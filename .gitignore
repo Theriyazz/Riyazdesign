@@ -1,0 +1,20 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+.env*
+!.env.example
+next-env.d.ts
+tsconfig.tsbuildinfo
+.vercel
+
+# Source assets are kept locally; optimized derivatives are generated into public/
+# and committed. Uncomment if you'd rather generate them on CI instead.
+# public/work/
+# public/riyaz/
+
+# Reference captures of other designers' live sites, kept for local research.
+# Not ours to publish, and 47MB that git history would hold onto forever.
+Inspirarion/

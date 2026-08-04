@@ -1,0 +1,151 @@
+/* ============================================================================
+   Riyaz Malek — Design Tokens
+   Three layers: primitive -> semantic -> component.
+   Never reference a primitive directly in a component; go through semantic.
+   ========================================================================= */
+
+:root {
+  /* -- LAYER 1: PRIMITIVE ------------------------------------------------ */
+
+  /* Ink — the dark canvas. Slightly cool so the warm accent reads warmer. */
+  --ink-950: #08080a;
+  --ink-900: #0e0e11;
+  --ink-850: #141418;
+  --ink-800: #1c1c21;
+  --ink-700: #2a2a31;
+  --ink-600: #3a3a43;
+
+  /* Paper — warm off-white. Pure #FFF on near-black glares; this doesn't. */
+  --paper-50: #f4f3f0;   /* 17.4:1 on --ink-950 */
+  --paper-200: #cfcfca;  /* 12.1:1 */
+  --paper-300: #a8a8a4;  /*  8.4:1 */
+  /* 4.68:1 — the quietest we can go and still clear WCAG AA for normal text.
+     The 11px mono labels use this, so it is normal text, not large text. */
+  --paper-500: #7a7a7e;
+
+  /* Signal — sampled from the red window light in Profile Riyaz.png.
+     6.03:1 on --ink-950, so it clears WCAG AA for normal text. */
+  --signal-500: #ff4d2e;
+  --signal-600: #e63e20;
+  --signal-400: #ff7358;
+
+  /* -- LAYER 2: SEMANTIC ------------------------------------------------- */
+
+  --bg: var(--ink-950);
+  --bg-raised: var(--ink-900);
+  --bg-inset: var(--ink-850);
+
+  --border: var(--ink-800);
+  --border-strong: var(--ink-700);
+
+  --fg: var(--paper-50);
+  --fg-muted: var(--paper-300);
+  --fg-subtle: var(--paper-500);
+
+  --accent: var(--signal-500);
+  --accent-hover: var(--signal-600);
+  --accent-soft: var(--signal-400);
+  --focus: var(--signal-500);
+
+  /* Per-case-study tint. Overridden inline on the case study root so a
+     client's real brand color can live inside the page without the site
+     shell ever losing its own identity. Defaults to the site accent. */
+  --case-accent: var(--accent);
+
+  /* -- Spacing: 4px base ------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-48: 192px;
+
+  /* -- Layout ------------------------------------------------------------ */
+  --page-max: 1440px;
+  --gutter: clamp(20px, 5vw, 80px);
+  --section-y: clamp(96px, 14vh, 200px);
+
+  /* -- Type scale: fluid, seven steps ------------------------------------ */
+  --text-micro: 12px;
+  /* Was a separate 12px. Pointed at --text-micro rather than repeating the
+     number: two tokens holding the same literal is how a scale drifts apart
+     the next time one of them is nudged. */
+  --text-xs: var(--text-micro);
+  --text-sm: 16px;
+  --text-base: 20px;
+  --text-lg: clamp(29px, 2.4vw, 34px);
+  /* Flat, not fluid: the ramp used to run 24 -> 34, and raising the floor to
+     34 leaves nothing to interpolate. */
+  --text-xl: 34px;
+  /* Floor raised 32 -> 38 to stay clear of --text-xl. At 32 the two crossed
+     below an 850px viewport — 4vw drops under 34 there — so a section <h2>
+     rendered SMALLER than the <h3>s inside it on every phone. */
+  --text-2xl: clamp(38px, 4vw, 56px);
+  /* Display size, +20%. Hero and 404 only — both are single-line statements
+     that can carry the extra weight without pushing content off the fold. */
+  --text-3xl: clamp(53px, 8.4vw, 110px);
+  /* Hero sub-line only, +35% over --text-xl at the top end. Bespoke rather
+     than a token bump because --text-xl is also the work-card and case-study
+     heading size, where this scale would be far too loud.
+
+     The 26px floor is set by the longest rotating word: the line reserves
+     width for "Mobile Experiences" in Instrument Serif italic and cannot
+     break inside it, so anything larger pushes "Creating" onto its own line
+     at 375px and the sentence reads as three ragged fragments. */
+  --text-hero-sub: clamp(26px, 3.4vw, 46px);
+
+  /* One-off display sizes. Each was an inline `style={{ fontSize }}` on its
+     component, which is how a type scale ends up with sizes nobody can find.
+     Values are unchanged — this moves where they are declared, not what they
+     render. (--text-display used to sit here unused and has been dropped.) */
+  --text-metric: clamp(2.25rem, 5vw, 3.5rem);
+  --text-email: clamp(1.6rem, 6vw, 5.2rem);
+  --text-wordmark: clamp(3.5rem, 14.5vw, 14rem);
+
+  /* -- Motion ------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur: 280ms;
+  --dur-slow: 400ms;
+
+  --radius-chip: 10px;
+  --radius-squircle: 14px;
+
+  --z-content: 1;
+  --z-nav: 60;
+  --z-cursor: 90;
+  --z-overlay: 95;
+  --z-preloader: 100;
+}
+
+/* ---------------------------------------------------------------------------
+   LAYER 3: COMPONENT
+   Only components own these. Changing a component's look happens here, not
+   by reaching back into the primitives.
+   ------------------------------------------------------------------------ */
+:root {
+  --btn-label-bg: var(--ink-800);
+  --btn-label-fg: var(--fg);
+  --btn-label-bg-hover: var(--ink-700);
+  --btn-chip-bg: var(--accent);
+  --btn-chip-fg: var(--ink-950);
+  --btn-gap: 4px;
+  --btn-gap-hover: 10px;
+
+  --tag-bg: transparent;
+  --tag-border: var(--border);
+  --tag-fg: var(--fg-muted);
+
+  --row-index-fg: var(--fg-subtle);
+  --row-index-fg-hover: var(--accent);
+  --row-rule: var(--border);
+
+  --cursor-dot: var(--accent);
+  --cursor-ring: var(--paper-300);
+}

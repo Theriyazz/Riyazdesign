@@ -1,0 +1,559 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* Map our semantic tokens into Tailwind's theme so utilities like
+   `text-fg`, `bg-bg-raised`, `border-border` resolve to the same variables. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-inset: var(--bg-inset);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-case-accent: var(--case-accent);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+
+  --ease-out-expo: var(--ease-out);
+}
+
+/* ------------------------------------------------------------------ base
+
+   These element rules must sit in `@layer base`, not unlayered. Unlayered CSS
+   outranks every cascade layer no matter the specificity, so an unlayered
+   `p { margin: 0 }` silently beat `.mt-10` (which Tailwind emits into
+   `@layer utilities`) and no utility could override an element default.
+   ------------------------------------------------------------------------ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  html {
+    background: var(--bg);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-synthesis-weight: none;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  /* Title Case for the top two levels, done in CSS rather than by rewriting
+     every string — this also catches the case-study headings, which come from
+     markdown and are not ours to retype. `capitalize` raises the first letter
+     of each word and leaves the rest alone, so acronyms and "I'm" survive. */
+  h1,
+  h2 {
+    text-transform: capitalize;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  video,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--ink-950);
+  }
+}
+
+/* Lenis drives scrolling; native smooth-scroll would fight it.
+   Under reduced motion Lenis never mounts, so we hand scrolling back.
+   Left unlayered on purpose: this has to win over the base `html`/`body`
+   rules above and over any utility, which is exactly what unlayered does. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------- focus / a11y */
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 200;
+  padding: var(--space-3) var(--space-4);
+  background: var(--fg);
+  color: var(--ink-950);
+  border-radius: var(--radius-chip);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: top var(--dur) var(--ease-out);
+}
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -------------------------------------------------------------- layout */
+
+.shell {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------ type util */
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 400;
+  font-feature-settings: "tnum";
+}
+
+.serif-em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ------------------------------------------------------------ control text ---
+   One size for every control: nav, buttons, the mobile toggle. The type grows
+   from the 11px `.mono` default, the control does not — padding comes down to
+   absorb it, so the nav pill and the buttons keep roughly the heights they had.
+
+   Tracking drops from the mono 0.14em to 0.06em. That figure is tuned for
+   11px, where letters need prying apart to read as a label; at 20px the same
+   ratio is over 2px a character and "SEE RECENT WORK" stops being a phrase and
+   becomes a row of separate letters.
+
+   The size is --text-base, which is 20px — the same 20px this class used to
+   hardcode. Kept as the token so a future move of the scale carries the
+   controls with it instead of stranding them at a literal. */
+.ctl-text {
+  font-size: var(--text-base);
+  letter-spacing: 0.06em;
+}
+
+
+/* Left and right edges dissolve instead of ending on a hard line.
+
+   The fade completes exactly at --gutter, which is also `.shell`'s inline
+   padding — so it finishes at the precise x where the content column begins
+   and never touches a glyph. Any wider and it would start eating the "T" of
+   the headline. */
+.edge-fade-x {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 var(--gutter),
+    #000 calc(100% - var(--gutter)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 var(--gutter),
+    #000 calc(100% - var(--gutter)),
+    transparent
+  );
+}
+
+/* ------------------------------------------------------- hero entrance ---
+   Deliberately CSS, not GSAP, and deliberately transform-only.
+
+   The hero subline is the LCP element. Animating its opacity from JS meant
+   GSAP set it to 0 on mount and the text could not paint until hydration
+   finished — 3.0s of render delay on throttled mobile, for an entrance that
+   lasts under a second. CSS animations start at first paint instead, and
+   because only `transform` moves, the text is painted (and LCP is recorded)
+   immediately at its offset position.
+
+   Net effect: mobile LCP 3.5s -> ~1.5s, with the same entrance on screen.
+   ------------------------------------------------------------------------ */
+html.js [data-hero-line] {
+  animation: heroLine 1s var(--ease-out) both;
+}
+html.js [data-hero-sub] {
+  animation: heroSub 0.85s var(--ease-out) both;
+}
+/* Staggered by explicit index, not :nth-of-type — each of these elements is
+   the only one of its type inside its own parent, so positional selectors
+   would never match. */
+html.js [data-hero-line="2"] {
+  animation-delay: 0.08s;
+}
+html.js [data-hero-sub="2"] {
+  animation-delay: 0.09s;
+}
+
+@keyframes heroLine {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes heroSub {
+  from {
+    transform: translateY(16px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+html[data-motion="reduced"] [data-hero-line],
+html[data-motion="reduced"] [data-hero-sub] {
+  animation: none !important;
+  transform: none !important;
+}
+
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------ tool ticker ---
+   One continuous drift, parked on hover.
+
+   The track holds the tool set twice and travels exactly -50%, so at the moment
+   the keyframe wraps, copy two is standing precisely where copy one began.
+   Nothing jumps because nothing moved — which is why both copies must stay the
+   same width, and why the trailing gap lives on the set rather than between the
+   two sets.
+
+   `linear` is not a default here, it is the whole effect: any easing gives the
+   row a heartbeat, and a ticker that breathes reads as an animation instead of
+   as a passing band. */
+
+/* The frame is the clip boundary and the edge treatment; the track inside it
+   is the only thing that moves.
+
+   The blur lives out here rather than on `.ticker` because `mask-image` builds
+   a stacking context, and a `backdrop-filter` nested inside one stops sampling
+   the page behind it — the marks would slide under a pane that blurs nothing. */
+.ticker-frame {
+  position: relative;
+}
+
+.ticker-frame::before,
+.ticker-frame::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: clamp(40px, 9%, 140px);
+  pointer-events: none;
+  /* Prefixed first, unprefixed last — lightningcss collapses the pair and keeps
+     whichever came last, deriving prefixes from that. Written the other way
+     round it emits only `-webkit-backdrop-filter`, and Firefox, which supports
+     the unprefixed property only, gets no blur at all. */
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+/* The blur itself has to fade, or its own edge becomes the hard line the fade
+   was there to avoid. */
+.ticker-frame::before {
+  left: 0;
+  -webkit-mask-image: linear-gradient(90deg, #000, transparent);
+  mask-image: linear-gradient(90deg, #000, transparent);
+}
+.ticker-frame::after {
+  right: 0;
+  -webkit-mask-image: linear-gradient(270deg, #000, transparent);
+  mask-image: linear-gradient(270deg, #000, transparent);
+}
+
+.ticker {
+  overflow: hidden;
+  /* Dissolve both ends rather than guillotine a mark mid-tile. Percentages,
+     not the gutter: the frame now sits inside the shell, so its own edges are
+     already the container edges the marks must not cross. */
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 10%,
+    #000 90%,
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  /* Duration is chosen for a constant travel speed (~31px/s), not a constant
+     wall-clock loop, so it has to move with the mark size: at 84px marks and
+     a 96px gap, one half runs ~3240px and 44s would read as a sprint. */
+  animation: tickerDrift 100s linear infinite;
+}
+
+/* Park it on hover so a mark can actually be read, and on focus-within so the
+   same is true for a keyboard user tabbing past. */
+.ticker:hover .ticker-track,
+.ticker:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+/* Half the track.
+
+   The guard for screens wider than the runs measure: rather than let a hole
+   open before the wrap, the half stretches to the viewport and `space-around`
+   spreads the slack evenly across the marks.
+
+   `100vw`, NOT `100%`. A percentage here resolves against `.ticker-track`,
+   whose width is `max-content` — which is itself the sum of these two halves.
+   That circularity resolves as each half inflating to the width of the whole
+   track, so `-50%` stops being one half and the seam jumps once per cycle.
+   The viewport is a definite length and closes the loop. */
+.ticker-set {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 100vw;
+  gap: var(--space-24);
+}
+
+.ticker-run {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.ticker-mark {
+  flex: none;
+  opacity: 0.55;
+  transition: opacity var(--dur) var(--ease-out);
+}
+/* Dim at rest, full strength under the cursor. The rest of the row drops back
+   further while you are pointing at one — the same read the typeset names got
+   from `text-fg-subtle` -> `hover:text-fg`, now that the names are gone. */
+.ticker:hover .ticker-mark {
+  opacity: 0.28;
+}
+.ticker .ticker-mark:hover {
+  opacity: 1;
+}
+
+@keyframes tickerDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Reduced motion: the row becomes a plain wrapped grid of marks.
+
+   `animation: none` has to be !important and outrank the global guard below,
+   which only shortens durations to 0.01ms. Shortening is the wrong fix for a
+   loop — it would run the single allowed iteration instantly and strand the
+   track at -50%, i.e. half the marks pushed off-screen for good.
+
+   Written as a media query rather than against `data-motion`, so it holds with
+   no JS too. The duplicate copy is decorative once nothing scrolls. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  /* Nothing is passing out of frame, so there is no edge to soften. */
+  .ticker-frame::before,
+  .ticker-frame::after {
+    display: none;
+  }
+  .ticker-track {
+    animation: none !important;
+    transform: none !important;
+    width: 100%;
+  }
+  /* Everything past the first run exists only to make the loop seamless. With
+     nothing looping, it is nine marks repeated for no reason. */
+  .ticker-set + .ticker-set,
+  .ticker-run + .ticker-run {
+    display: none;
+  }
+  .ticker-set {
+    justify-content: flex-start;
+    min-width: 0;
+  }
+  .ticker-run {
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+  .ticker-mark {
+    opacity: 1;
+  }
+}
+
+/* -------------------------------------------------------- motion guard */
+
+/* The single global switch. Components read `data-motion` off <html> rather
+   than each re-querying the media list. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html[data-motion="reduced"] .motion-only {
+  display: none !important;
+}
+
+/* Elements animated by GSAP start dimmed ONLY when JS is available, so a
+   no-JS visitor still sees every word at full strength.
+
+   0.5 is a floor, not a taste call: #F4F3F0 at 50% over #08080A measures
+   4.93:1, which clears WCAG AA for normal text. The reveal must be legible
+   *before* it fires, because a visitor can land mid-page, scrub backwards,
+   or simply never trigger it. The fill to 1.0 still reads clearly. */
+html.js [data-reveal] .reveal-word {
+  opacity: 0.5;
+}
+html.js [data-reveal-group] > * {
+  opacity: 0;
+}
+html[data-motion="reduced"] [data-reveal] .reveal-word,
+html[data-motion="reduced"] [data-reveal-group] > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Cursor modes, driven by `data-cursor` on the hovered element. */
+.cursor-ring {
+  border-color: var(--cursor-ring);
+  transition: background-color 240ms var(--ease-out), border-color 240ms var(--ease-out);
+}
+
+/* 6px — half the 12px this was actually rendering at. It carried a
+   `text-[8px]` utility that never applied: `.mono` sets --text-micro and is
+   unlayered, so it outranks every Tailwind size utility no matter the
+   specificity. Declared here so it wins for real. */
+.cursor-ring-label {
+  font-size: 6px;
+  letter-spacing: 0.08em;
+}
+/* Over a work card the ring fills with the brand accent rather than plain
+   --fg. The label stays --ink-950: near-black on the accent measures far
+   higher contrast than white would, and this is 4px type that needs every
+   bit of it. */
+.cursor-ring[data-mode="view"] {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cursor-ring[data-mode="view"] .cursor-ring-label {
+  opacity: 1;
+  color: var(--ink-950);
+  transition: opacity 200ms var(--ease-out) 80ms;
+}
+.cursor-ring[data-mode="text"] {
+  border-color: transparent;
+}
+
+/* Custom cursor replaces the native one only where a real pointer exists. */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body {
+    cursor: none;
+  }
+  /* ...but never on controls, where the native cursor carries meaning. */
+  html.has-custom-cursor :is(input, textarea, select, [contenteditable]) {
+    cursor: auto;
+  }
+}
