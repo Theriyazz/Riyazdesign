@@ -2,85 +2,189 @@
 slug: atrc
 index: "003"
 title: ATRC STEM Career Test
-subtitle: Assessment platform for UAE students
-detail: Designed the full test experience, from first question to results. The hard part was the logic behind it — turning a complex assessment model into something a teenager finishes without dropping out halfway.
-role: [EdTech, Assessment flow, Responsive]
-timeline: "2025 · TODO weeks"
-team: "TODO"
-platform: [Web, Responsive]
-tools: [Figma, FigJam]
+subtitle: STEM career assessment for UAE school students
+detail: Designed a 25-question assessment in four formats, with pause and resume, inactivity recovery and a three-pathway report — solo, from working prototype to the shipped product live at careertest.atrc.ae.
+role: [Research, Strategy, UI design, Prototyping]
+delivered: [Assessment flow design, UX decisions, Figma prototype, Component library]
+tools: [Figma, FigJam, Lovable, Claude AI, Perplexity]
+platform: [Web — desktop + mobile, Responsive]
+industry: EdTech · STEM
+timeline: 1 month
 cover: /work/atrc/cover.avif
-accent: "#4C1FD7"
-outcome: "TODO — one sentence, past tense, with the number in it."
+headline: STEM assessments are long. Teenagers quit in the middle. I didn't shorten the test — I designed the reasons to finish it.
 year: "2025"
 featured: true
 order: 3
 draft: false
 ---
 
-<Callout>
-  **Skeleton — replace every `TODO`.** See `careerlogica.mdx` for notes on how
-  each section earns its place.
-</Callout>
-
 ## Context
 
-TODO — What ATRC is, and who actually takes this test. Name the user in
-concrete terms ("16–18 year old students in UAE schools, most of whom have
-never spoken to a careers advisor") rather than abstract ones ("end users").
+For the Advanced Technology Research Council, UAE, I designed a STEM career assessment for school students — solo, from working prototype through wireframes to the approved product, live at careertest.atrc.ae. The test stays long, because the psychometrics need it to be. The design's job was to carry a student all the way through it.
 
-## Problem
+ATRC is the Abu Dhabi government body that oversees research and development for the emirate. Alongside the deep-tech work it runs youth and STEM initiatives — among them Future-Focused Career Pathways — that shape how Emirati students find their way into science and technology careers. That's where this project sits: a research council can fund labs and attract global scientists, but the long-term supply of Emirati engineers starts with a fifteen-year-old deciding what to study. This test is the front door of that decision.
 
-TODO — You've already named the real one: a complex assessment model that a
-teenager has to finish. Put a number on the drop-off if you have one, and
-describe where in the flow people gave up.
+<Deliverables items="Interactive prototypes (2 directions) · Sketch wireframes · Landing page · Onboarding · 4 question types · Gamified progress system · Pause & resume · Inactivity recovery · Error & analysing states · 3-pathway report · Retake flow" />
 
-<ImageBlock src="/work/atrc/01.avif" alt="TODO — describe what the image shows" caption="TODO" />
+<Callout>
+  This case study shows three stages of the same product — the throwaway
+  prototypes, the wireframes, and the shipped screens — including decisions
+  from the prototypes that I deliberately reversed. The gaps between the
+  stages are the point.
+</Callout>
 
-## Research
+## The problem
 
-TODO — What you learned about how teenagers actually move through a long
-assessment. Attention, progress perception, and the moment they decide it isn't
-worth finishing.
+Serious STEM assessments in this market run 60–70 questions. There's no way around the length — a credible psychometric result needs enough signal, and a five-question quiz can't map a student to a career pathway.
 
-## Architecture
+But the test-taker is fifteen. Long assessments lose teenagers in the middle: attention drifts, a notification lands, the tab closes, and twenty minutes of honest answers disappear.
 
-TODO — The assessment logic is the interesting system here. Show the branching,
-the scoring model, and how it maps to the result. A flow diagram belongs here.
+**So the brief was a contradiction: a test long enough to be credible, experienced as something a student wants to finish.** I was the sole freelance product designer — prototype, wireframes, UI, every state.
 
-<ImageBlock src="/work/atrc/02.avif" alt="TODO — assessment flow / scoring model" caption="TODO" />
+## Stage 01 — Prototype first
 
-## Design decisions
+I started by building, not sketching: two working prototypes in Lovable, with 8 placeholder questions — enough to make the flow real without writing a full question bank. The point was never the question count. It was that a test flow can't be judged from static screens; I needed to *take it* to feel where it breaks.
 
-<Decision
-  decision="TODO — how you made a long assessment feel finishable"
-  why="TODO — tie to a research finding above"
-  tradeoff="TODO — what did this cost in accuracy, build complexity, or time?"
+I built it twice deliberately — one consumer-toned, one institutional — to force a comparison instead of a default.
+
+<Compare
+  before="/work/atrc/proto-consumer.avif"
+  after="/work/atrc/proto-institutional.avif"
+  beforeAlt="The consumer-toned prototype landing screen"
+  afterAlt="The institutional-toned prototype landing screen"
+  beforeLabel="Consumer-toned"
+  afterLabel="Institutional-toned"
+  caption="Built twice on purpose. Comparing two real builds surfaces decisions that comparing two static mockups never would."
 />
 
-<Decision
-  decision="TODO — how the results page explains itself without a counsellor in the room"
-  why="TODO"
-  tradeoff="TODO"
+### Three findings came out of clicking through them
+
+<Findings>
+  <Finding n="01" title="State the cost before asking for the effort">
+    The version that told students the time, the question count, and "no registration required" *before* the start button made starting feel safe. The version that only promised benefits didn't. This became the landing page principle.
+  </Finding>
+  <Finding n="02" title="A selected answer should still look like an answer">
+    One prototype flooded the chosen option solid and dropped its letter badge — the item you picked stopped resembling the list around it. The fix, keeping the badge and marking selection with fill and border, carried into the final system.
+  </Finding>
+  <Finding n="03" title="A verdict closes doors; a ranking opens them">
+    One prototype ended with a single career. The other ranked every path with a percentage. For a teenager who'll be a different person next year, ranked is more honest — this finding became the three-pathway report.
+  </Finding>
+</Findings>
+
+## Stage 02 — Wireframes: designing the full system
+
+With the findings listed, I sketched every screen and state on paper — and this is where the product became much bigger than the prototypes. The wireframes added everything the prototypes never had:
+
+- **Two-step onboarding** — an intro video with three highlights about the test, so a student knows what they're walking into.
+- **A per-question layout** with timer, progress bar showing how many questions remain, and a question-related image beside every question.
+- **Four question formats** — five-option choice, picture selection, drag-to-arrange, and connect/match — sketched as separate templates.
+- **Pause as a first-class flow** — "Pause this test" on every screen, with a reminder scheduler drawn right into the wireframe.
+- **Inactivity recovery** — a "Still there?" state triggered after minutes of no activity, progress already saved.
+- **Loading and analysing states** — the moment between finishing and results, treated as its own screen.
+- **The report skeleton** — avatar, About, Skills, Subjects, Careers, Quick Tip, download and retake.
+
+<Quote cite="From the wireframing notes">
+  The pause and inactivity screens are the wireframes I'm proudest of. They exist because the test is long *on purpose* — the design accepts the length and builds safety nets around it, instead of pretending students never leave mid-test.
+</Quote>
+
+<ImageBlock src="/work/atrc/01.avif" alt="Wireframe spread showing the pause flow and the reminder scheduler" caption="The pause flow, sketched before it was ever a component." />
+
+## Stage 03 — The final design
+
+### Keeping engagement high across 25 questions
+
+The shipped test runs 25 questions — and the count can grow, because the design doesn't depend on it staying small. Length is handled by design, not denial.
+
+**Gamified progress.** A progress bar tracks questions remaining, next to a per-question timer — answering "how much is left?" before it's asked. At milestones the test celebrates: 25% lands with a confetti moment and an encouraging message, and again at 50% and beyond. Long tests die in the middle; the milestones put small finish lines inside the big one.
+
+<Principle name="Goal gradient effect">
+  Motivation rises the closer someone gets to a goal — not steadily, but sharply near the end. Splitting one long test into milestone finish lines means the student feels that acceleration four times instead of once.
+</Principle>
+
+**A guide, not an invigilator.** An illustrated Emirati character stands beside every question — a doctor for the health-science questions, a builder in a VR headset for the technology ones. Culturally, students see a test made *for* them. Emotionally, a companion turns exam pressure into conversation. The character set was AI-generated to my direction, doing the work of an illustration budget a solo freelance project doesn't have.
+
+**Friendly failure.** Skip without answering and the error matches the product's voice — *"Ohh no… something missing"* — no red scolding on a test that promised there are no wrong answers.
+
+<ImageBlock src="/work/atrc/02.avif" alt="The milestone celebration screen at 25 percent completion" caption="A finish line inside the finish line." />
+
+### Four question types in rotation
+
+The variety serves the psychometrics — different formats surface different signals — and it breaks the rhythm, so question 19 doesn't feel like question 4 again.
+
+<CardGrid cols={2}>
+  <Card title="Standard choice">Five options with letter badges. The baseline format, and the one the selection-state finding came from.</Card>
+  <Card title="Picture choice">Image options instead of text, for preferences a sentence describes badly.</Card>
+  <Card title="Drag to rank">Ordering rather than picking — surfaces relative preference, not just presence.</Card>
+  <Card title="Build a sentence">Assembling blocks into a statement, for questions about how a student frames a problem.</Card>
+</CardGrid>
+
+### The safety nets
+
+**Pause, with a promise.** Pausing saves progress for 7 days and offers a reminder email — in 1 hour, tomorrow, or this week. The student picks when they'll return; the product gently holds them to it.
+
+<Principle name="Zeigarnik effect">
+  An unfinished task occupies memory more persistently than a finished one — people feel a pull to close the loop. The pause reminder isn't just a courtesy notification; it's riding that pull back to completion.
+</Principle>
+
+**Inactivity recovery.** Ten minutes idle triggers "Still there?" — one tap to break or continue, nothing lost to a closed tab.
+
+<Compare
+  before="/work/atrc/pause.avif"
+  after="/work/atrc/still-there.avif"
+  beforeAlt="The pause screen with reminder scheduling options"
+  afterAlt="The Still there? inactivity recovery screen"
+  beforeLabel="Pause, with a reminder"
+  afterLabel="Inactivity recovery"
+  caption="The most valuable screens in the product are the ones for not taking the test."
 />
 
-## The system
+### The report — three pathways, not one answer
 
-TODO — Components, tokens, states. Assessment UI is mostly a small set of
-question types repeated a lot — show the set and the rules for when each is
-used.
+Every student gets a Primary, Secondary and Tertiary pathway, each a full identity rather than a job title.
 
-<SystemGrid>
-  <SystemItem label="TODO" value="TODO" />
-  <SystemItem label="TODO" value="TODO" />
-  <SystemItem label="TODO" value="TODO" />
-</SystemGrid>
+<Pathways>
+  <Pathway name="Future Builder" role="The Maker">
+    Skills to build, subjects to focus on, and career clusters to explore — plus one concrete activity for this month, like building a prototype in CAD or LEGO.
+  </Pathway>
+  <Pathway name="Future Analyst" role="The Decoder">
+    The same four lists, tuned to a student who reads patterns — with a Try This such as modelling predictions in Excel.
+  </Pathway>
+  <Pathway name="Future Leader" role="The Guide">
+    For the student who organises people rather than systems, ending in a Try This like running a school initiative.
+  </Pathway>
+</Pathways>
+
+A result you can only read is a label; a result you can act on this week is guidance. And at the bottom: *"Not sure? Hit rewind and see where your curiosity takes you."* Retake framed as exploration, never as failure.
+
+<ImageBlock src="/work/atrc/03.avif" alt="Full scroll of the Future Builder pathway report" caption="The Future Builder report, full scroll." wide />
 
 ## Outcome
 
-TODO — Completion rate is the number that matters here. If you don't have it,
-say so plainly and delete the `metrics` block from the frontmatter.
+<SpecList>
+  <Spec label="Shipped">Landing, video onboarding, a 25-question test in four formats, gamified progress with milestone celebrations, pause and resume with reminders, inactivity recovery, an analysing state, a 3-pathway report, and retake.</Spec>
+  <Spec label="Status">Live at careertest.atrc.ae.</Spec>
+  <Spec label="Role">Solo freelance product designer, September 2025.</Spec>
+  <Spec label="Approach">Prototype first, then wireframes, then UI — with decisions from the prototypes deliberately reversed along the way.</Spec>
+</SpecList>
 
-## Reflection
+### What I'd do differently
 
-TODO
+<Takeaways>
+  <Takeaway title="Watch five students take it">
+    Every finding came from testing my own prototypes — better than nothing, but I was a designer simulating a fifteen-year-old.
+  </Takeaway>
+  <Takeaway title="Prototype the final interactions too">
+    Drag-to-rank and build-a-sentence went to development from Figma. They deserved the same working-prototype test the early flow got.
+  </Takeaway>
+</Takeaways>
+
+### What it taught me
+
+<Takeaways>
+  <Takeaway title="Prototype-first is a research method">
+    The findings that shaped this product are invisible in static screens. A rough working build cost two days and bought the strategy.
+  </Takeaway>
+  <Takeaway title="Length is a design material">
+    The most valuable screens are the ones for *not* taking the test — pausing, returning, recovering. I designed the gaps, and the gaps are why students finish.
+  </Takeaway>
+</Takeaways>

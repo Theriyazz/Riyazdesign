@@ -45,9 +45,12 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /* Deliberately no `background` here — `html` above carries it.
+     `BackdropField` paints at `z-index: -1`, and a block's own background is
+     painted *after* its negative-z-index descendants. A background on <body>
+     would sit on top of the field and hide it completely. */
   body {
     margin: 0;
-    background: var(--bg);
     color: var(--fg);
     font-family: var(--font-sans);
     font-size: var(--text-base);
@@ -181,6 +184,88 @@ html.lenis body {
   margin: 0;
 }
 
+/* ---------------------------------------------------------- backdrop field ---
+   The fixed ground the whole site scrolls over (see BackdropField.tsx).
+
+   `position: fixed` and not `background-attachment: fixed`: the field is four
+   stacked layers with their own masks and opacities, which a single background
+   shorthand cannot express, and a fixed background on <body> repaints on every
+   scroll frame in several engines. This composites once and then holds still.
+
+   Behind everything at `z-index: -1`. Nothing in the page needs a positive
+   z-index to clear it, which is what keeps it out of the way of the nav (60),
+   the cursor (90) and the preloader (100). */
+.backdrop-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg);
+  opacity: var(--backdrop-strength);
+}
+
+/* How loud the field is, per page. Fading the whole layer rather than each
+   gradient inside it: the field paints its own `--bg` as a base and `html`
+   underneath is the same colour, so what actually fades is the glow, the
+   streaks and the grain — the dark ground never lightens.
+
+   Case studies run at little over half the homepage's strength. They are the
+   one place on the site with long-form reading, and a texture that reads as
+   atmosphere behind a hero reads as interference behind twelve paragraphs.
+
+   Set on <body> via `:has()` rather than in a client component, so it is
+   correct on the first server-rendered frame — a `usePathname` check would
+   paint the homepage value and then correct itself after hydration. */
+:root {
+  --backdrop-strength: 0.75;
+}
+
+body:has([data-page="case-study"]) {
+  --backdrop-strength: 0.4;
+}
+
+/* The one directional transform. Flipping the group is what moves the glow
+   from the top-left of the source pattern to the top-right, and mirrors the
+   45deg skew of the streaks along with it. */
+.backdrop-field__mirror {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(-1);
+}
+
+/* ------------------------------------------------------- footer wordmark ---
+   Sized to the content column rather than the viewport.
+
+   A vw-based size can't see `.shell` — it doesn't know about `--page-max` or
+   the gutter — so the mark grew past the column on wide screens and got
+   sheared off by the footer's `overflow: hidden`. A container query unit does
+   know: `cqw` is 1% of `.wordmark-fit`'s inline size, which IS the column.
+
+   17.1 is measured, not guessed. "Riyazdesigns." in Geist 500 at -0.045em
+   tracking inks 5.82em wide, so 1/5.82 = 0.1718 of the column per em. Trimmed
+   a hair under that to leave the right-side bearing somewhere to go. Change
+   the word or the tracking and this coefficient has to be re-measured.
+
+   The padding-bottom is the descender ("y", "g"): `line-height: 0.78` pulls
+   the box tighter than the glyphs, and ink drops 0.254em below it. Without the
+   pad, `overflow: hidden` clips the tails at the footer's bottom edge. */
+.wordmark-fit {
+  container-type: inline-size;
+}
+
+.wordmark-text {
+  display: block;
+  white-space: nowrap;
+  font-weight: 500;
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+  color: var(--ink-800);
+  padding-bottom: 0.26em;
+  font-size: var(--text-wordmark); /* fallback: no container query units */
+  font-size: 17.1cqw;
+}
+
 /* ------------------------------------------------------------ type util */
 
 .mono {
@@ -190,6 +275,26 @@ html.lenis body {
   letter-spacing: 0.14em;
   font-weight: 400;
   font-feature-settings: "tnum";
+}
+
+/* The label voice for reading surfaces: captions, field names, cites,
+   attributions.
+
+   These were all `.mono` at 12px in `--fg-subtle`, which is the smallest and
+   faintest combination on the site — and they were carrying real content, not
+   decoration. A caption explaining what a screenshot proves is not furniture.
+   Geist at 16px in `--fg-muted` is 8.4:1 and reads at a glance.
+
+   Uppercase and the wide tracking are gone with the mono: at 16px they made
+   labels compete with the headings they sit under. */
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 500;
+  color: var(--fg-muted);
 }
 
 .serif-em {
@@ -262,11 +367,11 @@ html.js [data-hero-sub] {
 /* Staggered by explicit index, not :nth-of-type — each of these elements is
    the only one of its type inside its own parent, so positional selectors
    would never match. */
-html.js [data-hero-line="2"] {
-  animation-delay: 0.08s;
+html.js [data-hero-sub="1"] {
+  animation-delay: 0.06s;
 }
 html.js [data-hero-sub="2"] {
-  animation-delay: 0.09s;
+  animation-delay: 0.12s;
 }
 
 @keyframes heroLine {
@@ -509,8 +614,193 @@ html.js [data-reveal] .reveal-word {
 html.js [data-reveal-group] > * {
   opacity: 0;
 }
+
+/* The sheen fill resolves words out of a blur, so unlike the plain reveal
+   above it cannot honour the 0.5 / AA floor — blurred text is unreadable at
+   any opacity. Two things make that acceptable here rather than careless:
+   the fill is scrubbed, so the words are crisp by the time the block is read
+   rather than skimmed past; and it ends while the block is still well inside
+   the viewport, so a reader who stops scrolling lands on finished text.
+
+   Values mirror SHEEN_REST_OPACITY / SHEEN_REST_BLUR in RevealText.tsx and
+   exist to paint the resting state before the runtime split creates the
+   words — without them the statement flashes crisp for a frame on mount. */
+html.js [data-reveal-sheen] .reveal-word {
+  opacity: 0.35;
+  filter: blur(8px);
+}
+
 html[data-motion="reduced"] [data-reveal] .reveal-word,
+html[data-motion="reduced"] [data-reveal-sheen] .reveal-word,
 html[data-motion="reduced"] [data-reveal-group] > * {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ------------------------------------------------------------ clip wipe ---
+   The panel that wipes off an image entrance. It is opaque and covers its
+   picture completely, so it only ever exists where the script that removes it
+   is also running. Without JS it never renders, and under reduced motion it is
+   removed again — otherwise every cover on the page would sit behind a solid
+   block for those visitors. */
+[data-clip-panel] {
+  display: none;
+}
+html.js [data-clip-panel] {
+  display: block;
+}
+html[data-motion="reduced"] [data-clip-panel] {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------ hover rows ---
+   One treatment for every list surface on the page: experience rows,
+   capability cells, testimonial cards. The ground lifts to `--bg-raised` and a
+   1px accent rule wipes in from the left.
+
+   The rule is a pseudo-element scaled on X rather than a width or a
+   background-size, so the whole thing stays transform + colour. `top: -1px`
+   parks it exactly on the border it is tracing, whether that border belongs to
+   this element or to the one above it.
+
+   `focus-within` as well as `:hover` — a keyboard reader moving through a row
+   that contains a link should get the same signal a pointer does. */
+.hover-row {
+  position: relative;
+  transition: background-color var(--dur) var(--ease-out);
+}
+.hover-row::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+  pointer-events: none;
+}
+.hover-row:hover,
+.hover-row:focus-within {
+  background-color: var(--bg-raised);
+}
+.hover-row:hover::after,
+.hover-row:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* The sweep is an affordance, so it still fires under reduced motion — it just
+   arrives rather than travels. */
+html[data-motion="reduced"] .hover-row,
+html[data-motion="reduced"] .hover-row::after {
+  transition: none;
+}
+
+/* Inline links whose underline draws in instead of switching on. Same
+   mechanic, applied to the text baseline rather than a row edge. */
+.link-sweep {
+  position: relative;
+}
+.link-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+}
+.link-sweep:hover::after,
+.link-sweep:focus-visible::after {
+  transform: scaleX(1);
+}
+html[data-motion="reduced"] .link-sweep::after {
+  transition: none;
+}
+
+/* -------------------------------------------------------------- nav bar ---
+   The bar has no background at the top of the page — over the hero that reads
+   as open and deliberate. The moment content starts passing underneath it, it
+   frosts: one surface edge to edge carrying the wordmark, the pill and the
+   Resume button, with the page behind it blurred enough to stop competing.
+
+   A separate full-bleed layer rather than a background on <header> itself, so
+   the fade is one opacity tween on a leaf element and nothing else in the bar
+   has to repaint. */
+.nav-frost {
+  opacity: 0;
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  border-bottom: 1px solid var(--border);
+  transition: opacity var(--dur) var(--ease-out);
+  /* Prefixed first, unprefixed last. lightningcss collapses the pair and keeps
+     whichever came last, deriving prefixes from that — written the other way
+     round it emits only `-webkit-backdrop-filter` and Firefox, which supports
+     the unprefixed property only, gets no blur at all. Same trap as
+     `.ticker-frame` above. */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+header[data-scrolled="true"] .nav-frost {
+  opacity: 1;
+}
+
+/* `data-scrolled` is set by JS, so without it the bar would stay transparent
+   over every section forever. Frosted-always is the safe fallback. */
+html:not(.js) .nav-frost {
+  opacity: 1;
+}
+
+/* Once the whole bar is glass, the pill's own glass is redundant: two
+   translucent darks stack into a visibly darker patch on an otherwise even
+   surface, and it re-blurs an already-blurred backdrop for nothing. Border and
+   active indicator stay — they're what still separates the links from the
+   wordmark. */
+header[data-scrolled="true"] .nav-pill {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ------------------------------------------------------------- preloader ---
+   The curtain is server-rendered so it occupies the first painted frame, and
+   hidden unless the boot script has decided the intro should play. That covers
+   repeat visits, reduced motion, and no-JS in one rule — none of them ever see
+   it, and none of them can be trapped behind it. */
+.preloader {
+  display: none;
+}
+html[data-preload="1"] .preloader {
+  display: block;
+}
+/* Set here rather than on body.style: the boot script runs in <head>, before
+   there is a body to set it on. */
+html[data-preload="1"] body {
+  overflow: hidden;
+}
+
+/* Section chrome resting state. The heading is hidden outright rather than
+   offset: it is masked per word at runtime, and holding it at 0 is what stops
+   the unmasked line flashing in the gap before the split exists. */
+html.js [data-sec-rule] {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+html.js [data-sec-eyebrow] {
+  opacity: 0;
+}
+html.js [data-sec-heading] {
+  opacity: 0;
+}
+html[data-motion="reduced"] [data-sec-rule],
+html[data-motion="reduced"] [data-sec-eyebrow],
+html[data-motion="reduced"] [data-sec-heading] {
   opacity: 1 !important;
   transform: none !important;
 }

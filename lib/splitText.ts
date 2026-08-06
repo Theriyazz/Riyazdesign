@@ -23,7 +23,12 @@ const CHAR_CLASS = "reveal-char";
 
 export function splitText(
   el: HTMLElement,
-  kind: SplitKind = "words"
+  kind: SplitKind = "words",
+  /**
+   * Wrap each word in an overflow-hidden box so a `yPercent` rise reads as the
+   * word climbing out from behind a mask rather than sliding in from nowhere.
+   */
+  mask = false
 ): SplitResult {
   const original = el.innerHTML;
   const text = el.textContent ?? "";
@@ -73,7 +78,20 @@ export function splitText(
       parts.push(word);
     }
 
-    frag.appendChild(word);
+    if (mask) {
+      const box = document.createElement("span");
+      box.style.display = "inline-block";
+      box.style.overflow = "hidden";
+      box.style.verticalAlign = "bottom";
+      // overflow:hidden clips descenders against the line box, so the mask is
+      // grown downward and the extra height pulled back out of the layout.
+      box.style.paddingBottom = "0.14em";
+      box.style.marginBottom = "-0.14em";
+      box.appendChild(word);
+      frag.appendChild(box);
+    } else {
+      frag.appendChild(word);
+    }
   }
 
   visual.appendChild(frag);

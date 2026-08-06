@@ -54,7 +54,10 @@ export function Capabilities() {
     >
       <RevealGroup className="grid grid-cols-1 border-l border-t border-[var(--border)] md:grid-cols-3">
         {GROUPS.map((g) => (
-          <div key={g.title} className="border-b border-r border-[var(--border)] p-7">
+          <div
+            key={g.title}
+            className="hover-row border-b border-r border-[var(--border)] p-7"
+          >
             <h3 className="text-[length:var(--text-lg)] leading-tight">{g.title}</h3>
             {/* No dash rule. It bought nothing a list does not already say,
                 and its 10px + gap indented every item away from the heading —

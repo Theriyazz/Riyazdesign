@@ -42,13 +42,24 @@ Adding a section means adding a section — not a route.
 `styles/tokens.css` is the source of truth: primitive → semantic → component.
 Components reference semantic tokens only; nothing reaches back to a raw hex.
 
-**The accent is a signal, never a fill.** `#FF4D2E` (sampled from the red
-window light in the portrait, 6.03:1 on the background) is allowed on exactly
-six things: the cursor dot, the split-button arrow chip, the active nav
-indicator, link underlines on hover, a hovered card's index number, and the
-availability dot. Every other colour on the page comes from the case study
-covers themselves. That restraint is what most separates this from a template —
-if you add a seventh accent use, you've started down the wrong path.
+**The accent is a signal, never a fill.** `--signal-500` is allowed on exactly
+five things:
+
+1. the cursor dot
+2. the split-button arrow chip
+3. the active nav indicator
+4. the availability dot
+5. **whatever you are currently pointing at** — link underlines, a hovered
+   card's index number, and the rule that wipes across a hovered row, cell or
+   card
+
+Every other colour on the page comes from the case study covers themselves.
+That restraint is what most separates this from a template.
+
+The fifth entry is one rule, not three exceptions: the accent answers "this is
+the thing under your cursor", and it does not matter which element is asking.
+Adding a *sixth* category — an accent that is not one of the four fixed marks
+and is not a hover response — is where this starts going wrong.
 
 `--case-accent` is the one deliberate exception: each case study sets it to the
 client's real brand colour, scoped to that page, so the client's identity lives
@@ -79,10 +90,18 @@ time is a net loss however good it looks.
   `lib/useReducedMotion.ts`) disables Lenis, the preloader, the cursor, and all
   scrubs. Not sprinkled per component.
 - Only `transform` and `opacity` are animated. Never `width`/`height`/`top`/`left`.
+  The two exceptions are both deliberate and both scoped to one element: the
+  `filter` on the FirstFold sheen, and the `backdrop-filter` on the nav bar.
 - `useGSAP()` scoped to a container ref, so every timeline auto-cleans.
 - Reveal text rests at **0.5 opacity, not lower** — that's 4.93:1, the AA floor.
   A visitor can land mid-page or scrub backwards; the text has to be legible
   before the animation fires.
+  **The FirstFold sheen is the one exception**, resting at 0.35 behind an 8px
+  blur, because blurred text is unreadable at any opacity and the floor buys
+  nothing there. It's allowed only because that fill is scrubbed and ends while
+  the block is still well inside the viewport, so a reader who stops scrolling
+  lands on finished text rather than on blur. Do not copy the exception into a
+  reveal that isn't scrubbed.
 - No GSAP SplitText (paid Club plugin). `lib/splitText.ts` replaces it and keeps
   the split accessible via a visually-hidden sibling rather than an `aria-label`,
   which would be invalid ARIA on a `<p>`.

@@ -1,4 +1,5 @@
 import { MicroLabel } from "@/components/primitives/MicroLabel";
+import { SectionChrome } from "@/components/motion/SectionChrome";
 import { cn } from "@/lib/cn";
 
 /**
@@ -35,9 +36,11 @@ export function Section({
       id={id}
       className={cn("scroll-mt-24 pt-[var(--section-y)]", className)}
     >
-      <div className="shell">
-        <hr className="rule" />
-        <MicroLabel className="pt-5">{eyebrow}</MicroLabel>
+      <SectionChrome>
+        <hr data-sec-rule className="rule" />
+        <div data-sec-eyebrow className="pt-5">
+          <MicroLabel>{eyebrow}</MicroLabel>
+        </div>
         {heading ? (
           /* No `max-w`, and `text-wrap: wrap` overriding the base `balance`.
              Both were holding the line short: the 22ch cap ended the measure
@@ -47,11 +50,14 @@ export function Section({
              Experiences" early and left half the row empty. Greedy wrapping
              fills to the container, which is what the short headings were
              already doing by virtue of fitting. */
-          <h2 className="mt-6 text-[length:var(--text-2xl)] [text-wrap:wrap]">
+          <h2
+            data-sec-heading
+            className="mt-6 text-[length:var(--text-2xl)] [text-wrap:wrap]"
+          >
             {heading}
           </h2>
         ) : null}
-      </div>
+      </SectionChrome>
       {bleed ? children : <div className="shell mt-14">{children}</div>}
     </section>
   );

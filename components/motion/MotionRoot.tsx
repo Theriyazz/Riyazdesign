@@ -2,6 +2,7 @@
 
 import { SmoothScroll } from "./SmoothScroll";
 import { Cursor } from "./Cursor";
+import { CursorTrail } from "./CursorTrail";
 import { Preloader } from "./Preloader";
 import { TransitionProvider } from "./TransitionOverlay";
 
@@ -16,6 +17,7 @@ export function MotionRoot({ children }: { children: React.ReactNode }) {
     <TransitionProvider>
       <SmoothScroll />
       <Preloader />
+      <CursorTrail />
       <Cursor />
       {children}
     </TransitionProvider>

@@ -18,3 +18,12 @@ tsconfig.tsbuildinfo
 # Reference captures of other designers' live sites, kept for local research.
 # Not ours to publish, and 47MB that git history would hold onto forever.
 Inspirarion/
+
+# Local-only agent permissions. launch.json is shared on purpose (it is how the
+# dev server gets started); this one is per-machine.
+.claude/settings.local.json
+
+# Screenshots taken while checking layouts. Scratch, not deliverables — they
+# land at the repo root and would otherwise get swept up by `git add -A`.
+/home-*.png
+/case-*.png

@@ -22,21 +22,25 @@ export const caseStudySchema = z.object({
   subtitle: z.string().min(1),
   /** The paragraph the work card reveals on hover/focus. */
   detail: z.string().min(1),
+  /* The six meta cells, matching the two tables every case study source
+     carries: Role / Delivered / Tools, then Platform / Industry / Timeline. */
   role: z.array(z.string()).min(1),
-  timeline: z.string().min(1),
-  team: z.string().min(1),
-  platform: z.array(z.string()).min(1),
+  delivered: z.array(z.string()).min(1),
   tools: z.array(z.string()).min(1),
+  platform: z.array(z.string()).min(1),
+  industry: z.string().min(1),
+  timeline: z.string().min(1),
   cover: z.string().startsWith("/"),
-  /** Client brand color, scoped to this case study only. */
-  accent: z.string().regex(/^#[0-9a-fA-F]{6}$/),
-  outcome: z.string().min(1),
-  /** Omit entirely when there are no real numbers. Never invent them. */
-  metrics: z
-    .array(z.object({ value: z.string().min(1), label: z.string().min(1) }))
-    .min(2)
-    .max(4)
-    .optional(),
+  /**
+   * The opening hook, verbatim from the case study source — the line the page
+   * leads with under the meta bar.
+   *
+   * Was `outcome`, which invited a results claim the work cannot always make:
+   * CareerLogica is not live and has no conversion data, so a confident
+   * outcome sentence there was writing a number that does not exist. A hook is
+   * honest whatever stage the project is at.
+   */
+  headline: z.string().min(1),
   collaborator: z.string().optional(),
   year: z.string().min(4),
   featured: z.boolean().default(false),

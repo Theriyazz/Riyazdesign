@@ -14,7 +14,7 @@ export function NextProject({ meta }: { meta: CaseStudyMeta }) {
 
           <div className="mt-8 grid items-center gap-10 lg:grid-cols-[1fr_0.8fr]">
             <div>
-              <span className="mono block text-fg-subtle transition-colors duration-300 group-hover:text-[var(--accent)]">
+              <span className="mono block text-fg-muted transition-colors duration-300 group-hover:text-[var(--accent)]">
                 ({meta.index})
               </span>
               <h2 className="mt-4 text-[length:var(--text-2xl)]">{meta.title}</h2>

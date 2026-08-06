@@ -32,13 +32,11 @@ const JOBS = [
 ];
 
 /**
- * Tool ticker marks. Displayed at 84px (see ToolStack.tsx), well past the
- * 36x36 native size of the source PNGs — so unlike the photography above,
- * this job is an upscale, not a resize-down. There's no point pretending
- * otherwise with a placeholder (no extra detail is coming, and the file lands
- * before a placeholder could paint anyway); the honest move is to do the
- * upscale once, here, with a real resampler, instead of leaving the browser
- * to stretch a 36px file at display time.
+ * Tool ticker marks. Displayed at 84px (see ToolStack.tsx) and exported at 2x
+ * for retina, so 168px out of a 136x136 source — a mild upscale. Doing it here
+ * with lanczos3 beats leaving the browser to stretch the file at display time.
+ * No placeholder: no extra detail is coming, and the file lands before a
+ * placeholder could paint anyway.
  *
  * ICON_DISPLAY_PX * ICON_EXPORT_SCALE sets the exported size: scale 2 covers
  * retina at the current display size without re-running this for every future

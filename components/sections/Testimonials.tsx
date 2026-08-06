@@ -34,7 +34,10 @@ export function Testimonials() {
     >
       <RevealGroup className="grid gap-px border border-[var(--border)] bg-[var(--border)] lg:grid-cols-3">
         {QUOTES.map((q) => (
-          <figure key={q.name} className="flex flex-col justify-between gap-8 bg-bg p-7">
+          <figure
+            key={q.name}
+            className="hover-row flex flex-col justify-between gap-8 bg-bg p-7"
+          >
             <blockquote className="text-[length:var(--text-sm)] leading-relaxed text-fg-muted">
               {/* Curly quotes in the copy itself, so the mark is typographic
                   rather than a decorative glyph floating beside the text. */}

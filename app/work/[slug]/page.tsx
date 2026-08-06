@@ -9,9 +9,8 @@ import {
 } from "@/lib/content";
 import { site } from "@/lib/site";
 import { mdxComponents } from "@/components/case-study/mdx";
-import { MetaBar, MetricsBand } from "@/components/case-study/MetaBar";
+import { MetaBar } from "@/components/case-study/MetaBar";
 import { CaseHero } from "@/components/case-study/CaseHero";
-import { SectionRail } from "@/components/case-study/SectionRail";
 import { NextProject } from "@/components/case-study/NextProject";
 import { MicroLabel, Tag } from "@/components/primitives/MicroLabel";
 import { TransitionLink } from "@/components/motion/TransitionLink";
@@ -57,13 +56,19 @@ export default async function CaseStudyPage({
   const { meta } = study;
 
   return (
-    // --case-accent is scoped here: the client's real brand color lives inside
-    // the page without the site shell ever losing its own identity.
-    <article style={{ "--case-accent": meta.accent } as React.CSSProperties}>
+    // No per-case accent override. `--case-accent` stays pointed at `--accent`
+    // (see tokens.css), so the signal colour is the same on every page of the
+    // site. Tinting each case study with its client's brand colour sounded
+    // right and read as three unrelated sites — the accent is this portfolio's
+    // voice, not the client's.
+    // `data-page` is what dials the backdrop field down on these pages (see
+    // `--backdrop-strength` in globals.css). A marker rather than a route
+    // check, so the rule holds wherever a case study is rendered from.
+    <article data-page="case-study">
       <header className="shell pt-[calc(var(--space-32)+40px)]">
         <TransitionLink
           href="/#work"
-          className="mono inline-flex items-center gap-2 text-fg-subtle transition-colors duration-200 hover:text-fg"
+          className="mono inline-flex items-center gap-2 text-fg-muted transition-colors duration-200 hover:text-fg"
         >
           ← Back to work
         </TransitionLink>
@@ -77,7 +82,7 @@ export default async function CaseStudyPage({
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 lg:justify-end">
+          <div className="flex flex-wrap gap-2 lg:justify-end">
             {meta.role.map((r) => (
               <Tag key={r}>{r}</Tag>
             ))}
@@ -86,21 +91,24 @@ export default async function CaseStudyPage({
 
         <CaseHero slug={meta.slug} cover={meta.cover} title={meta.title} />
 
-        <div className="mt-14">
-          <MetaBar meta={meta} />
-        </div>
-
-        <p className="mt-14 max-w-[34ch] text-[length:var(--text-2xl)] leading-[1.06] tracking-[-0.03em]">
-          {meta.outcome}
+        {/* The hook, verbatim from the source. It leads because it is the one
+            line that makes a reader want the next one — a scope summary here
+            answers a question nobody has asked yet. */}
+        <p className="mt-16 max-w-[24ch] text-[length:var(--text-2xl)] leading-[1.08] tracking-[-0.03em] text-fg">
+          {meta.headline}
         </p>
 
-        <MetricsBand meta={meta} />
+        <div className="mt-16">
+          <MetaBar meta={meta} />
+        </div>
       </header>
 
-      <div className="shell mt-[var(--section-y)] grid gap-16 lg:grid-cols-[200px_1fr]">
-        <SectionRail containerId={BODY_ID} />
-
-        <div id={BODY_ID}>
+      {/* Single column. The sticky section rail that used to sit at 200px on
+          the left is gone — it was 12px uppercase mono in the faintest grey on
+          the site, which is exactly the kind of thing these pages are being
+          rebuilt to stop doing. */}
+      <div className="shell mt-[var(--section-y)]">
+        <div id={BODY_ID} className="mx-auto max-w-[820px]">
           <MDXRemote source={study.body} components={mdxComponents} />
         </div>
       </div>

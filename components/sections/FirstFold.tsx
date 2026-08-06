@@ -1,16 +1,16 @@
-import { RevealText } from "@/components/motion/RevealText";
+import { RevealSheen } from "@/components/motion/RevealText";
 
 /**
- * The positioning statement, set large and filled word-by-word on scroll.
+ * The positioning statement, set large and resolved out of a blur on scroll.
  *
  * It is the only place on the page where type is both this big and this long,
  * which is what makes the scrub read as emphasis rather than as an effect.
  *
- * Both paragraphs run at the same display size and edge to edge in the shell:
- * the block is read as one statement, so a size step between its halves would
- * split it into a headline plus a caption. Hierarchy is carried by color
- * (--fg then --fg-muted) instead, which keeps the scrub reading as a single
- * continuous fill down the whole block.
+ * Both paragraphs run at the same display size, the same colour, and edge to
+ * edge in the shell: the block is one statement, so any step between its
+ * halves — size or colour — would split it into a headline plus a caption.
+ * Hierarchy is carried by the fill itself, which travels the whole block in a
+ * single pass and so needs the two halves to look identical at rest.
  */
 
 /* No max-width and `text-wrap: wrap` — the base `p` rule sets `pretty`, which
@@ -24,16 +24,21 @@ export function FirstFold() {
   return (
     <section className="border-y border-[var(--border)] py-[var(--section-y)]">
       <div className="shell">
-        <RevealText as="p" className={statement}>
-          I&rsquo;m Riyaz — a UX designer with 3+ years across SaaS platforms,
-          EdTech, career assessment tools, and non-profit websites.
-        </RevealText>
+        {/* One wrapper, not one per paragraph: `RevealSheen` puts every word
+            inside it on a single timeline, so the second paragraph cannot
+            start filling until the first has finished. */}
+        <RevealSheen>
+          <p data-sheen-line className={statement}>
+            I&rsquo;m Riyaz — a UX designer with 3+ years across SaaS platforms,
+            EdTech, career assessment tools, and non-profit websites.
+          </p>
 
-        <RevealText as="p" className={`mt-10 ${statement} text-fg-muted`}>
-          Most recently a 140+ screen bilingual career-guidance platform,
-          designed solo from research through handoff. Teams bring me the
-          problem. I own it end to end.
-        </RevealText>
+          <p data-sheen-line className={`mt-10 ${statement}`}>
+            Most recently a 140+ screen bilingual career-guidance platform,
+            designed solo from research through handoff. Teams bring me the
+            problem. I own it end to end.
+          </p>
+        </RevealSheen>
       </div>
     </section>
   );

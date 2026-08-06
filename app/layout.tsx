@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 
 import { site } from "@/lib/site";
 import { MotionRoot } from "@/components/motion/MotionRoot";
+import { BackdropField } from "@/components/layout/BackdropField";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 
@@ -76,8 +77,13 @@ export const viewport: Viewport = {
  *    never gets a blank page.
  *  - `data-motion` is set here rather than in React so the very first frame
  *    already respects the preference.
+ *  - `data-preload` decides the intro *before* anything paints. Deciding it in
+ *    React instead meant the site painted first and the curtain dropped on top
+ *    of it a beat later — backwards, and very visible now the curtain is light
+ *    and the site is dark. The session key is claimed here too, so a back-nav
+ *    can never replay it.
  */
-const BOOT_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');try{d.dataset.motion=window.matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'full';}catch(e){d.dataset.motion='reduced';}})();`;
+const BOOT_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');try{d.dataset.motion=window.matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'full';}catch(e){d.dataset.motion='reduced';}try{if(d.dataset.motion==='full'&&!sessionStorage.getItem('rm:preloaded')){sessionStorage.setItem('rm:preloaded','1');d.dataset.preload='1';}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -94,6 +100,10 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
       </head>
       <body>
+        {/* First child, so it is the first thing painted and the last thing
+            anything else has to think about. It is fixed and `z-index: -1`, so
+            its position in the tree is about reading order, not stacking. */}
+        <BackdropField />
         <a className="skip-link" href="#main">
           Skip to content
         </a>

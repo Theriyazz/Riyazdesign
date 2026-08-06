@@ -1,4 +1,5 @@
 import { MicroLabel } from "@/components/primitives/MicroLabel";
+import { SectionChrome } from "@/components/motion/SectionChrome";
 
 /** Display size of a single mark. Exported at ICON_EXPORT_SCALE * this, in
  *  scripts/optimize-images.mjs — keep the two in sync if this changes. */
@@ -82,10 +83,17 @@ function Half() {
 export function ToolStack() {
   return (
     <section className="pt-[var(--section-y)]">
-      <div className="shell">
-        <hr className="rule" />
-        <MicroLabel className="pt-5">Tools I can&rsquo;t live without</MicroLabel>
-      </div>
+      {/* Through `SectionChrome` rather than a bare rule + label. This section
+          builds its own header instead of going through `<Section>` (the
+          ticker needs to escape the shell), which is why it was the one
+          section on the page whose rule never drew and whose eyebrow never
+          lifted. The attribute hooks are what the chrome animates. */}
+      <SectionChrome>
+        <hr data-sec-rule className="rule" />
+        <div data-sec-eyebrow className="pt-5">
+          <MicroLabel>Tools I can&rsquo;t live without</MicroLabel>
+        </div>
+      </SectionChrome>
 
       {/*
         The names, once, for anyone not reading this with their eyes. The strip

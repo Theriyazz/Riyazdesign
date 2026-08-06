@@ -14,6 +14,29 @@ const check = (label, cond, detail = "") => {
   console.log(`  [${cond ? "PASS" : "FAIL"}] ${label}${detail ? " — " + detail : ""}`);
 };
 
+/**
+ * Block until the first-visit intro has released the page.
+ *
+ * The preloader deliberately locks scroll — it stops Lenis and holds
+ * `overflow: hidden` — for as long as it runs, which on a throttled headless
+ * profile is around five seconds. Any test that clicks or scrolls before that
+ * is measuring a page that is *designed* not to move, and the failure it
+ * reports is the harness's, not the site's.
+ *
+ * Keyed off `data-preload`, which the boot script sets before first paint and
+ * the preloader deletes on completion.
+ */
+const waitForIntro = async (p, timeout = 12000) => {
+  await p
+    .waitForFunction(() => !document.documentElement.dataset.preload, {
+      timeout,
+      polling: 100,
+    })
+    .catch(() => {});
+  // One extra beat for the curtain's exit tween to finish unwinding.
+  await new Promise((r) => setTimeout(r, 400));
+};
+
 const browser = await puppeteer.launch({
   executablePath: CHROME,
   headless: "new",
@@ -68,7 +91,8 @@ console.log("\n== ANCHOR NAV ==");
   const p = await browser.newPage();
   await p.setViewport({ width: 1440, height: 900 });
   await p.goto(BASE + "/", { waitUntil: "networkidle0" });
-  await new Promise((r) => setTimeout(r, 2200));
+  await waitForIntro(p);
+  await new Promise((r) => setTimeout(r, 600));
 
   for (const label of ["Work", "About", "Contact"]) {
     await p.evaluate((l) => {
@@ -181,7 +205,16 @@ console.log("\n== REDUCED MOTION ==");
   await new Promise((r) => setTimeout(r, 1500));
   const s = await p.evaluate(() => ({
     motion: document.documentElement.dataset.motion,
-    preloader: !!document.querySelector('[class*="z-[100]"]'),
+    // Presence is no longer the question. The curtain is server-rendered so it
+    // occupies the first painted frame on a first visit, and CSS decides
+    // whether it is ever shown — under reduced motion the boot script never
+    // sets `data-preload`, so it stays `display: none`. Asserting it is absent
+    // from the DOM would fail on a page that is behaving correctly; assert it
+    // cannot be seen instead.
+    preloader: (() => {
+      const el = document.querySelector(".preloader");
+      return el ? getComputedStyle(el).display !== "none" : false;
+    })(),
     cursor: !!document.querySelector(".cursor-ring"),
     lenis: document.documentElement.classList.contains("lenis"),
     dimmed: Array.from(document.querySelectorAll(".reveal-word")).filter(
@@ -192,7 +225,7 @@ console.log("\n== REDUCED MOTION ==");
     ).length,
   }));
   check("data-motion is 'reduced'", s.motion === "reduced");
-  check("no preloader", !s.preloader);
+  check("preloader never shown", !s.preloader);
   check("no custom cursor", !s.cursor);
   check("no Lenis", !s.lenis);
   check("no dimmed reveal words", s.dimmed === 0, `${s.dimmed}`);
@@ -223,10 +256,24 @@ console.log("\n== NO JAVASCRIPT ==");
   check("anchor links have real hrefs", home.anchors >= 3, `${home.anchors}`);
 
   await p.goto(BASE + "/work/pecuc", { waitUntil: "load" });
-  const cs = await p.evaluate(() =>
-    document.body.innerText.toLowerCase().includes("design decisions")
+  // Structure, not a phrase. This used to grep for "design decisions", a
+  // heading that existed only in the original skeleton copy — so the check
+  // went red the moment the real case study was written, while the page was
+  // perfectly fine. What actually matters without JS is that the MDX body
+  // server-rendered: a real container, real headings, real prose.
+  const cs = await p.evaluate(() => {
+    const body = document.getElementById("case-body");
+    return {
+      hasBody: !!body,
+      headings: body ? body.querySelectorAll("h2").length : 0,
+      chars: body ? body.innerText.trim().length : 0,
+    };
+  });
+  check(
+    "case study prose present",
+    cs.hasBody && cs.headings >= 3 && cs.chars > 2000,
+    `h2=${cs.headings} chars=${cs.chars}`
   );
-  check("case study prose present", cs);
   await p.close();
 }
 

@@ -7,26 +7,46 @@ import Link from "next/link";
 import { AnchorLink } from "./AnchorLink";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
+import { gsap } from "@/lib/gsap";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+
+/** Long enough for the panel's fade-out to finish before it leaves the DOM. */
+const PANEL_EXIT_MS = 200;
 
 export function Nav() {
   const pathname = usePathname();
   const onHome = pathname === "/";
+  const reduced = useReducedMotion();
 
   const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [active, setActive] = useState<string>("");
   const lastY = useRef(0);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const markerRef = useRef<HTMLSpanElement>(null);
 
   // Hide on scroll down, reveal on scroll up. Reading the work is the point of
   // the page; the nav shouldn't sit on top of it.
+  //
+  // The frost threshold is deliberately far below the hide threshold: the bar
+  // has to be legible from the moment content starts passing under it, which
+  // happens long before it ever moves.
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setHidden(y > 120 && y > lastY.current);
+      setScrolled(y > 16);
       lastY.current = y;
     };
+    // Run once: arriving at /#work, or a restored scroll position, lands the
+    // page mid-document with no scroll event to follow — the bar would sit
+    // transparent over content until the visitor happened to scroll.
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -55,7 +75,65 @@ export function Nav() {
     return () => io.disconnect();
   }, [onHome]);
 
+  // The indicator is a single 1px element that slides between links rather
+  // than one span per link appearing and disappearing. Width is carried by
+  // scaleX so nothing but a transform animates.
+  useEffect(() => {
+    const marker = markerRef.current;
+    const list = listRef.current;
+    if (!marker || !list) return;
+
+    const target = active
+      ? list.querySelector<HTMLElement>(`[data-nav-item="${active}"]`)
+      : null;
+
+    if (!target) {
+      gsap.to(marker, { opacity: 0, duration: 0.2 });
+      return;
+    }
+
+    // The rule sits under the label, not the pill's padding.
+    const inset = 12;
+    const x = target.offsetLeft + inset;
+    const width = Math.max(target.offsetWidth - inset * 2, 0);
+
+    if (reduced || gsap.getProperty(marker, "opacity") === 0) {
+      gsap.set(marker, { x, scaleX: width });
+      gsap.to(marker, { opacity: 1, duration: 0.2 });
+      return;
+    }
+
+    gsap.to(marker, {
+      x,
+      scaleX: width,
+      opacity: 1,
+      duration: 0.34,
+      ease: "power3.out",
+    });
+  }, [active, reduced]);
+
   useEffect(() => setOpen(false), [pathname]);
+
+  // Two states, not one: `mounted` controls `hidden` (which is what takes the
+  // panel out of the accessibility tree and the tab order), `visible` controls
+  // the fade. They're separated by a paint so the transition has a frame at
+  // the closed state to move from — flipping both at once would just snap.
+  useEffect(() => {
+    if (open) {
+      setMounted(true);
+      let inner = 0;
+      const outer = requestAnimationFrame(() => {
+        inner = requestAnimationFrame(() => setVisible(true));
+      });
+      return () => {
+        cancelAnimationFrame(outer);
+        cancelAnimationFrame(inner);
+      };
+    }
+    setVisible(false);
+    const t = setTimeout(() => setMounted(false), PANEL_EXIT_MS);
+    return () => clearTimeout(t);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -114,8 +192,11 @@ export function Nav() {
       <div
         ref={panelRef}
         id="mobile-nav"
-        hidden={!open}
-        className="fixed inset-0 z-[59] flex flex-col justify-center bg-bg px-[var(--gutter)] md:hidden"
+        hidden={!mounted}
+        className={cn(
+          "fixed inset-0 z-[59] flex flex-col justify-center bg-bg px-[var(--gutter)] transition-[opacity,transform] duration-200 ease-[var(--ease-out)] md:hidden",
+          visible ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+        )}
       >
         <ul className="flex flex-col gap-2">
           {site.nav.map((item) => (
@@ -147,11 +228,21 @@ export function Nav() {
       </div>
 
       <header
+        data-scrolled={scrolled ? "true" : undefined}
         className={cn(
           "fixed inset-x-0 top-0 z-[60] transition-transform duration-500 ease-[var(--ease-out)]",
           hidden && !open ? "-translate-y-full" : "translate-y-0"
         )}
       >
+        {/* The glass, as its own full-bleed layer rather than a background on
+            <header>. It spans the whole bar — wordmark, pill and Resume button
+            sit on one surface — and being a separate element lets it fade in
+            without the bar's transform having to animate anything else.
+
+            No z-index: <nav> below is `relative` and later in the DOM, so it
+            already paints on top. */}
+        <div aria-hidden className="nav-frost absolute inset-0" />
+
         <nav
           aria-label="Primary"
           className="shell relative flex items-center justify-between gap-4 py-5"
@@ -162,11 +253,22 @@ export function Nav() {
 
           {/* Below `md` these three labels plus the resume button crowd a 375px
               bar, so they move into a panel. */}
-          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-raised)_82%,transparent)] px-2 py-1.5 backdrop-blur-md md:flex">
+          <ul
+            ref={listRef}
+            className="nav-pill absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-raised)_82%,transparent)] px-2 py-1.5 backdrop-blur-md md:flex"
+          >
+            {/* One indicator for the whole list. It's 1px wide and stretched by
+                scaleX to the active label, so the slide is transform-only. */}
+            <span
+              ref={markerRef}
+              aria-hidden
+              className="pointer-events-none absolute bottom-1 left-0 h-px w-px origin-left opacity-0"
+              style={{ background: "var(--accent)" }}
+            />
             {site.nav.map((item) => {
               const isActive = active === item.hash;
               return (
-                <li key={item.hash}>
+                <li key={item.hash} data-nav-item={item.hash}>
                   <AnchorLink
                     hash={item.hash}
                     className={cn(
@@ -175,13 +277,6 @@ export function Nav() {
                     )}
                   >
                     {item.label}
-                    {isActive ? (
-                      <span
-                        aria-hidden
-                        className="absolute inset-x-3 -bottom-px h-px"
-                        style={{ background: "var(--accent)" }}
-                      />
-                    ) : null}
                   </AnchorLink>
                 </li>
               );

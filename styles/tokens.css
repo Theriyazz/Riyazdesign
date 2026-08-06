@@ -23,11 +23,17 @@
      The 11px mono labels use this, so it is normal text, not large text. */
   --paper-500: #7a7a7e;
 
-  /* Signal — sampled from the red window light in Profile Riyaz.png.
-     6.03:1 on --ink-950, so it clears WCAG AA for normal text. */
-  --signal-500: #ff4d2e;
-  --signal-600: #e63e20;
-  --signal-400: #ff7358;
+  /* Signal — lime candy pearl. 16.2:1 on --ink-950, so it clears WCAG AAA for
+     normal text with room to spare, and it is legible as a 1px rule or a 6px
+     square where the old warm red was only just holding on at 6.03:1.
+
+     500 is the signal itself. 600 is a step down in lightness for the button
+     chip's hover — the chip carries --ink-950 text, so the hover state has to
+     stay dark enough to keep that text readable (11.0:1). 400 is the lighter
+     tint, used where the signal sits on a raised surface rather than the page. */
+  --signal-500: #aaff00;
+  --signal-600: #8fd400;
+  --signal-400: #c6ff5c;
 
   /* -- LAYER 2: SEMANTIC ------------------------------------------------- */
 
@@ -47,9 +53,10 @@
   --accent-soft: var(--signal-400);
   --focus: var(--signal-500);
 
-  /* Per-case-study tint. Overridden inline on the case study root so a
-     client's real brand color can live inside the page without the site
-     shell ever losing its own identity. Defaults to the site accent. */
+  /* Kept as an indirection so the case study components do not all have to
+     change if this ever becomes per-page again. It does not, today: tinting
+     each case study with its client's brand colour read as three unrelated
+     sites, so every page uses the one site signal. */
   --case-accent: var(--accent);
 
   /* -- Spacing: 4px base ------------------------------------------------- */
@@ -71,7 +78,15 @@
   --section-y: clamp(96px, 14vh, 200px);
 
   /* -- Type scale: fluid, seven steps ------------------------------------ */
-  --text-micro: 12px;
+  /* Mono only, and mono is now only chips and the back button. Raised from
+     12px: at 12 it was the smallest type on the site and it was carrying
+     captions, labels and cites — things people actually read. Those moved to
+     --text-label; this is what is left, and it is UI furniture. */
+  --text-micro: 14px;
+  /* Labels, captions, cites, eyebrows, metric labels. Geist, not mono, and
+     never below 16 — a case study is a reading surface before it is a layout,
+     and everything on it that carries meaning has to clear that floor. */
+  --text-label: 16px;
   /* Was a separate 12px. Pointed at --text-micro rather than repeating the
      number: two tokens holding the same literal is how a scale drifts apart
      the next time one of them is nudged. */

@@ -1,4 +1,5 @@
 import { Section } from "./Section";
+import { RevealGroup } from "@/components/motion/RevealText";
 import { SplitButton } from "@/components/primitives/SplitButton";
 import { site } from "@/lib/site";
 
@@ -43,11 +44,15 @@ export function Experience() {
         </>
       }
     >
-      <ol className="border-t border-[var(--border)]">
+      <RevealGroup as="ol" className="border-t border-[var(--border)]" y={20}>
         {ROLES.map((r) => (
           <li
             key={r.from + r.period}
-            className="grid gap-x-8 gap-y-3 border-b border-[var(--border)] py-8 md:grid-cols-[1fr_1.1fr] md:items-start"
+            // Padded inline as well as vertically: the hover tint needs to
+            // reach past the text, or it reads as a highlight on the words
+            // rather than as the row responding. Negative margin keeps the
+            // text on the same left edge it sat on before.
+            className="hover-row -mx-5 grid gap-x-8 gap-y-3 border-b border-[var(--border)] px-5 py-8 md:grid-cols-[1fr_1.1fr] md:items-start"
           >
             <div>
               <h3 className="text-[length:var(--text-lg)] leading-tight">
@@ -75,7 +80,7 @@ export function Experience() {
             </p>
           </li>
         ))}
-      </ol>
+      </RevealGroup>
 
       <SplitButton href={site.resume} download emphasis className="mt-10">
         Get my resume

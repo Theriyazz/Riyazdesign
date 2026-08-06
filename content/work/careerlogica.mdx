@@ -3,89 +3,227 @@ slug: careerlogica
 index: "001"
 title: CareerLogica
 subtitle: Bilingual career-guidance SaaS platform
-detail: 140+ screens across four user roles, full English/Arabic with RTL support. I owned research, information architecture, the design system, and every screen.
-role: [EdTech SaaS, Design system, Bilingual / RTL, End-to-end]
-timeline: "2025 · TODO weeks"
-team: "Solo designer · TODO engineers"
-platform: [Web, Responsive]
-tools: [Figma, FigJam, Notion]
+detail: 140+ screens across five platform roles, full English/Arabic with RTL support. I owned research, information architecture, the design system, and every screen.
+role: [Research, Strategy, UI design, Prototyping]
+delivered: [UX/UI design, Product strategy, Dashboard design]
+tools: [Figma, FigJam, Figma Make, Claude AI, Antigravity]
+platform: [Web — desktop + mobile, Responsive, Bilingual RTL/LTR]
+industry: EdTech
+timeline: 3 months
 cover: /work/careerlogica/cover.avif
-accent: "#1668E3"
-outcome: "TODO — one sentence, past tense, with the number in it."
-year: "2025"
+headline: When a Grade 11 student in Dubai asks "what career should I choose?" the answer shouldn't be a guess.
+year: "2026"
 featured: true
 order: 1
 draft: false
 ---
 
-<Callout>
-  **Riyaz — this file is the skeleton, not the copy.** Every `TODO` is a slot
-  for something you already know. The section order below is the one recruiters
-  scan fastest; keep it. Delete any `<Decision>` you don't have a real tradeoff
-  for — three honest ones beat eight padded ones.
-</Callout>
-
 ## Context
 
-TODO — What CareerLogica is and who uses it. You have four user roles and two
-languages; name them concretely. The interesting design problem here is that
-students, parents, schools and counsellors all look at the same result and want
-different things from it — lead with that.
+I designed a psychometric-first career guidance platform for the UAE and South Asian markets — from blank canvas to a full marketing website and multi-role dashboards, bilingual in English and Arabic.
 
-## Problem
+CareerLogica is an early-stage venture built on one observation: students across the region pick their career stream under pressure from family, peers and assumption, with almost no data about themselves in the decision. When I came on it was a founder, a vision and a detailed brief — no product, no prior design, no validated flows. Every screen in this case study is the first version of that screen that has ever existed.
 
-TODO — The specific breakdown, with evidence. Not "the UX was poor." Something
-like: "counsellors were exporting results to spreadsheets because the dashboard
-couldn't answer the one question they actually had."
+<Deliverables items="Marketing website · 3 login flows · RTL/LTR design system · Figma prototype · Student dashboard · Counsellor dashboard · School dashboard · Admin dashboard · Component library" />
 
-<ImageBlock src="/work/careerlogica/01.avif" alt="TODO — describe what the image shows" caption="TODO" />
+<Callout>
+  This isn't a polished retrospective written after launch. It's a working
+  record of a live project currently in development. Where I have proof, I've
+  shown it. Where I made a judgement call without data, I've said so.
+</Callout>
 
-## Research
+## 01 — The problem worth solving
 
-TODO — What you did, how many people, and what you learned that you didn't
-already believe. The last part is what separates research from decoration.
+When I got this brief, one question kept me up: why does this need to exist at all?
 
-## Architecture
+Every year, thousands of UAE students choose their career stream under pressure from parents, peers and assumptions — not from data, not from science, not from any real understanding of who they are. Three groups were being failed at once, in three different ways.
 
-TODO — 140 screens across four roles is a structure problem before it's a
-screen problem. Show the map. This is where a systems thinker gets to show the
-system.
+<CardGrid>
+  <Card eyebrow="For students" title="No credible tool to decide with">
+    No personalised way to connect interests to actual careers — before making a decision they'll live with for years.
+  </Card>
+  <Card eyebrow="For counsellors" title="Five tools doing one job">
+    Managing an entire practice across WhatsApp, email, Google Drive, a calendar and a spreadsheet.
+  </Card>
+  <Card eyebrow="For schools" title="Zero visibility">
+    No tracking, no reporting, no oversight of what happens between a counsellor and their students. All of it manual.
+  </Card>
+</CardGrid>
 
-<ImageBlock src="/work/careerlogica/02.avif" alt="TODO" caption="TODO" />
+The challenge wasn't designing three separate tools. It was designing one coherent system that served four completely different mental models at the same time.
 
-## Design decisions
+### Scope and approach
+
+No existing platform. The founder came to me with a vision and a detailed brief, but no product, no prior design, no validated flows. I was brought on as the sole freelance UX/UI designer: research, information architecture, wireframing, UI design, the design system, and handoff. No junior support. Every decision in this document traces back to me.
+
+## 02 — What I learned before I designed anything
+
+I'd never designed for the UAE. I didn't know how the education system worked, how families made these decisions, or what a Grade 11 student in Dubai actually worries about. So before anything else, I went and found out.
+
+### What the competitive audit told me
+
+<CardGrid>
+  <Card title="ISMOJO">
+    Psychometric testing buried behind a confusing flow.
+  </Card>
+  <Card title="Unifrog / IDP">
+    Study-abroad focused — not a direct competitor, but it set the bar for what students already expect from a guidance tool.
+  </Card>
+  <Card title="GemsForLife / UniHawk">
+    Surface-level marketing pages. No real product depth underneath.
+  </Card>
+</CardGrid>
+
+### Three findings that changed the design
+
+<Findings>
+  <Finding n="01" title="The paywall was in the wrong place">
+    Almost every competitor let users sign up, complete onboarding, then hit a payment wall at the final step before the dashboard. Users invested effort, then got blocked. That's not a monetisation strategy — it's a trust problem disguised as one.
+  </Finding>
+  <Finding n="02" title="Onboarding was exhausting people before they started">
+    Long forms, dozens of small fields crammed onto a single page. Users were mentally spent before completing the first section. High cognitive load at exactly the moment you're asking someone to be honest about their future.
+  </Finding>
+  <Finding n="03" title="Nobody was designing for the other three roles">
+    Every competitor optimised for the student. Counsellors, schools and administrators were an afterthought — which is why counsellors were running practices out of five disconnected tools.
+  </Finding>
+</Findings>
+
+<ImageBlock src="/work/careerlogica/01.avif" alt="Student persona and the platform sitemap" caption="One persona and the sitemap: four roles mapped against a single information architecture." />
+
+## 03 — The decision that shaped the product
+
+Every competitor gated the product behind a paywall. I argued for the opposite: let people in, let them see what the platform actually knows about them, and ask for money only after that value is undeniable.
+
+This wasn't a guess. I'd implemented a freemium model at CareerNaksha and watched it work — users who experienced the assessment first converted better and complained less than users asked to pay upfront.
 
 <Decision
-  decision="TODO — what you chose, stated as an action"
-  why="TODO — the user or business reason, ideally tied to a research finding above"
-  tradeoff="TODO — what this cost. Every real decision costs something."
+  decision="Free until the value is proven, not gated behind a paywall"
+  why="Payment at the last step destroys trust. When someone completes a 15-minute assessment and then hits a paywall, the emotional read isn't 'this is valuable' — it's 'I've been tricked.' Moving the ask to after the first meaningful result means the user is deciding whether to buy more of something good, not whether to gamble on something unknown. Demonstrated value converts better than promised value: a locked dashboard is a promise, a partial result is proof."
+  tradeoff="Revenue arrives later in the funnel, and the free tier has to be generous enough to be genuinely convincing — a harder design problem than a paywall at step one. It also had to carry the institutional products: schools won't buy a platform their students haven't used, so free student access is the acquisition channel for the counsellor and school tiers."
 />
 
-<Decision
-  decision="TODO — the RTL decision belongs here"
-  why="TODO — Arabic isn't a translation layer, it's a mirrored layout with different type metrics"
-  tradeoff="TODO"
+### 4-step onboarding, named after what it builds
+
+The competitor research showed me what not to do: everything on one page, dozens of fields, no sense of progress. I split onboarding into four steps, each with a name that tells the student what they're doing and why — not "Step 2 of 4", but a stage in understanding themselves.
+
+<Steps>
+  <Step n="01" name="Identity">Personal details — who you are.</Step>
+  <Step n="02" name="Scholar">Educational details — where you are academically.</Step>
+  <Step n="03" name="Explorer">Career preferences — what you're drawn to.</Step>
+  <Step n="04" name="Achiever">Final goal and purpose — what you're actually trying to reach.</Step>
+</Steps>
+
+Naming the steps did two things. It reduced the perceived length of the form, because four named stages read as shorter than one long page. And it reframed the task — the student isn't filling in a form, they're building a profile of themselves.
+
+<Principle name="Chunking (Miller's law)">
+  One long form asks the brain to hold too much at once. Four named steps break the same task into pieces the brain can process one at a time — each with its own small sense of completion.
+</Principle>
+
+<Principle name="Endowed progress effect">
+  People are more likely to finish a task when they believe they've already made headway on it — even a fake head start increases completion. The journey bar opens at 2/4 rather than 0/4 for exactly this reason: a blank bar reads as a big ask, a head start reads as momentum already in motion.
+</Principle>
+
+<ImageBlock src="/work/careerlogica/02.avif" alt="The four-step onboarding flow with the progress bar opening at two of four" caption="Identity → Scholar → Explorer → Achiever, with the journey bar starting at 2/4." />
+
+## 04 — The marketing website
+
+A 9–10 page marketing website. This was the first piece approved, and it set the visual language everything else inherited.
+
+<ImageBlock src="/work/careerlogica/03.avif" alt="Full-page scroll of the CareerLogica marketing homepage" caption="The homepage, full scroll — the approved direction the rest of the product inherited." wide />
+
+### Three separate signup flows, not one with branches
+
+<CardGrid>
+  <Card title="Student">
+    Academic details, interests, and what they're actually looking for. Conversational, low-pressure.
+  </Card>
+  <Card title="Counsellor">
+    Experience, expertise, credentials. A professional register — this person is applying, not signing up.
+  </Card>
+  <Card title="School">
+    Institutional details and the structure of who they oversee.
+  </Card>
+</CardGrid>
+
+## 05 — One system, four products
+
+A student, a counsellor, a school administrator and a platform admin want opposite things from the same product. The student wants clarity and encouragement. The counsellor wants throughput. The school wants oversight. The admin wants control.
+
+One component library. One set of tokens. Density and tone do the differentiating — the student dashboard spacious and encouraging, the counsellor dashboard dense and built for volume. Same parts, different rhythm.
+
+<ImageBlock src="/work/careerlogica/04.avif" alt="Student dashboard showing the plan status and upgrade card" caption="Plan status stays visible year-round, and the upsell names exactly what's locked — counselling, full report, 20,000+ careers — instead of a generic 'go premium'." />
+
+<ImageBlock src="/work/careerlogica/05.avif" alt="Counsellor list in the student dashboard before any booking has been made" caption="Recommended counsellors appear before the student has booked anyone — ratings, specialty and review count all visible. An empty state invites nothing; a populated one invites a decision." />
+
+## 06 — Building it in both directions
+
+I'd never designed a bilingual product. I assumed Arabic support meant swapping text and mirroring layout. That lasted about a day.
+
+Every element had to be reconsidered from the perspective of someone who reads right to left — nav bar, section order, button placement, icon direction, where the eye lands first, how a photo reads when its subject now faces the wrong way.
+
+It forced me to stop designing from habit. English had a thousand prior instincts to lean on; Arabic had none, so every call had to be reasoned from scratch — which made the English version sharper too.
+
+Bilingual isn't a feature bolted on at the end. It's a constraint that belongs in the design system from component one, or you build everything twice.
+
+<Compare
+  before="/work/careerlogica/en.avif"
+  after="/work/careerlogica/ar.avif"
+  beforeAlt="English left-to-right homepage layout"
+  afterAlt="Arabic right-to-left homepage layout, fully mirrored"
+  beforeLabel="English — LTR"
+  afterLabel="Arabic — RTL"
+  caption="Not a translation layer: mirrored structure, re-composed imagery, and different type metrics on the same components."
 />
 
-## The system
+## 07 — What shipped
 
-TODO — Components, tokens, states. This is the section that proves you build
-systems rather than screens. Show the variants, the states, the rules for when
-each is used — and how the system handled both writing directions.
+The product isn't live, so there are no conversion numbers and no retention data. Here's what is real.
 
-<SystemGrid>
-  <SystemItem label="TODO" value="TODO" />
-  <SystemItem label="TODO" value="TODO" />
-  <SystemItem label="TODO" value="TODO" />
-</SystemGrid>
+<SpecList>
+  <Spec label="Scope">140+ screens across five platform roles. Solo — a scope that typically needs a team of two to three.</Spec>
+  <Spec label="System">A complete bilingual EN/AR design system, with RTL/LTR built in from day one rather than retrofitted.</Spec>
+  <Spec label="Approval">The client approved the final direction after the first major presentation, with no structural revisions. For a 0-to-1 product this complex, that's a real signal.</Spec>
+  <Spec label="Timeline">Three months, solo. Not faster work — fewer wrong turns. Owning the problem end to end meant fewer reversals later.</Spec>
+</SpecList>
 
-## Outcome
+### Targets I designed against
 
-TODO — Prose around the metrics. If you don't have hard numbers, say what you
-do have honestly and delete the `metrics` block from the frontmatter. An honest
-gap reads better than an invented number.
+| Target | Number | What it means |
+|---|---|---|
+| Conversion | 8–12% | Free-to-paid target, against the 2–5% typical of fully gated platforms |
+| Onboarding completion | 70%+ | Target for the 4-step flow, against 40–60% typical for single-page forms |
+| Assessment volume | 200,000+ | The founder's three-year goal for completed assessments — the scale this is built for |
 
-## Reflection
+### Working with a non-technical founder
 
-TODO — What you'd change. Hiring managers read this section for self-awareness;
-it's worth more than another screenshot.
+The client knew exactly what he wanted the business to do, and very little about how products get built. That turned out to help — I had to argue every real decision in business terms, not design terms. Why the paywall moved. Why onboarding split into four. Why RTL couldn't wait.
+
+Once the reasoning landed, he stopped reviewing pixels and started trusting direction. That's when the project moved fast.
+
+### What I'd do differently
+
+<Takeaways>
+  <Takeaway title="Test with real students">
+    Every call was validated with the founder, not the people who'd use it. He knew the market and was usually right, but agreement isn't validation. Next time: five student sessions before locking onboarding.
+  </Takeaway>
+  <Takeaway title="Build RTL into the system on day one">
+    I designed English-first and adapted Arabic after. That cost rework on components that should have been direction-agnostic from the start.
+  </Takeaway>
+  <Takeaway title="Push back harder on scope in month one">
+    The extra month wasn't slow work — it was scope growing without renegotiation. I should have flagged it in week three instead of absorbing it.
+  </Takeaway>
+</Takeaways>
+
+### What this project taught me
+
+<Takeaways>
+  <Takeaway title="Ownership means the failures too">
+    Solo, no team, no senior to check against. Stuck meant reasoning it out alone and living with the answer.
+  </Takeaway>
+  <Takeaway title="Strategy beats surface">
+    The best work happened before Figma opened — the freemium argument, the onboarding structure, understanding how UAE families actually decide. The interfaces were the easy part.
+  </Takeaway>
+  <Takeaway title="An unfamiliar market is a research problem first">
+    I had to learn the UAE education system and how families weigh options before a single screen made sense. Domain understanding wasn't prep — it was the work.
+  </Takeaway>
+</Takeaways>
