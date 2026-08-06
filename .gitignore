@@ -27,3 +27,6 @@ Inspirarion/
 # land at the repo root and would otherwise get swept up by `git add -A`.
 /home-*.png
 /case-*.png
+
+# Snapshots and console logs written by the Playwright MCP browser.
+.playwright-mcp/
