@@ -69,10 +69,15 @@ Every case study page has these three, regardless of body content.
 | Slot | Where | Display @1440 | Ratio | Source needed |
 |------|-------|---------------|-------|---------------|
 | Hero | Under the title block | 1280×580 | ~2.2:1 crop | 2560×1160 |
-| Body image, standard | Inside the 820px reading column | 820 wide | any (height free) | 1640 wide |
-| Body image, `wide` | Breaks out 8vw each side | 1050 wide @1440, up to 1280 | any | 2560 wide |
+| Body image | Inside the 820px reading column | 820 wide | any (height free) | 1640 wide |
 | Compare panel (×2) | Two-up grid inside the column | 398 wide each | any | 840 wide |
 | Next project cover | Bottom of the page | 550×344 | 16:10 crop | 1100×688 |
+
+Every body image is the width of the reading column — the same left and right
+edge as the paragraphs. There is no wider variant. There was one, breaking out
+8vw a side, but it landed on no edge the page has (at 1280px it sat 56px inside
+the gutter and 103px outside the text) so it read as an image that had escaped
+rather than one placed deliberately.
 
 Body images use `h-auto w-full` — they keep their own aspect ratio and are never
 cropped. Full-page scroll captures are fine here however tall they run. The
@@ -90,7 +95,7 @@ Cover live. **7 body images missing.**
 | 1.0 | Hero | `/work/careerlogica/cover.avif` | Hero | 1280×580 | 2560×1160 | Live |
 | 1.1 | 02 — What I learned before I designed anything | `/work/careerlogica/01.avif` | Standard | 820 | 1640 | Student persona and the platform sitemap — four roles mapped against a single information architecture |
 | 1.2 | 03 — The decision that shaped the product | `/work/careerlogica/02.avif` | Standard | 820 | 1640 | The four-step onboarding flow, progress bar opening at 2 of 4 — Identity → Scholar → Explorer → Achiever |
-| 1.3 | 04 — The marketing website | `/work/careerlogica/03.avif` | **Wide** | 1050–1280 | 2560 | Full-page scroll of the CareerLogica marketing homepage — the approved direction the rest of the product inherited |
+| 1.3 | 04 — The marketing website | `/work/careerlogica/03.avif` | Standard | 820 | 1640 | Full-page scroll of the CareerLogica marketing homepage — the approved direction the rest of the product inherited |
 | 1.4 | 05 — One system, four products | `/work/careerlogica/04.avif` | Standard | 820 | 1640 | Student dashboard showing plan status and the upgrade card |
 | 1.5 | 05 — One system, four products | `/work/careerlogica/05.avif` | Standard | 820 | 1640 | Counsellor list in the student dashboard before any booking — ratings, specialty, review count |
 | 1.6a | 06 — Building it in both directions | `/work/careerlogica/en.avif` | Compare — "English — LTR" | 398 | 840 | English left-to-right homepage layout |
@@ -110,7 +115,7 @@ before/after wall.
 | 2.2 | Stage 01 — The audit | `/work/pecuc/02.avif` | Standard | 820 | 1640 | The old navigation fully expanded, annotated with all 37 destinations |
 | 2.3a | Stage 02 — Restructuring | `/work/pecuc/nav-old.avif` | Compare — "37 destinations" | 398 | 840 | Sitemap of the old 37-destination navigation |
 | 2.3b | Stage 02 — Restructuring | `/work/pecuc/nav-new.avif` | Compare — "7 destinations" | 398 | 840 | Sitemap of the new 7-destination navigation |
-| 2.4 | Stage 03 — Building the visual language | `/work/pecuc/03.avif` | **Wide** | 1050–1280 | 2560 | The PECUC visual design guide — palette, type sheet, photography treatment |
+| 2.4 | Stage 03 — Building the visual language | `/work/pecuc/03.avif` | Standard | 820 | 1640 | The PECUC visual design guide — palette, type sheet, photography treatment |
 | 2.5 | Stage 04 — Designing the two broken journeys | `/work/pecuc/04.avif` | Standard | 820 | 1640 | Full scroll of the redesigned tiered donation page |
 | 2.6a | Stage 05 — Iteration | `/work/pecuc/layout-v1.avif` | Compare — "Version 1 — rejected" | 398 | 840 | The first homepage layout, rejected at client review |
 | 2.6b | Stage 05 — Iteration | `/work/pecuc/layout-v2.avif` | Compare — "Version 2 — approved" | 398 | 840 | The approved homepage layout |
@@ -128,7 +133,7 @@ before/after wall.
 | 2.12b | Before and after | `/work/pecuc/ba-06-new.avif` | Compare — "Volunteering — after" | 398 | 840 | The staged volunteer signup flow |
 | 2.13a | Before and after | `/work/pecuc/ba-07-old.avif` | Compare — "The footer — before" | 398 | 840 | Footer reading "All rights Reserved 2001-2023" |
 | 2.13b | Before and after | `/work/pecuc/ba-07-new.avif` | Compare — "The footer — after" | 398 | 840 | Footer stat strip carrying PECUC's own reported figures |
-| 2.14 | Outcome | `/work/pecuc/05.avif` | **Wide** | 1050–1280 | 2560 | Full-page scroll of the redesigned PECUC homepage |
+| 2.14 | Outcome | `/work/pecuc/05.avif` | Standard | 820 | 1640 | Full-page scroll of the redesigned PECUC homepage |
 
 The before/after wall is 14 images that must read as pairs. Shoot them at
 matched crops — same framing, same scroll depth — or the comparison does the
@@ -149,7 +154,7 @@ Cover live. **7 body images missing.**
 | 3.3 | Stage 03 — The final design | `/work/atrc/02.avif` | Standard | 820 | 1640 | The milestone celebration screen at 25% completion |
 | 3.4a | Stage 03 — The safety nets | `/work/atrc/pause.avif` | Compare — "Pause, with a reminder" | 398 | 840 | The pause screen with reminder scheduling options |
 | 3.4b | Stage 03 — The safety nets | `/work/atrc/still-there.avif` | Compare — "Inactivity recovery" | 398 | 840 | The "Still there?" inactivity recovery screen |
-| 3.5 | Stage 03 — The report | `/work/atrc/03.avif` | **Wide** | 1050–1280 | 2560 | Full scroll of the Future Builder pathway report |
+| 3.5 | Stage 03 — The report | `/work/atrc/03.avif` | Standard | 820 | 1640 | Full scroll of the Future Builder pathway report |
 
 ---
 

@@ -103,25 +103,32 @@ function CaseImage({
   return <Image {...imageProps(src)} alt={alt} sizes={sizes} className="h-auto w-full" />;
 }
 
+/**
+ * A body image. Always the width of the reading column.
+ *
+ * There used to be a `wide` variant that broke out of the column by 8vw a
+ * side. It was removed rather than repaired: the breakout landed on no edge
+ * the page has — at 1280px it sat 56px inside the gutter and 103px outside the
+ * text — so it read as an image that had escaped rather than one placed
+ * deliberately, at every viewport width. One shared edge for every figure and
+ * every paragraph is the whole point of a single-column reading layout.
+ *
+ * The full-page scroll captures are the images this affects, and they lose
+ * nothing: they are tall, not wide, and 820px is the same 820px they had.
+ */
 export function ImageBlock({
   src,
   alt,
   caption,
-  wide,
 }: {
   src: string;
   alt: string;
   caption?: string;
-  wide?: boolean;
 }) {
   return (
-    <figure className={wide ? "my-16 lg:-mx-[8vw]" : "my-16"}>
+    <figure className="my-16">
       <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
-        <CaseImage
-          src={src}
-          alt={alt}
-          sizes={wide ? "100vw" : "(max-width: 900px) 100vw, 820px"}
-        />
+        <CaseImage src={src} alt={alt} sizes="(max-width: 900px) 100vw, 820px" />
       </div>
       {caption ? (
         <figcaption className={`label mt-4 ${MEASURE}`}>{caption}</figcaption>
