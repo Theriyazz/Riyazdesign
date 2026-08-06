@@ -30,3 +30,8 @@ Inspirarion/
 
 # Snapshots and console logs written by the Playwright MCP browser.
 .playwright-mcp/
+
+# Screen recordings made while reproducing a bug. Useful locally, but they are
+# tens of megabytes each and git would keep them forever.
+Scroll Issue Video/
+*.mp4

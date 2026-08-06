@@ -23,6 +23,37 @@
   --ease-out-expo: var(--ease-out);
 }
 
+/* Teach `group-hover:` about `[data-hovered]`.
+ *
+ * Overriding the built-in variant rather than hand-adding a
+ * `group-data-[hovered]:` twin to each of the nine `group-hover:` utilities on
+ * the site. Nine is already enough to forget one, and the tenth would be
+ * written months from now by someone with no reason to know any of this.
+ *
+ * Why it is needed at all: Lenis cancels the wheel event and scrolls from a
+ * RAF loop, so the browser gets no real pointer input and never re-runs its
+ * hover hit-test. A work card stayed in its hover state — cover scaled up,
+ * index lit, chip bordered — for the rest of the page. `HoverSync` resolves
+ * the pointer itself and writes `[data-hovered]`; this is what makes the
+ * existing utilities listen to it.
+ *
+ * The `:hover` branch keeps its `(hover: hover)` guard so tap-then-stick
+ * behaviour on touch is still suppressed. The attribute branch needs no guard:
+ * `HoverSync` bails on anything that is not a fine pointer, so `[data-hovered]`
+ * is never written on a touch device.
+ *
+ * Named groups (`group//name`) are not carried over. Nothing here uses one. */
+@custom-variant group-hover {
+  @media (hover: hover) {
+    &:is(:where(.group):hover *) {
+      @slot;
+    }
+  }
+  &:is(:where(.group)[data-hovered] *) {
+    @slot;
+  }
+}
+
 /* ------------------------------------------------------------------ base
 
    These element rules must sit in `@layer base`, not unlayered. Unlayered CSS
@@ -683,11 +714,25 @@ html[data-motion="reduced"] [data-clip-panel] {
   transition: transform var(--dur) var(--ease-out);
   pointer-events: none;
 }
+/* `[data-hovered]` alongside `:hover` here, and on every other hover rule in
+   this file.
+
+   `:hover` is unreliable on this site and cannot be made reliable: Lenis
+   cancels the wheel event and scrolls from a RAF loop, so no real pointer
+   input reaches the browser and it never re-runs its hit-test. The row that
+   was under the cursor when the gesture started stays lit all the way down the
+   page, and the row that scrolls into its place never lights at all.
+
+   `HoverSync` hit-tests with `elementFromPoint` and writes `[data-hovered]`
+   itself. `:hover` stays because it is instant, costs nothing, and still works
+   with JS off — the attribute only has to cover the case the browser drops. */
 .hover-row:hover,
+.hover-row[data-hovered],
 .hover-row:focus-within {
   background-color: var(--bg-raised);
 }
 .hover-row:hover::after,
+.hover-row[data-hovered]::after,
 .hover-row:focus-within::after {
   transform: scaleX(1);
 }
@@ -717,6 +762,7 @@ html[data-motion="reduced"] .hover-row::after {
   transition: transform var(--dur) var(--ease-out);
 }
 .link-sweep:hover::after,
+.link-sweep[data-hovered]::after,
 .link-sweep:focus-visible::after {
   transform: scaleX(1);
 }

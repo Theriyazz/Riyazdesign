@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
+import { onCursorMode } from "@/lib/hoverTarget";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
@@ -11,6 +12,13 @@ import { useReducedMotion } from "@/lib/useReducedMotion";
  *   data-cursor="view"  -> ring fills and shows a "View" label (project media)
  *   data-cursor="text"  -> ring collapses to a caret bar (headings, copy)
  *   data-cursor="hide"  -> both hide (native cursor takes over)
+ *
+ * The mode comes from `HoverSync` rather than from a `pointerover` listener
+ * here. `pointerover` only fires when the browser re-runs its hit-test, which
+ * it does on real pointer input and nothing else — so while Lenis scrolled the
+ * page under a still pointer, the ring kept whatever mode it last resolved.
+ * It would sit at "View", two sections past the card it belonged to, until the
+ * mouse was nudged. `HoverSync` hit-tests on its own and publishes the answer.
  *
  * Mounts only where a real pointer exists, and never under reduced motion.
  */
@@ -81,18 +89,14 @@ export function Cursor() {
       }
     };
 
-    const onOver = (e: PointerEvent) => {
-      const target = (e.target as Element | null)?.closest?.("[data-cursor]");
-      setMode(target instanceof HTMLElement ? target.dataset.cursor ?? null : null);
-    };
+    const unsubscribe = onCursorMode(setMode);
 
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerover", onOver, { passive: true });
     document.addEventListener("pointerleave", onLeave);
 
     return () => {
+      unsubscribe();
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerover", onOver);
       document.removeEventListener("pointerleave", onLeave);
       root.classList.remove("has-custom-cursor");
       gsap.killTweensOf([dot, ring]);

@@ -1,141 +1,131 @@
 "use client";
 
 import { useEffect } from "react";
+import { setCursorMode } from "@/lib/hoverTarget";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
- * Keeps hover honest when the page scrolls under a stationary pointer.
+ * Resolves what the pointer is over, and keeps resolving it while the page
+ * moves underneath a pointer that hasn't.
  *
- * The browser only re-runs its hover hit-test when it believes something
- * moved. A wheel gesture here never reaches it as a scroll: Lenis takes the
- * wheel event, cancels it, and moves the page itself from a RAF loop. The
- * pointer has not moved and, as far as the browser is concerned, neither has
- * anything else — so `:hover` stays pinned to whatever it landed on before the
- * scroll began.
+ * The browser only re-runs its hover hit-test when it believes something moved.
+ * A wheel gesture never reaches it as a scroll here: Lenis takes the wheel
+ * event, cancels it, and moves the page itself from a RAF loop. The pointer has
+ * not moved and, as far as the browser is concerned, neither has anything else
+ * — so `:hover` stays pinned to whatever it landed on before the scroll began,
+ * and `pointerover` never fires for whatever scrolled into its place.
  *
- * That is the reported bug. A row stays lit long after it has scrolled away,
- * the row now under the cursor never lights, and the custom cursor keeps the
- * `data-cursor` mode it last resolved. Nudging the mouse one pixel fixes all
- * three at once, because that is a real pointer event and the browser re-tests.
+ * Reported as: a work card's "View" cursor still showing three sections later,
+ * a row staying lit after it has scrolled away, and the row now under the
+ * cursor never lighting. One pixel of mouse movement fixes all of it, because
+ * that is a real pointer event and the browser re-tests.
  *
- * Every hover treatment on the site rides on that single browser state —
- * `.hover-row`, `.link-sweep`, Tailwind's `group-hover`, and the `pointerover`
- * the cursor listens for — so correcting the state fixes all of them, and
- * anything added later, rather than re-implementing each one in JS.
+ * The first attempt at this tried to make the browser re-test — flipping
+ * `pointer-events` for a frame to invalidate its cached hit-test. It does not
+ * work: displacing an element under a stationary pointer and then flipping
+ * `pointer-events` leaves `:hover` exactly where it was. So this does not ask
+ * the browser anything. It hit-tests with `elementFromPoint`, which always
+ * answers against current geometry, and writes the answer to the DOM itself.
+ *
+ * `data-hovered` is that answer. The stylesheet pairs it with `:hover`
+ * everywhere, so ordinary mouse-move hover keeps working untouched (and still
+ * works with JS off), and this only has to carry the case the browser drops.
  */
 
 /**
- * How long after the last scroll event to re-test.
- *
- * The final check, after the page has stopped moving. Lenis keeps emitting
- * scroll events through its own easing tail, so this timer does not start
- * counting until the movement has actually finished — which is the moment the
- * hover state has to be right, because it is the state the reader is left
- * looking at.
+ * What we mark. Everything whose appearance depends on being hovered:
+ * the row treatments, the underline sweep, and the work card's `group`, whose
+ * cover scale and label colours are all `group-hover:` utilities.
  */
-const SETTLE_MS = 120;
+const TARGETS = ".hover-row, .link-sweep, .group";
 
 /**
- * Minimum gap between checks while the page is still moving.
- *
- * Correcting on every scrolled frame was the first attempt and it was wrong
- * twice over: the document is untargetable for the frame a correction takes,
- * so a click landing mid-scroll could be swallowed, and hover genuinely lags
- * `elementFromPoint` by a frame during a scroll, which made the staleness
- * check fire constantly on a browser that had nothing wrong with it.
- *
- * At 100ms hover keeps up with a scroll closely enough to read as live, while
- * the untargetable frames add up to a few percent of the gesture — and a wheel
- * scroll is not a gesture anyone clicks during.
+ * Minimum gap between hit-tests while the page is moving. A hit-test is cheap
+ * but it is not free, and hover has no visible resolution finer than this.
  */
-const THROTTLE_MS = 100;
+const THROTTLE_MS = 60;
 
 /**
- * Module scope, not per-instance.
- *
- * React runs effects twice in development, so there can be two of these alive
- * at once. With the flag on the instance, the second could begin a correction
- * while the first was mid-correction and restore `pointer-events` to the
- * `none` it had read from the first — latching it on and leaving the whole
- * page unclickable. It is a module-wide lock on a document-wide property.
+ * One more pass after the page stops. Lenis keeps emitting scroll events
+ * through its easing tail, so this only fires once movement has truly finished
+ * — the state the reader is left looking at is the one that has to be right.
  */
-let correcting = false;
+const SETTLE_MS = 100;
 
 export function HoverSync() {
   const reduced = useReducedMotion();
 
   useEffect(() => {
-    // Under reduced motion Lenis never mounts, scrolling is native, and the
-    // browser keeps hover in sync by itself. No fine pointer, no hover at all.
-    if (reduced) return;
+    // No fine pointer means no hover to keep in sync.
     if (!window.matchMedia("(pointer: fine)").matches) return;
+    // Under reduced motion Lenis never mounts. Scrolling is native, the browser
+    // re-tests hover on its own, and the custom cursor is disabled — so there
+    // is nothing here left to fix.
+    if (reduced) return;
 
-    /** Last real pointer position. Null until the pointer has been seen. */
     let x: number | null = null;
     let y: number | null = null;
+    let marked: Element[] = [];
     let timer: number | undefined;
-    let lastCheck = 0;
+    let last = 0;
+
+    const clear = () => {
+      for (const el of marked) el.removeAttribute("data-hovered");
+      marked = [];
+      setCursorMode(null);
+    };
+
+    const resolve = () => {
+      last = performance.now();
+      if (x === null || y === null) return;
+
+      const under = document.elementFromPoint(x, y);
+      if (!under) return clear();
+
+      // The whole ancestor chain, not just the nearest match: a `.link-sweep`
+      // inside a `.hover-row` means both are hovered, which is what `:hover`
+      // would have done.
+      const next: Element[] = [];
+      for (let node: Element | null = under; node; node = node.parentElement) {
+        if (node.matches(TARGETS)) next.push(node);
+      }
+
+      for (const el of marked) {
+        if (!next.includes(el)) el.removeAttribute("data-hovered");
+      }
+      for (const el of next) {
+        if (!marked.includes(el)) el.setAttribute("data-hovered", "");
+      }
+      marked = next;
+
+      const owner = under.closest<HTMLElement>("[data-cursor]");
+      setCursorMode(owner?.dataset.cursor ?? null);
+    };
 
     const onMove = (e: PointerEvent) => {
       x = e.clientX;
       y = e.clientY;
+      resolve();
     };
 
-    // Pointer outside the window: hover is the browser's business again, and
-    // `elementFromPoint` would be answering about a coordinate we no longer own.
+    // Pointer gone from the window: drop everything rather than leave a row lit
+    // at the last coordinate we happened to see.
     const onLeave = () => {
       x = null;
       y = null;
-    };
-
-    /**
-     * There is no API for "re-run your hit test". Making the document briefly
-     * untargetable is what works: changing `pointer-events` invalidates the
-     * cached result, and on the next frame the browser resolves hover against
-     * the geometry as it now is, firing the pointerout/pointerover pair it
-     * skipped. One frame, and only when something is actually stale.
-     */
-    const correct = () => {
-      if (correcting) return;
-      correcting = true;
-      document.body.style.pointerEvents = "none";
-      requestAnimationFrame(() => {
-        // Cleared outright rather than restored to a remembered value. The
-        // only correct state afterwards is "no inline override", and reading
-        // the old value back is exactly how this used to latch itself on.
-        document.body.style.pointerEvents = "";
-        correcting = false;
-      });
-    };
-
-    const check = () => {
-      lastCheck = performance.now();
-      if (correcting || x === null || y === null) return;
-
-      const under = document.elementFromPoint(x, y);
-      if (!under) return;
-
-      // `:hover` applies to the whole ancestor chain, so whatever sits under
-      // the pointer is hovered too — unless the browser's idea of that chain
-      // is stale, which is the only case worth paying a correction for.
-      if (!under.matches(":hover")) correct();
+      clear();
     };
 
     const onScroll = () => {
-      // Throttled while moving, so hover tracks the scroll rather than waiting
-      // for it to end...
-      if (performance.now() - lastCheck >= THROTTLE_MS) check();
-      // ...and once more after it stops, because the throttled pass can land
-      // mid-glide and leave the final resting position untested.
+      if (performance.now() - last >= THROTTLE_MS) resolve();
       window.clearTimeout(timer);
-      timer = window.setTimeout(check, SETTLE_MS);
+      timer = window.setTimeout(resolve, SETTLE_MS);
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("pointerleave", onLeave);
-    // The native scroll event rather than Lenis's own: Lenis moves the page
-    // with `scrollTo`, so this fires either way and keeps working if Lenis is
-    // ever switched off or swapped out.
+    // The native scroll event rather than Lenis's own, so this keeps working if
+    // Lenis is ever switched off or swapped out.
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
@@ -143,9 +133,7 @@ export function HoverSync() {
       document.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("scroll", onScroll);
       window.clearTimeout(timer);
-      // Never leave the document untargetable behind us.
-      document.body.style.pointerEvents = "";
-      correcting = false;
+      clear();
     };
   }, [reduced]);
 
