@@ -16,11 +16,10 @@ export default async function HomePage() {
   const studies = await getAllCaseStudies();
 
   const projects: WorkCardData[] = studies.map(({ meta }) => ({
-    index: meta.index,
     slug: meta.slug,
     title: meta.title,
-    subtitle: meta.subtitle,
-    tags: meta.role,
+    industry: meta.industry,
+    year: meta.year,
     cover: meta.cover,
   }));
 

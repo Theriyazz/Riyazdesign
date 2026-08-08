@@ -14,6 +14,14 @@
   --ink-800: #1c1c21;
   --ink-700: #2a2a31;
   --ink-600: #3a3a43;
+  /* A true, unlipped grey rather than a step on the cool ink ramp — a filled
+     chip needs to read as neutral fabric, not as a darker patch of the page.
+     Sits between --ink-600 and --paper-500 in lightness. */
+  --ink-500: #47474c;
+  /* Hover step for the neutral chip fill only — one notch lighter than
+     --ink-500, the same way --border-strong is one notch lighter than
+     --border. Nothing else on the site currently needs a step past 500. */
+  --ink-400: #57575d;
 
   /* Paper — warm off-white. Pure #FFF on near-black glares; this doesn't. */
   --paper-50: #f4f3f0;   /* 17.4:1 on --ink-950 */
@@ -153,9 +161,20 @@
   --btn-gap: 4px;
   --btn-gap-hover: 10px;
 
-  --tag-bg: transparent;
-  --tag-border: var(--border);
-  --tag-fg: var(--fg-muted);
+  --tag-bg: var(--ink-500);
+  --tag-border: var(--ink-500);
+  --tag-fg: var(--paper-200);
+
+  /* The outlined pill on a work card ("Read case study →") and anything
+     sharing its look. Same fill as the tag chips, on purpose: both are
+     secondary, low-emphasis controls and now read as one family instead of
+     one filled and one see-through. */
+  --btn-secondary-bg: var(--ink-500);
+  --btn-secondary-border: var(--ink-500);
+  --btn-secondary-fg: var(--paper-200);
+  --btn-secondary-bg-hover: var(--ink-400);
+  --btn-secondary-border-hover: var(--ink-400);
+  --btn-secondary-fg-hover: var(--fg);
 
   --row-index-fg: var(--fg-subtle);
   --row-index-fg-hover: var(--accent);

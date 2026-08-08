@@ -19,6 +19,13 @@ tsconfig.tsbuildinfo
 # Not ours to publish, and 47MB that git history would hold onto forever.
 Inspirarion/
 
+# CareerLogica source exports — 37MB of PNGs that only exist to be fed through
+# `npm run images`. The optimized derivatives in public/work/careerlogica/ are
+# committed and are what the site serves; these are the negatives, not the
+# prints. Back them up outside the repo — regenerating at a different size
+# needs them, and git history is the wrong place to keep 37MB forever.
+CareerLogica Images/
+
 # Local-only agent permissions. launch.json is shared on purpose (it is how the
 # dev server gets started); this one is per-machine.
 .claude/settings.local.json

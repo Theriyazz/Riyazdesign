@@ -5,33 +5,35 @@ import Link from "next/link";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { Tag } from "./MicroLabel";
 import { ClipReveal } from "@/components/motion/ClipReveal";
-import { gsap, useGSAP } from "@/lib/gsap";
 import { imageProps } from "@/lib/images";
 import { setHandoff } from "@/lib/flipHandoff";
-import { useReducedMotion } from "@/lib/useReducedMotion";
 
 export interface WorkCardData {
-  index: string;
   slug: string;
   title: string;
-  subtitle: string;
-  tags: readonly string[];
+  /** The eyebrow. Short and categorical — "EdTech", not the subtitle. */
+  industry: string;
+  year: string;
   cover: string;
 }
 
 /**
- * A work card: index, title, one-line subtitle, role chips, cover.
+ * A work card: the cover, with a glass panel floating over its lower edge.
  *
- * The card used to expand a detail paragraph on hover. That is gone — the row
- * now says only as much as it can say at a glance, and the case study itself
- * carries the rest. What hover still does is the cover scale and the index
- * colour, which are affordances rather than content, so nothing readable is
- * behind a pointer any more.
+ * The card was a full-width row — index, title, subtitle, role chips, a pill,
+ * and the cover stacked underneath. Three of those rows said things the case
+ * study says again on its own first screen, and at full width only one card
+ * was ever on screen at once. This shows all three at a glance and lets the
+ * cover do the arguing.
  *
- * On scroll the text column rises, the index counts up to its real number, and
- * the cover wipes in beside them.
+ * What the panel carries is deliberately the minimum that makes a card
+ * clickable with intent: what field it is in, what it is called, when it was.
+ * The subtitle and the role chips live on the case study page, which is one
+ * click away and has room for them.
+ *
+ * Everything is one <Link> — a single tab stop with one accessible name. The
+ * arrow is decoration, not a second control.
  */
 export function WorkCard({
   data,
@@ -41,145 +43,104 @@ export function WorkCard({
   priority?: boolean;
 }) {
   const coverRef = useRef<HTMLDivElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const reduced = useReducedMotion();
-
-  useGSAP(
-    () => {
-      const root = rootRef.current;
-      if (!root || reduced) return;
-
-      const rows = Array.from(root.querySelectorAll<HTMLElement>("[data-card-row]"));
-      const indexEl = root.querySelector<HTMLElement>("[data-card-index]");
-      if (!rows.length) return;
-
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: root, start: "top 85%", once: true },
-      });
-
-      tl.fromTo(
-        rows,
-        { opacity: 0, y: 16 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: "expo.out",
-          stagger: 0.07,
-          // Nothing downstream should ever measure a transformed row.
-          clearProps: "transform",
-        },
-        0
-      );
-
-      if (indexEl) {
-        // Counts to the card's real index. Parsed rather than assumed: the
-        // value is a zero-padded string in the frontmatter and the padding has
-        // to survive, or the digits change width mid-count.
-        const target = Number(data.index);
-        if (Number.isFinite(target)) {
-          const counter = { value: 0 };
-          const pad = data.index.length;
-          tl.to(
-            counter,
-            {
-              value: target,
-              duration: 0.9,
-              ease: "power2.out",
-              // The global default writes a translate3d to whatever it
-              // touches; on a plain object that is a warning per tween.
-              force3D: false,
-              onUpdate: () => {
-                indexEl.textContent = `(${String(Math.round(counter.value)).padStart(pad, "0")})`;
-              },
-            },
-            0
-          );
-        }
-      }
-
-      return () => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
-      };
-    },
-    { scope: rootRef, dependencies: [reduced, data.index] }
-  );
 
   return (
-    <div ref={rootRef}>
-      <Link
-        href={`/work/${data.slug}`}
-        className="work-card group block border-t border-[var(--row-rule)] pt-6"
-        onClick={(e) => {
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-          if (!coverRef.current) return;
-          e.preventDefault();
-          setHandoff(data.slug, coverRef.current);
-          router.push(`/work/${data.slug}`);
-        }}
+    <Link
+      href={`/work/${data.slug}`}
+      className="work-card group block"
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        if (!coverRef.current) return;
+        e.preventDefault();
+        setHandoff(data.slug, coverRef.current);
+        router.push(`/work/${data.slug}`);
+      }}
+    >
+      {/*
+        `coverRef` is on this frame and nothing inside it is ever transformed
+        by the entrance — ClipReveal animates its own inner wrapper. The FLIP
+        handoff into the case study hero measures this box, so a transform
+        here would hand the hero a rect that was never on screen.
+      */}
+      <div
+        ref={coverRef}
+        data-cursor="view"
+        className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised"
       >
-        <div className="flex flex-wrap items-start justify-between gap-x-8 gap-y-5">
-          <div className="max-w-[64ch]">
-            <span
-              data-card-row
-              data-card-index
-              className="mono block text-[var(--row-index-fg)] transition-colors duration-300 group-hover:text-[var(--row-index-fg-hover)]"
-            >
-              ({data.index})
+        <ClipReveal className="absolute inset-0">
+          <Image
+            {...imageProps(data.cover)}
+            alt=""
+            priority={priority}
+            // Three up on a 1280px column, two at tablet, one on a phone —
+            // but these are not the frame's widths. The frame is 4:5 and the
+            // covers are landscape, so `object-cover` scales each image to
+            // match the frame's *height* and lets the sides overflow: a 411px
+            // frame renders a 685px-wide image. Describing the frame instead
+            // (33vw) under-requested by a quarter and the browser upscaled the
+            // variant it got.
+            //
+            // Sized against the widest cover (PECUC at 1.33:1) rather than the
+            // average: the two 1.16:1 covers then over-request by a few KB,
+            // which is the cheap direction to be wrong in. Under-requesting
+            // shows up as softness; over-requesting shows up as nothing.
+            sizes="(max-width: 767px) 150vw, (max-width: 1023px) 71vw, 48vw"
+            // Scale lives in globals.css next to the title and arrow rules
+            // rather than as a `group-hover:` utility, so all three hover
+            // responses are one block that `[data-hovered]` can drive together.
+            className="work-card-cover h-full w-full object-cover"
+          />
+        </ClipReveal>
+
+        {/*
+          Inset from the card edge rather than flush to it, so the cover reads
+          as a photograph the panel is resting on instead of a block the panel
+          is cropping.
+        */}
+        <div className="work-card-panel absolute inset-x-4 bottom-4 flex items-center gap-4 rounded-[var(--radius-squircle)] p-5">
+          <div className="min-w-0 flex-1">
+            <span data-card-row className="label block truncate text-fg-muted">
+              {data.industry}
             </span>
 
-            <h3 data-card-row className="mt-3 text-[length:var(--text-xl)]">
+            {/* Wraps to two lines rather than truncating. "ATRC STEM Career
+                Test" does not fit one line beside the arrow at any column
+                width this grid produces, and a project's name is the one
+                thing on the card that must never be shown clipped. */}
+            <h3
+              data-card-row
+              className="work-card-title mt-1.5 text-balance text-[length:var(--text-xl)] leading-tight text-fg transition-colors duration-300 ease-[var(--ease-out)]"
+            >
               {data.title}
             </h3>
 
-            <p data-card-row className="mt-2 text-[length:var(--text-base)] text-fg-muted">
-              {data.subtitle}
-            </p>
-
-            <div data-card-row className="mt-5 flex flex-wrap gap-1.5">
-              {data.tags.map((t) => (
-                <Tag key={t}>{t}</Tag>
-              ))}
-            </div>
+            <span
+              data-card-row
+              className="mono mt-3 inline-flex items-center rounded-[var(--radius-chip)] border border-[var(--border-strong)] px-2.5 py-1 text-fg-muted"
+            >
+              {data.year}
+            </span>
           </div>
 
           <span
-            data-card-row
             aria-hidden
-            className="mono inline-flex shrink-0 items-center gap-2 rounded-[var(--radius-chip)] border border-[var(--border)] px-3 py-2 text-fg-muted transition-colors duration-300 group-hover:border-[var(--border-strong)] group-hover:text-fg"
+            className="work-card-arrow grid h-14 w-14 shrink-0 place-items-center rounded-[var(--radius-squircle)] border border-[var(--border-strong)] text-fg-muted transition-colors duration-300 ease-[var(--ease-out)]"
           >
-            Read case study <span>→</span>
+            <svg
+              viewBox="0 0 16 16"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+            </svg>
           </span>
         </div>
-
-        {/*
-          Cropped to 16:10 rather than shown at its native ~1:1. The source
-          mockups are near-square with a lot of empty space above and below the
-          device; at full height each card ran past a full viewport, which
-          defeats the fast scan the page is built for.
-
-          `coverRef` stays on the bordered box, not on ClipReveal's inner
-          wrapper: that box is what the FLIP handoff measures, and it is the
-          one element in here that is never transformed.
-        */}
-        <div
-          ref={coverRef}
-          data-cursor="view"
-          className="mt-7 overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised"
-        >
-          <ClipReveal parallax delay={0.1}>
-            <Image
-              {...imageProps(data.cover)}
-              alt=""
-              priority={priority}
-              sizes="(max-width: 900px) 100vw, 1200px"
-              className="aspect-[16/10] w-full scale-100 object-cover transition-transform duration-[900ms] ease-[var(--ease-out)] group-hover:scale-[1.04]"
-            />
-          </ClipReveal>
-        </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }

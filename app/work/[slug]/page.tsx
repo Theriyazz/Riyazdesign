@@ -93,14 +93,23 @@ export default async function CaseStudyPage({
 
         {/* The hook, verbatim from the source. It leads because it is the one
             line that makes a reader want the next one — a scope summary here
-            answers a question nobody has asked yet. */}
-        <p className="mt-16 max-w-[24ch] text-[length:var(--text-2xl)] leading-[1.08] tracking-[-0.03em] text-fg">
+            answers a question nobody has asked yet.
+
+            Context follows it directly, which is why the facts table is no
+            longer here: sitting between the two, it interrupted the hook with
+            six fields of metadata before the reader had been told what the
+            project even was. It now renders from inside the body, after
+            Context (see `<MetaBar />` in the MDX).
+
+            `mx-auto max-w-[820px]` rather than the old `max-w-[24ch]`: a
+            character cap doesn't know about the page's actual column, so at
+            this font size it ran wider than the 820px the body text below it
+            is locked to and sat on a different left edge. Matching the two
+            numbers directly makes the headline read as the top of the same
+            column, not a wider block stacked over a narrower one. */}
+        <p className="mx-auto mt-16 max-w-[820px] text-[length:var(--text-2xl)] leading-[1.08] tracking-[-0.03em] text-fg">
           {meta.headline}
         </p>
-
-        <div className="mt-16">
-          <MetaBar meta={meta} />
-        </div>
       </header>
 
       {/* Single column. The sticky section rail that used to sit at 200px on
@@ -109,7 +118,24 @@ export default async function CaseStudyPage({
           rebuilt to stop doing. */}
       <div className="shell mt-[var(--section-y)]">
         <div id={BODY_ID} className="mx-auto max-w-[820px]">
-          <MDXRemote source={study.body} components={mdxComponents} />
+          {/*
+            `MetaBar` is bound here rather than living in `mdx.tsx`, because it
+            is the one body component that needs the page's frontmatter. Giving
+            the author the tag means the facts table sits where the writing puts
+            it — after Context on all three studies today — instead of at a
+            fixed offset the prose has to work around.
+          */}
+          <MDXRemote
+            source={study.body}
+            components={{
+              ...mdxComponents,
+              MetaBar: () => (
+                <div className="my-16">
+                  <MetaBar meta={meta} />
+                </div>
+              ),
+            }}
+          />
         </div>
       </div>
 

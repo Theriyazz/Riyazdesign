@@ -215,7 +215,7 @@ export function Nav() {
         <a
           href={site.resume}
           download
-          className="mono ctl-text mt-12 inline-flex w-fit items-center gap-2 rounded-[var(--radius-chip)] border border-[var(--border)] px-3.5 py-2 text-fg-muted"
+          className="mono ctl-text mt-12 inline-flex w-fit items-center gap-2 rounded-[var(--radius-chip)] bg-[var(--btn-chip-bg)] px-3.5 py-2 text-[var(--btn-chip-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]"
         >
           {resumeIcon} Resume
         </a>
@@ -284,10 +284,17 @@ export function Nav() {
           </ul>
 
           <div className="flex shrink-0 items-center gap-2">
+            {/* Filled the same as the primary CTA (`SplitButton` with
+                `emphasis`) — same `--btn-chip-bg` fill, same
+                `--btn-chip-fg` text, same `--accent-hover` on hover — so the
+                one action in the bar a visitor is likeliest to want reads as
+                the site's primary action, not a secondary outline pill. Icon
+                and single-piece shape stay: this isn't a `SplitButton`, just
+                the same skin on the existing anchor. */}
             <a
               href={site.resume}
               download
-              className="mono ctl-text hidden items-center gap-2 rounded-full border border-[var(--border)] px-3.5 py-1.5 text-fg-muted transition-colors duration-200 hover:border-[var(--border-strong)] hover:text-fg md:inline-flex"
+              className="mono ctl-text hidden items-center gap-2 rounded-full bg-[var(--btn-chip-bg)] px-3.5 py-1.5 text-[var(--btn-chip-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)] md:inline-flex"
             >
               {resumeIcon} Resume
             </a>

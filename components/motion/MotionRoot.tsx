@@ -2,7 +2,6 @@
 
 import { SmoothScroll } from "./SmoothScroll";
 import { Cursor } from "./Cursor";
-import { CursorTrail } from "./CursorTrail";
 import { HoverSync } from "./HoverSync";
 import { Preloader } from "./Preloader";
 import { TransitionProvider } from "./TransitionOverlay";
@@ -21,7 +20,6 @@ export function MotionRoot({ children }: { children: React.ReactNode }) {
           hover on its own, so this belongs next to it. */}
       <HoverSync />
       <Preloader />
-      <CursorTrail />
       <Cursor />
       {children}
     </TransitionProvider>

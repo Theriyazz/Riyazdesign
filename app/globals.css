@@ -249,11 +249,11 @@ html.lenis body {
    correct on the first server-rendered frame — a `usePathname` check would
    paint the homepage value and then correct itself after hydration. */
 :root {
-  --backdrop-strength: 0.75;
+  --backdrop-strength: 0.4;
 }
 
 body:has([data-page="case-study"]) {
-  --backdrop-strength: 0.4;
+  --backdrop-strength: 0.2;
 }
 
 /* The one directional transform. Flipping the group is what moves the glow
@@ -263,6 +263,72 @@ body:has([data-page="case-study"]) {
   position: absolute;
   inset: 0;
   transform: scaleX(-1);
+}
+
+/* -------------------------------------------------------- screen carousel ---
+   The scroll track in `ScreenCarousel`.
+
+   The native scrollbar is hidden because the arrows, the dots and the peeking
+   edge of the next screen already say "this scrolls" — a scrollbar under a
+   figure reads as a rendering accident. The element stays a real scroll
+   container, so keyboard scrolling, trackpad momentum and touch swipe are all
+   untouched; only the painted bar is gone.
+
+   `overscroll-behavior-x: contain` stops a horizontal swipe that runs past the
+   last screen from triggering the browser's back-navigation gesture. */
+.screen-track {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.screen-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ------------------------------------------------------------- work card ---
+   The glass panel resting on the cover.
+
+   The fill is deliberately heavy — 88% of --bg-raised, not the 62% the nav
+   frosts at. The nav sits over the page's own dark ground, where a light
+   layer is enough; this sits over a photograph whose pixels are unknown and
+   change per card, and the panel carries a heading. At 62% the title measured
+   under 4.5:1 against the brighter parts of a mockup. The blur is doing the
+   texture, the opacity is doing the contrast, and only one of those is
+   allowed to be a judgement call.
+
+   -webkit- first: lightningcss preserves declaration order, and a browser
+   reading the unprefixed form last would never see it — the same trap the nav
+   hit. */
+.work-card-panel {
+  background: color-mix(in srgb, var(--bg-raised) 88%, transparent);
+  border: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Hover is paired with `[data-hovered]` throughout, not just `:hover`.
+   Lenis cancels the wheel event and scrolls from a RAF loop, so the browser
+   never re-runs its hit-test and `:hover` latches to whatever the pointer was
+   over when the gesture began — `HoverSync` writes the attribute instead.
+   `.group` is already in its TARGETS list, so the card is covered. */
+.work-card:hover .work-card-title,
+.work-card[data-hovered] .work-card-title {
+  color: var(--accent);
+}
+
+.work-card:hover .work-card-arrow,
+.work-card[data-hovered] .work-card-arrow {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.work-card-cover {
+  transition: transform 900ms var(--ease-out);
+}
+
+.work-card:hover .work-card-cover,
+.work-card[data-hovered] .work-card-cover {
+  transform: scale(1.04);
 }
 
 /* ------------------------------------------------------- footer wordmark ---

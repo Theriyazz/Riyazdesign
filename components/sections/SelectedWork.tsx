@@ -16,7 +16,10 @@ export function SelectedWork({ projects }: { projects: WorkCardData[] }) {
         </>
       }
     >
-      <div className="flex flex-col gap-[var(--space-24)]">
+      {/* Three up. One card per row meant only one was ever on screen, which
+          made the section read as three separate pages rather than a body of
+          work. Two at tablet, one on a phone. */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((p, i) => (
           // Only the first cover is priority — the rest are below the fold and
           // would compete with the LCP for bandwidth.

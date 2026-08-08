@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { MDXComponents } from "mdx/types";
 import { imageMeta, imageProps } from "@/lib/images";
 import { Tag } from "@/components/primitives/MicroLabel";
+import { ScreenCarousel } from "./ScreenCarousel";
 
 /*
  * Case study building blocks.
@@ -101,6 +102,43 @@ function CaseImage({
   }
 
   return <Image {...imageProps(src)} alt={alt} sizes={sizes} className="h-auto w-full" />;
+}
+
+/**
+ * One screen inside a `<ScreenCarousel>`.
+ *
+ * This renders its own frame and its own name, rather than handing `name` up to
+ * the carousel to draw. It has to: `ScreenCarousel` is a client component, so
+ * what reaches it as children is this component's *rendered output*, not
+ * `<Screen>` elements — `props.name` read from the other side of that boundary
+ * is always undefined. Keeping the label here also keeps it next to the `src`
+ * it describes, where it cannot drift out of order.
+ *
+ * `sizes` is 86vw below the breakpoint and a flat 705px above it, which is what
+ * a slide measures at the 820px column: 86% of the column, with the peek of the
+ * next screen accounted for.
+ */
+export function Screen({
+  src,
+  alt,
+  name,
+}: {
+  src: string;
+  alt: string;
+  name?: string;
+}) {
+  // One element, never a fragment: `ScreenCarousel` counts its children to get
+  // the slide count, and a fragment is flattened into that list on the way
+  // across the server/client boundary — the frame and the label would each
+  // become their own slide, doubling the count.
+  return (
+    <div>
+      <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
+        <CaseImage src={src} alt={alt} sizes="(max-width: 900px) 86vw, 705px" />
+      </div>
+      {name ? <span className="label mt-3 block">{name}</span> : null}
+    </div>
+  );
 }
 
 /**
@@ -279,12 +317,22 @@ export function CardGrid({
   cols = 3,
 }: {
   children: React.ReactNode;
-  cols?: 2 | 3;
+  /**
+   * Write this as a *string* in MDX — `cols="2"`, never `cols={2}`.
+   *
+   * This toolchain drops JSX expression attributes on the way through, so
+   * `cols={2}` arrived here as `undefined` and silently fell back to 3. Both
+   * four-card grids were written as `cols={2}` and both rendered three across
+   * with the fourth card stranded beside two empty cells. `<Deliverables>`
+   * takes a delimited string for the same reason.
+   */
+  cols?: 2 | 3 | "2" | "3";
 }) {
+  const twoUp = Number(cols) === 2;
   return (
     <div
       className={`my-12 grid gap-px border border-[var(--border)] bg-[var(--border)] ${
-        cols === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"
+        twoUp ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"
       }`}
     >
       {children}
@@ -500,6 +548,8 @@ export const mdxComponents: MDXComponents = {
   Decision,
   ImageBlock,
   Compare,
+  ScreenCarousel,
+  Screen,
   Callout,
   Deliverables,
   Principle,
