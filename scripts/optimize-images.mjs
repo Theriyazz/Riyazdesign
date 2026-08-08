@@ -20,15 +20,93 @@ import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/**
+ * CareerLogica research artifacts, in the order they were made: who it is for,
+ * how it is structured, then how it lays out. Numbered so the carousel order is
+ * readable here as well as in the MDX.
+ *
+ * These are tall boards rather than single screens, so they get the same
+ * one-at-a-time treatment as the shipped screens — a wireframe set squeezed
+ * beside another artifact is a wireframe set nobody can read.
+ */
+const CAREERLOGICA_RESEARCH = [
+  ["CareerLogica Images/Persona.png", "research-01-persona"],
+  ["CareerLogica Images/Sitemaps.png", "research-02-sitemap"],
+  // Source filename is misspelled ("Wirerfames"). Matched exactly rather than
+  // corrected — the build reads this string, so it has to be what is on disk.
+  ["CareerLogica Images/Wirerfames Website.png", "research-03-wireframes-web"],
+  ["CareerLogica Images/Wireframes Dashboard.png", "research-04-wireframes-dashboard"],
+].map(([src, name]) => [src, `work/careerlogica/${name}`]);
+
+/**
+ * CareerLogica shipped screens and the two dashboard comparison shots.
+ *
+ * The screens feed `<ScreenCarousel>`, which shows one at a time at ~705px
+ * rather than nine at once at ~260px. That is the whole reason they are
+ * separate files: a composed 3x3 board cannot be shown one screen at a time.
+ *
+ * Sources carry a `.avif.png` double extension — they are PNGs named after the
+ * AVIF they become. Left exactly as exported rather than renamed, because this
+ * string has to match what is on disk, and a rename is one more step to forget
+ * on the next export.
+ */
+const CAREERLOGICA_WORK = [
+  "student-01-dashboard",
+  "student-02-counselling",
+  "student-03-sessions",
+  "student-04-profile",
+  "student-05-admissions",
+  "student-06-library",
+  "student-07-payment",
+  "student-08-plan",
+  "student-09-active-plan",
+  "counsellor-01-dashboard",
+  "counsellor-02-test-codes",
+  "counsellor-03-student-connect",
+  "counsellor-04-appointments",
+  "school-01-dashboard",
+  "school-02-students",
+  "school-03-test-codes",
+  "school-04-add-codes",
+  "admin-01-dashboard",
+  "admin-02-users",
+  "admin-03-verification",
+  "admin-04-payments",
+  // The CareerNaksha / CareerLogica pair in section 05.
+  "dash-old",
+  "dash-new",
+  // Onboarding flow (03), the three signup paths (03), and the EN/AR pair (06).
+  "02",
+  "signup-flows",
+  "en",
+  "ar",
+  // The marketing pages, full scroll (section 04). Numbered 04 in the export
+  // even though it is section 04's only figure — the MDX points at this name
+  // rather than the file being renamed, so the two cannot drift apart.
+  "04",
+].map((name) => [
+  `CareerLogica Images/Work/careerlogica/${name}.avif.png`,
+  `work/careerlogica/${name}`,
+]);
+
 /** source (relative to repo root) -> output basename under public/ */
 const JOBS = [
   ["Case Study Section Images/Cover Image ATRC.png", "work/atrc/cover"],
-  ["Case Study Section Images/Cover Image CareerLogica.png", "work/careerlogica/cover"],
+  // Re-shot cover. This one file is both the homepage work card (4:5 crop) and
+  // the case study hero (~2.2:1), so it is cropped twice in opposite
+  // directions — keep the subject centred both ways.
+  [
+    "CareerLogica Images/Work/careerlogica/Main COver Image of CareerLogica Case Study/Main COver Image of CareerLogica Case Study.png",
+    "work/careerlogica/cover",
+  ],
   ["Case Study Section Images/Cover Image Pecuc.png", "work/pecuc/cover"],
   ["Riyaz Images/Profile Riyaz.png", "riyaz/portrait"],
   ["Riyaz Images/Image 3 wide.png", "riyaz/wide"],
   ["Riyaz Images/Riyaz Image 2.png", "riyaz/alt-1"],
   ["Riyaz Images/Image 3.png", "riyaz/alt-2"],
+
+  ...CAREERLOGICA_RESEARCH,
+  ...CAREERLOGICA_WORK,
 ];
 
 /**

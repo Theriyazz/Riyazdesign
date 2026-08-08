@@ -37,9 +37,9 @@ Capabilities, Testimonials, Experience, Contact) carry no images.
 | # | Section | File | Display @1440 | Ratio | Source needed | Status |
 |---|---------|------|---------------|-------|---------------|--------|
 | 0.1–0.6 | Preloader previews | reuses the 3 covers + `riyaz/wide`, `alt-1`, `portrait` | 320×180 | 16:9 crop | — | Live |
-| 1.1 | Selected Work — card 001 | `/work/careerlogica/cover.avif` | 1280×800 | 16:10 crop | 2560×1600 | Live (1525×1319) |
-| 1.2 | Selected Work — card 002 | `/work/pecuc/cover.avif` | 1280×800 | 16:10 crop | 2560×1600 | Live (1448×1086) |
-| 1.3 | Selected Work — card 003 | `/work/atrc/cover.avif` | 1280×800 | 16:10 crop | 2560×1600 | Live (1525×1319) |
+| 1.1 | Selected Work — card 001 | `/work/careerlogica/cover.avif` | 411×514 | 4:5 crop | 2560×1160 (set by hero) | Live (1525×1319) |
+| 1.2 | Selected Work — card 002 | `/work/pecuc/cover.avif` | 411×514 | 4:5 crop | 2560×1160 (set by hero) | Live (1448×1086) |
+| 1.3 | Selected Work — card 003 | `/work/atrc/cover.avif` | 411×514 | 4:5 crop | 2560×1160 (set by hero) | Live (1525×1319) |
 | 2.1 | About — portrait | `/riyaz/portrait.avif` | 511×341 | 3:2, uncropped | 1024×683 | Live (1536×1024) |
 | 3.1–3.9 | Tool stack — marks | `/tools/*.webp` | 84×84 | 1:1 | 168×168 | Live (168×168) |
 
@@ -48,12 +48,17 @@ chatgpt, antigravity, github.
 
 ### Notes on the homepage
 
-- **Covers are cropped twice, differently.** The work card crops to 16:10; the
-  case study hero crops the same file to roughly 2.2:1. The sources are near
-  square (~1.16:1), so both crops take a lot off. Keep the subject centred and
-  inside a 16:10 safe zone or the hero will cut it.
-- **Covers are under 2× for their largest use.** At 1280px display, a 1525px
-  source is 1.19×. Re-export at 2560px wide for a retina-sharp card.
+- **Covers are cropped twice, in opposite directions.** The work card is a 4:5
+  *portrait* crop (three up on the homepage); the case study hero crops the
+  same file to roughly 2.2:1 *landscape*. The sources are near square
+  (~1.16:1), so the card takes ~31% off the width and the hero takes ~55% off
+  the height. Keep the subject centred both ways — anything near an edge is
+  cut by one crop or the other.
+- **Sizing is set by the hero, not the card.** At 411px the card needs only
+  822px of source for retina; the hero needs 2560×1160. Export for the hero
+  and the card is covered for free.
+- **Covers are still under 2× for the hero.** A 1525px source against a 1280px
+  hero is 1.19×. Re-export at 2560px wide when you can.
 - **`riyaz/alt-2.avif` is generated but unused** — nothing in the codebase
   references it. Either wire it up or drop it from `JOBS`.
 - **The About portrait declares `sizes="460px"` but renders at 511px.** Harmless
@@ -88,18 +93,38 @@ rhythm least.
 
 ## 001 — CareerLogica
 
-Cover live. **7 body images missing.**
+Cover live, 4 research boards live. **25 body images missing.**
+
+> **Research board sources live in `CareerLogica Images/`**, not
+> `Case Study Section Images/`. They are 2048×1280 against a 705px display —
+> 2.9×, comfortably past the 2× retina target.
+
+Two rules for this case study's exports:
+
+**No baked-in annotation callouts.** Those annotations are now page text in the
+MDX. A callout baked into a board renders around 7px once the board is scaled to
+the 820px reading column, which puts the most valuable content in the image below
+the 16px floor the rest of the page holds to.
+
+**Shipped screens are one file each, not composed boards.** They feed
+`<ScreenCarousel>`, which shows one screen at a time at 705px. A 3×3 board gives
+each screen roughly 260px in the same column — enough to see a layout, not enough
+to read one. Wireframes, persona and sitemap stay single figures: those are one
+artifact to study, not a set to browse.
 
 | # | Section | File | Kind | Display | Source | Description |
 |---|---------|------|------|---------|--------|-------------|
 | 1.0 | Hero | `/work/careerlogica/cover.avif` | Hero | 1280×580 | 2560×1160 | Live |
-| 1.1 | 02 — What I learned before I designed anything | `/work/careerlogica/01.avif` | Standard | 820 | 1640 | Student persona and the platform sitemap — four roles mapped against a single information architecture |
-| 1.2 | 03 — The decision that shaped the product | `/work/careerlogica/02.avif` | Standard | 820 | 1640 | The four-step onboarding flow, progress bar opening at 2 of 4 — Identity → Scholar → Explorer → Achiever |
-| 1.3 | 04 — The marketing website | `/work/careerlogica/03.avif` | Standard | 820 | 1640 | Full-page scroll of the CareerLogica marketing homepage — the approved direction the rest of the product inherited |
-| 1.4 | 05 — One system, four products | `/work/careerlogica/04.avif` | Standard | 820 | 1640 | Student dashboard showing plan status and the upgrade card |
-| 1.5 | 05 — One system, four products | `/work/careerlogica/05.avif` | Standard | 820 | 1640 | Counsellor list in the student dashboard before any booking — ratings, specialty, review count |
-| 1.6a | 06 — Building it in both directions | `/work/careerlogica/en.avif` | Compare — "English — LTR" | 398 | 840 | English left-to-right homepage layout |
-| 1.6b | 06 — Building it in both directions | `/work/careerlogica/ar.avif` | Compare — "Arabic — RTL" | 398 | 840 | Arabic right-to-left homepage layout, fully mirrored |
+| 1.1 | 02 — Persona, structure, then layout | `/work/careerlogica/research-01…04-*.avif` | **Carousel** ×4 | 705 | 1410 | **Live (2048×1280)** — persona, sitemap, marketing-site wireframes, dashboard wireframes |
+| 1.2 | 03 — Three separate signup flows | `/work/careerlogica/signup-flows.avif` | Standard | 820 | 1640 | Student / counsellor / school paths branching from one entry screen. Wide diagram — height is free |
+| 1.3 | 03 — 4-step onboarding | `/work/careerlogica/02.avif` | Standard | 820 | 1640 | The four-step onboarding flow, progress bar opening at 2 of 4 — Identity → Scholar → Explorer → Achiever |
+| 1.4 | 04 — The marketing website | `/work/careerlogica/03.avif` | Standard | 820 | 1640 | Full-page scroll of the CareerLogica marketing homepage — the approved direction the rest of the product inherited |
+| 1.5a | 05 — The student dashboard | `/work/careerlogica/dash-old.avif` | Compare — "CareerNaksha" | 398 | 840 | The CareerNaksha student dashboard home, **clean — no annotation callouts** |
+| 1.5b | 05 — The student dashboard | `/work/careerlogica/dash-new.avif` | Compare — "CareerLogica — UAE" | 398 | 840 | The rebuilt CareerLogica student dashboard home, **clean — no annotation callouts** |
+| 1.6 | 05 — The student dashboard | `/work/careerlogica/student-01…09-*.avif` | **Carousel** ×9 | 705 | 1410 | One file per screen: dashboard, counselling, sessions, profile, admissions, library, payment, plan, active-plan |
+| 1.7 | 05 — Same system, three more brains | `/work/careerlogica/{counsellor,school,admin}-*.avif` | **Carousel** ×12 | 705 | 1410 | One file per screen, 4 per role. Order in the MDX is counsellor → school → admin |
+| 1.8a | 06 — Building it in both directions | `/work/careerlogica/en.avif` | Compare — "English — LTR" | 398 | 840 | English left-to-right homepage layout |
+| 1.8b | 06 — Building it in both directions | `/work/careerlogica/ar.avif` | Compare — "Arabic — RTL" | 398 | 840 | Arabic right-to-left homepage layout, fully mirrored |
 
 ---
 
@@ -163,10 +188,10 @@ Cover live. **7 body images missing.**
 | | Live | Missing |
 |---|---|---|
 | Homepage | 13 files (3 covers, 1 portrait, 9 marks) | 0 |
-| CareerLogica body | 0 | 7 |
+| CareerLogica body | 4 | 25 |
 | PECUC body | 0 | 23 |
 | ATRC body | 0 | 7 |
-| **Total** | **13 in use** (+3 generated, 1 unused) | **37** |
+| **Total** | **17 in use** (+3 generated, 1 unused) | **55** |
 
 ## Current files on disk
 

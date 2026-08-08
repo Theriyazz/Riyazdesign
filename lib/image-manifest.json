@@ -5,9 +5,9 @@
     "blurDataURL": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASoUABEAPt1kqU+opaOtqAqpsBuJZQAALnWiNZfXVloSljkAAP7bGKmJZkA4WxWIC/OlEkqQvaJadWxiaTgdsJV6DmCxHVJXzgKyvJeOlVCD03N65EK2x3Ifx77+vaYi8d99eQTrx2wgAA=="
   },
   "/work/careerlogica/cover.avif": {
-    "width": 1525,
-    "height": 1319,
-    "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwBACdASoUABEAPt1cqU0opSQiKA1REBuJZwAALlrjI03MYDvV/A4trQAA/u7YmZHcQr7O1OkTy+6GfLs+OmCTajeAxWPyFMAXBb5qN5wzomka5p/HKVzjej4GjV8w2uTtQa8xmIAAAA=="
+    "width": 2560,
+    "height": 1153,
+    "blurDataURL": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwBACdASoUAAkAPt1cp0yopSOiMAgBEBuJbACdMoRwHuAiwDebAMeyNDFPLMGUTMAA/CATVVTfWIKQ7/Z+fqmpYT8lm5y9CayCR0p5wWE4LecWiGBcJHmGoy9FWDoIFtrTpw2B7xmZO7ZG+JyR6SSGT9saua0ovld0yiL3AB5l8y+2thTqjmOKd7+5mex3/PjHp7Gn4q8vafJ53vQtAAAA"
   },
   "/work/pecuc/cover.avif": {
     "width": 1448,
@@ -33,5 +33,165 @@
     "width": 1023,
     "height": 1537,
     "blurDataURL": "data:image/webp;base64,UklGRswAAABXRUJQVlA4IMAAAACQBQCdASoUAB4APt1WqUyopCQiMBgMARAbiWgAuyEAuoOejBOvSRyR7gOF4853WClaGevCYAD+nT3JJpvLJ5c/Y56M/HRIaU0GAZMz5HYQYBEJ7NFnqyD5ZzfHEzlh+776avGb7Uyt0g4rtMUVf3anBQCvrFd4K0YZg5OD/29iRMBb8Pt07giYQa4kZBecdhM2qoV5FBwUvRc+qTP32H2tRDSBuxURCAMLTADKMnRrDJcpLagGmvJ8mOlu0RQAAAA="
+  },
+  "/work/careerlogica/research-01-persona.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBOmUABLonW/o9AA/uqXc4xjoLJ2/I2gf0xtdzzNpyHN+1VRCXpggN5YsDvBD/5NHevDM20UlE0UMKEGZQ4lLKpbESDAAAA="
+  },
+  "/work/careerlogica/research-02-sitemap.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoUAA0APt1apkyopSOiMAgBEBuJQBYdhFKRplyQA7/3F/AAAP7vw8DWu4PkSGeBgljYKU7cBbgLf3g3zLHuCjSRa4DfkD6Ub1gBki+kiZ09j4O1ousXRrYFYAA="
+  },
+  "/work/careerlogica/research-03-wireframes-web.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACwAwCdASoUAA0APt1apkyopSOiMAgBEBuJZgCdMoADTpnfCii6AAD+6ws5hkAziqhgxN0jTDv0/AoR+cYaAnF8TWNaEtb6NJeD/skMLD41hriu1ThpipkM6J1ZkUk7FxAAAA=="
+  },
+  "/work/careerlogica/research-04-wireframes-dashboard.avif": {
+    "width": 2042,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAACwAwCdASoUAA0APt1apkyopSOiMAgBEBuJQBOmUABp04s8dk/AAAD+6oaOIzyiOErgxy8q46I2Qmh8t8NAJb814rDAHTSs2aAhqN2MCeeBkl1CFq6oYXlI4AA="
+  },
+  "/work/careerlogica/student-01-dashboard.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwAwCdASoUAA0APt1apkyopSOiMAgBEBuJaACdAB5oNDbWuQAA/uqpQvxI22hF+SrI9kW4VDf4z6vXg9Vf3HsXUYjeAvNMboJc6v1rfwBuOAkgwweF+2NY27n/GSr1yIBrMINl+9gCBBl3AJKBxAAA"
+  },
+  "/work/careerlogica/student-02-counselling.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdAB5wNthw1TIAAP7weIKQtz3d2ZDDURI7lbp9kNqD24Ftk5AaPsvVoEUWsGI3gJ4XrDf9wl7J5Homlsdr8XgmgGNOz65j4VanYbBMawnWQXDEAAAA"
+  },
+  "/work/careerlogica/student-03-sessions.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAACwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdAB5wZcLX0KmwgAD+7iMmQYyjzDcGwKEbbCmxnkKmo/fjItT0nFTQIr14LCD7B+jbuupusEZjQ4dJt26sYFRCpxUoGDPcXEvmAAA="
+  },
+  "/work/careerlogica/student-04-profile.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBOmUABfbEYJQSkQ972AAP7tcWqQdgQ5e7lqk4yR+qxPw9dY7EkFnVpcLK8YujS4i4to7v59Bx3OHBjpRnN/FXG5vjxy8JgmOIgiE2gAAA=="
+  },
+  "/work/careerlogica/student-05-admissions.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwBACdASoUAA0APt1cp0yopSOiMAgBEBuJYgCdMoAC+8rZ4HKpGqOd8AAA/u4jIufWN8qv6/MSD/eYSKibHFbEZOt+5hqMQae1UpUGt94Gv+W+QVl3NaTBR05JnfghpgyTrJGegAA="
+  },
+  "/work/careerlogica/student-06-library.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAACQAwCdASoUAA0APt1apkyopSOiMAgBEBuJQBYjYAA0LUs9XqoAAP7uIyYrNtQTleTtxtyNoE1GWvoD0XvU1w2zWIYMMOUkp6Sz4P+6osYNwUnP7qTPACth5JwhFCIF+8n2s9pvAKIAAA=="
+  },
+  "/work/careerlogica/student-07-payment.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdAB6WRrhhU1+w/sgA/u4L8YB8AJrcrQoOeDNhh97x+ytWfM5SoQu+T9eih8MIRE7v3Zazhrt5k9mFFTuUm/YAAA=="
+  },
+  "/work/careerlogica/student-08-plan.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBOmUABfTMpIW7oPBNAA/u4jJ9xVz/hHUrYsooQUb46Hcg0lnhPUBhEgn9iY6+lp248MpS0G1Rb0AAA="
+  },
+  "/work/careerlogica/student-09-active-plan.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAwBACdASoUAA0APt1cpkyopSOiMAgBEBuJbACdEfgANoK0XTQ/kb/5MAAA/u4jIyYv1BQ/ChsOnAIcGEHsosXBZa42OKpBAt9FO1Z9t9c80LB6jaRemCHY/IakWe6q3pQNCfg5+SNdIiydmy3Jgi4AhIxg1Zu1jb7vOqAA"
+  },
+  "/work/careerlogica/counsellor-01-dashboard.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAQBACdASoUAA0APt1apkyopSOiMAgBEBuJagCdMoAC/GO74J2/cRMgAAD+6qlC/EjbaEX+2IlzSHE9pwrXduT6+GpBeCtipJVjE8f7PLoiJm2N2xkt8cA6qyblXvY3bwp/hlseJ24Je6Hn/mVARrvwYDr+E2gAAAA="
+  },
+  "/work/careerlogica/counsellor-02-test-codes.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJZACdAB6Rz3T6/f+3AAAA/u1xanXzuo9QByd97RVmbv9NHYTUWTFlj+UYi2BiE38erNsbl4Ek6E0tjtKq56C1nlI2kU4v6eKFUnzHAzSNQAAA"
+  },
+  "/work/careerlogica/counsellor-03-student-connect.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoUAA0APt1apkyopSOiMAgBEBuJZAC7AB5u5PXcwAAA/u4jIyYvwfxG6f0KEyFXOsosseyGpOoyYtfcxiW3FZSL7ndZB+Q0gAEq2kRXJpL5o1VlwsaG2okJFtO4/qZoAAA="
+  },
+  "/work/careerlogica/counsellor-04-appointments.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACwAwCdASoUAA0APt1apkyopSOiMAgBEBuJZACdIIjCtlk5f1DAAAD+7iMi59Y3yq/COy0ouQwzA/V0fv5bRd8AuLIRqwGtYwgw38VEZYmQG9FqQutbwITOcuzS7tGH2KiBrNgtkTWrBNCWAAA="
+  },
+  "/work/careerlogica/school-01-dashboard.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAACQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJbACdEfqgNkvl8rAAAP7qqUL8SN0Ml/edgYZSuf84w927F+u7R25i3ou3yhLtsfbsBVX0uUn/PE05EoOrvXDFpf0/6B69X9WXW3pWPA/7/BQFoMWlpK7pO9B23lQpI6r80AAA"
+  },
+  "/work/careerlogica/school-02-students.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdMoADTrqds1N/3pwAAP7uD/Z97YCOGuDp5tUGzsup/HysbNo/FD93qYRZdM4bvL1D/R155wFlwH0gpwQkFnNQAA=="
+  },
+  "/work/careerlogica/school-03-test-codes.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAACQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJYgCdAB4+uAuHRJcAAP7uIydUVPfulmKZpNpuguchm7+qN51Hq2Oy2HyOkNjHqscSBNQ+za/WF+MN1JmRPzBRbWoAAA=="
+  },
+  "/work/careerlogica/school-04-add-codes.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACwAwCdASoUAA0APt1apkyopSOiMAgBEBuJZACdAB6PWoQEajcSAAD+7iMi59Y3yq/hN68p+zKXFcjh97dxnuqSu777oJsCQ4Yi0rdGMXKURliZAcIpA60zyBFdTxf1dJE9QQQBSZ64C1UDwAA="
+  },
+  "/work/careerlogica/admin-01-dashboard.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwBACdASoUAA0APt1cpkyopSOiMAgBEBuJaACdMoLT9AzFnqOenGTd+MAA/uqpQvxI2vtemJ9BM93YTbGQXRMgY42Y5+3QC+AgSdmlNEjkWeqcungnWBpeN2+3dBYQ9Y92PXoCT44mgGs3mQAAAA=="
+  },
+  "/work/careerlogica/admin-02-users.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAwCdASoUAA0APt1cpkyopSOiMAgBEBuJZACdAB6RwDl5f/brJ4AA/u1xaolJWQQarpZpjRecwgWLQcqhFjDgyxhBipwh4tsexIMK5UHtksG0bRgUoLn5YucuZFRksAA="
+  },
+  "/work/careerlogica/admin-03-verification.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQAwCdASoUAA0APt1apkyopSOiMAgBEBuJZACdAB6PUaPwsAD+7gmA2Rw/CGlKPKpbbzKxWlZ57mdEGItgXv/+3N5PeR38AyqHOEvkvMPEPvcV8P7SopfXt6PJiZy5kVGSwAAA"
+  },
+  "/work/careerlogica/admin-04-payments.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APt1apkyopSOiMAgBEBuJYgCdAB6Md2Ws1bPGaAAA/u4jIufWOH4Q3Hysa+8wte81us9/uZDmhiLYF7//tzeT3kd+5BaIakAYzmtZW3TSvVsUSZDSzgogAA=="
+  },
+  "/work/careerlogica/dash-old.avif": {
+    "width": 1000,
+    "height": 620,
+    "blurDataURL": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoUAAwAPt1kqU2opaQiMAgBEBuJZACdMoAKejt09+L2RNLFcAD++1NDuliI7LDExpyoj6k04h+MoP0/UXyYNADHmqdgr0p+rrGgP1oX/UzdF+uGhpM10NpjZI03+/CIwD2lVYAA"
+  },
+  "/work/careerlogica/dash-new.avif": {
+    "width": 1000,
+    "height": 620,
+    "blurDataURL": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwBACdASoUAAwAPt1ep00opSOiMAgBEBuJagCdMoR3ACWakz6wTpCWcAAA/utX29dv+WwZukDFDQ2bb83K9zq1LN8Yww7rDY1wyyJkulQqIbGfpRbY2jHyOvlZSxjRmAsSK1577/P6UllNpiAAAA=="
+  },
+  "/work/careerlogica/02.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAACwAwCdASoUAA0APt1cpkyopSOiMAgBEBuJQBYdhDwOliG7HLbmAAD+6nXO1SkmtXCi+jJg4m8/TGK8ALMDtjUUZ/ANCs6w8ooqXn6nUxRWkCrVD8889AAA"
+  },
+  "/work/careerlogica/signup-flows.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoUAA0APt1apkyopSOiMAgBEBuJQBYdsWMY11BU+6MZuWAAAP7r/Rm2hbL41GO4AtQ2vqrNkvjHuRY1zaqrery2MuVobFqGmUfIImpZ6QzyxqfEdkHOIY8Ly59CAr57o6ECyEqUYwmkm1Y4SETnW1rpkA/EJD68xOjWNrWAAAA="
+  },
+  "/work/careerlogica/en.avif": {
+    "width": 1000,
+    "height": 620,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAwCdASoUAAwAPt0+s1SooiWjmAEQG4lmAJ0AId/czS2tDGnC/AAA/u4QQ/sjETU/+oyONpvTqPQV4x95cGahbqsYNAQeEZS1QtJsMy51Fu2desbaMud9oBpXGw0wAAA="
+  },
+  "/work/careerlogica/ar.avif": {
+    "width": 1000,
+    "height": 620,
+    "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoUAAwAPt1cqUyopSQiMAgBEBuJZgCdACPyaQHVp3z0RvVQAAD+8GjSIRPNOtmnJe86w8rBnYLP9tUUueBi0mvG+6KKCYYgtAIMbFb27tyhHOzH71fNpXGxq9QAAA=="
+  },
+  "/work/careerlogica/04.avif": {
+    "width": 2048,
+    "height": 1280,
+    "blurDataURL": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAABQBACdASoUAA0APt1cpkyopSOiMAgBEBuJZACdMoKP+AtT0Y8Rn937A50AAP7tW6DEkd2o68jKVr6D45bGoxiPEEtx0fo9G/GF+76xHU+pCEWrqaovGR7XFlHrZdVH48r6kKMRcjcfcLdqc0G8tvDjcZkf102W087MmUZT+vEK4fq8VCfY5JwBlKLtpAqzrDeUPrwD21/HYlEAAAA="
   }
 }

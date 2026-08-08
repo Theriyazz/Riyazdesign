@@ -20,9 +20,9 @@ draft: false
 
 ## Context
 
-I designed a psychometric-first career guidance platform for the UAE and South Asian markets — from blank canvas to a full marketing website and multi-role dashboards, bilingual in English and Arabic.
+I designed a psychometric-first career guidance platform for the UAE and South Asian markets — a full marketing website and four role-based dashboards, bilingual in English and Arabic.
 
-CareerLogica is an early-stage venture built on one observation: students across the region pick their career stream under pressure from family, peers and assumption, with almost no data about themselves in the decision. When I came on it was a founder, a vision and a detailed brief — no product, no prior design, no validated flows. Every screen in this case study is the first version of that screen that has ever existed.
+CareerLogica is CareerNaksha rebuilt for the UAE, on one observation: students across the region pick their career stream under pressure from family, peers and assumption, with almost no data about themselves in the decision. That inheritance is why this case study can show its work. I wasn't guessing at what students needed — I was looking at a product already in use, and at everything it got wrong. Where a screen here differs from its predecessor, the difference is the argument.
 
 <Deliverables items="Marketing website · 3 login flows · RTL/LTR design system · Figma prototype · Student dashboard · Counsellor dashboard · School dashboard · Admin dashboard · Component library" />
 
@@ -31,6 +31,8 @@ CareerLogica is an early-stage venture built on one observation: students across
   record of a live project currently in development. Where I have proof, I've
   shown it. Where I made a judgement call without data, I've said so.
 </Callout>
+
+<MetaBar />
 
 ## 01 — The problem worth solving
 
@@ -54,7 +56,7 @@ The challenge wasn't designing three separate tools. It was designing one cohere
 
 ### Scope and approach
 
-No existing platform. The founder came to me with a vision and a detailed brief, but no product, no prior design, no validated flows. I was brought on as the sole freelance UX/UI designer: research, information architecture, wireframing, UI design, the design system, and handoff. No junior support. Every decision in this document traces back to me.
+An existing platform to learn from, and a market it was never built for. I was brought on as the sole freelance UX/UI designer: research, information architecture, wireframing, UI design, the design system, and handoff. No junior support. Every decision in this document traces back to me.
 
 ## 02 — What I learned before I designed anything
 
@@ -74,7 +76,7 @@ I'd never designed for the UAE. I didn't know how the education system worked, h
   </Card>
 </CardGrid>
 
-### Three findings that changed the design
+### Two findings that changed the design
 
 <Findings>
   <Finding n="01" title="The paywall was in the wrong place">
@@ -83,12 +85,22 @@ I'd never designed for the UAE. I didn't know how the education system worked, h
   <Finding n="02" title="Onboarding was exhausting people before they started">
     Long forms, dozens of small fields crammed onto a single page. Users were mentally spent before completing the first section. High cognitive load at exactly the moment you're asking someone to be honest about their future.
   </Finding>
-  <Finding n="03" title="Nobody was designing for the other three roles">
-    Every competitor optimised for the student. Counsellors, schools and administrators were an afterthought — which is why counsellors were running practices out of five disconnected tools.
-  </Finding>
 </Findings>
 
-<ImageBlock src="/work/careerlogica/01.avif" alt="Student persona and the platform sitemap" caption="One persona and the sitemap: four roles mapped against a single information architecture." />
+### Persona, structure, then layout
+
+**Persona** — one student, drawn from the market research rather than invented: a Grade 11 teenager whose parents are in the room for the decision.
+
+**Sitemap** — four roles mapped against a single information architecture, so one system could serve all of them without becoming four products.
+
+**Wireframes** — the marketing site first, then the dashboards. Structure argued in grey, so the visual work later was about tone rather than about where things go.
+
+<ScreenCarousel label="Research and wireframes">
+  <Screen src="/work/careerlogica/research-01-persona.avif" name="Student persona" alt="The student persona built from market research" />
+  <Screen src="/work/careerlogica/research-02-sitemap.avif" name="Platform sitemap" alt="Sitemap mapping four roles onto one information architecture" />
+  <Screen src="/work/careerlogica/research-03-wireframes-web.avif" name="Marketing site wireframes" alt="Wireframes for the marketing website pages" />
+  <Screen src="/work/careerlogica/research-04-wireframes-dashboard.avif" name="Dashboard wireframes" alt="Wireframes for the four role dashboards" />
+</ScreenCarousel>
 
 ## 03 — The decision that shaped the product
 
@@ -102,36 +114,9 @@ This wasn't a guess. I'd implemented a freemium model at CareerNaksha and watche
   tradeoff="Revenue arrives later in the funnel, and the free tier has to be generous enough to be genuinely convincing — a harder design problem than a paywall at step one. It also had to carry the institutional products: schools won't buy a platform their students haven't used, so free student access is the acquisition channel for the counsellor and school tiers."
 />
 
-### 4-step onboarding, named after what it builds
-
-The competitor research showed me what not to do: everything on one page, dozens of fields, no sense of progress. I split onboarding into four steps, each with a name that tells the student what they're doing and why — not "Step 2 of 4", but a stage in understanding themselves.
-
-<Steps>
-  <Step n="01" name="Identity">Personal details — who you are.</Step>
-  <Step n="02" name="Scholar">Educational details — where you are academically.</Step>
-  <Step n="03" name="Explorer">Career preferences — what you're drawn to.</Step>
-  <Step n="04" name="Achiever">Final goal and purpose — what you're actually trying to reach.</Step>
-</Steps>
-
-Naming the steps did two things. It reduced the perceived length of the form, because four named stages read as shorter than one long page. And it reframed the task — the student isn't filling in a form, they're building a profile of themselves.
-
-<Principle name="Chunking (Miller's law)">
-  One long form asks the brain to hold too much at once. Four named steps break the same task into pieces the brain can process one at a time — each with its own small sense of completion.
-</Principle>
-
-<Principle name="Endowed progress effect">
-  People are more likely to finish a task when they believe they've already made headway on it — even a fake head start increases completion. The journey bar opens at 2/4 rather than 0/4 for exactly this reason: a blank bar reads as a big ask, a head start reads as momentum already in motion.
-</Principle>
-
-<ImageBlock src="/work/careerlogica/02.avif" alt="The four-step onboarding flow with the progress bar opening at two of four" caption="Identity → Scholar → Explorer → Achiever, with the journey bar starting at 2/4." />
-
-## 04 — The marketing website
-
-A 9–10 page marketing website. This was the first piece approved, and it set the visual language everything else inherited.
-
-<ImageBlock src="/work/careerlogica/03.avif" alt="Full-page scroll of the CareerLogica marketing homepage" caption="The homepage, full scroll — the approved direction the rest of the product inherited." />
-
 ### Three separate signup flows, not one with branches
+
+A student, a counsellor and a school are not the same person filling in different fields. One form with conditional branches would have been cheaper to build and worse for all three — a fifteen-year-old wading past credential questions, a counsellor asked what grade they are in.
 
 <CardGrid>
   <Card title="Student">
@@ -145,15 +130,124 @@ A 9–10 page marketing website. This was the first piece approved, and it set t
   </Card>
 </CardGrid>
 
+<ImageBlock src="/work/careerlogica/signup-flows.avif" alt="Three signup flows branching from a single entry screen — student, counsellor and school" caption="Three paths from one entry point. The counsellor path runs longest, because credentials have to be checked before anyone is put in front of a student; the school path is shortest, because an administrator is registering an institution rather than themselves." />
+
+### 4-step onboarding, named after what it builds
+
+The competitor research showed me what not to do: everything on one page, dozens of fields, no sense of progress. I split onboarding into four steps, each with a name that tells the student what they're doing and why — not "Step 2 of 4", but a stage in understanding themselves.
+
+<Steps>
+  <Step n="01" name="Identity">Personal details — who you are.</Step>
+  <Step n="02" name="Scholar">Educational details — where you are academically.</Step>
+  <Step n="03" name="Explorer">Career preferences — what you're drawn to.</Step>
+  <Step n="04" name="Achiever">Final goal and purpose — what you're actually trying to reach.</Step>
+</Steps>
+
+<Principle name="Chunking (Miller's law)">
+  One long form asks the brain to hold too much at once. Four named steps break the same task into pieces the brain can process one at a time — each with its own small sense of completion.
+</Principle>
+
+Naming the steps did two things. It reduced the perceived length of the form, because four named stages read as shorter than one long page. And it reframed the task — the student isn't filling in a form, they're building a profile of themselves. The bar opens at 2/4 rather than 0/4 for a related reason: a blank bar reads as a big ask.
+
+<ImageBlock src="/work/careerlogica/02.avif" alt="The four-step onboarding flow with the progress bar opening at two of four" caption="Identity → Scholar → Explorer → Achiever, with the journey bar starting at 2/4." />
+
+## 04 — The marketing website
+
+A 9–10 page marketing website. This was the first piece approved, and it set the visual language everything else inherited.
+
+<ImageBlock src="/work/careerlogica/04.avif" alt="Full-page scrolls of the CareerLogica marketing pages" caption="Homepage, About, For Students and the partner page, full scroll — the approved direction the rest of the product inherited." />
+
 ## 05 — One system, four products
 
 A student, a counsellor, a school administrator and a platform admin want opposite things from the same product. The student wants clarity and encouragement. The counsellor wants throughput. The school wants oversight. The admin wants control.
 
 One component library. One set of tokens. Density and tone do the differentiating — the student dashboard spacious and encouraging, the counsellor dashboard dense and built for volume. Same parts, different rhythm.
 
-<ImageBlock src="/work/careerlogica/04.avif" alt="Student dashboard showing the plan status and upgrade card" caption="Plan status stays visible year-round, and the upsell names exactly what's locked — counselling, full report, 20,000+ careers — instead of a generic 'go premium'." />
+### The student dashboard — the hardest screen in the product
 
-<ImageBlock src="/work/careerlogica/05.avif" alt="Counsellor list in the student dashboard before any booking has been made" caption="Recommended counsellors appear before the student has booked anyone — ratings, specialty and review count all visible. An empty state invites nothing; a populated one invites a decision." />
+I genuinely did not know where to begin with this one. Too many decisions, too many kinds of user, too many things competing for the same screen. It took two or three full rounds before it settled, and each round taught me something the previous one had missed.
+
+What it settled into is a screen where every element has one job. The greeting and step tag create momentum. The journey tracker answers the first-time anxiety of *what am I supposed to do here.* The counsellor widget seeds the next paid action. Pricing sits in the open, because a product asking a teenager's parents for money should never look like it is hiding the number.
+
+<Compare
+  before="/work/careerlogica/dash-old.avif"
+  after="/work/careerlogica/dash-new.avif"
+  beforeAlt="The CareerNaksha student dashboard home screen"
+  afterAlt="The rebuilt CareerLogica student dashboard home screen"
+  beforeLabel="CareerNaksha"
+  afterLabel="CareerLogica — UAE"
+  caption="The same screen, one market apart. Four problems went into the rebuild as requirements."
+/>
+
+<CardGrid cols="2">
+  <Card eyebrow="Was — no orientation" title="The screen says who you are and where you are">
+    The old home never told a student their name, their stage, or what plan they were on. The rebuild opens with a greeting, a "Step 1 of 3" tag and the plan state — three questions answered before the eye moves.
+  </Card>
+  <Card eyebrow="Was — progress bars with no exit" title="Every incomplete step carries its next action">
+    Three bars stuck at 0% tell a student they are behind and nothing else. "Your Journey" names each step, marks the finished one done, and puts a button on every one that isn't. Same data, opposite emotional read.
+  </Card>
+  <Card eyebrow="Was — an empty card where the revenue is" title="The highest-value surface is never empty">
+    "Connect With Counsellors" was a heading with nothing underneath it, on what is probably the best conversion moment on the page. It now carries three real counsellors with specialty, rating, review count and a booking CTA. An empty state invites nothing; a populated one invites a decision.
+  </Card>
+  <Card eyebrow="Was — three icon styles in one sidebar" title="One icon set, one meaning per icon">
+    Filled icons, outline icons, and the same icon used for two different destinations. Consistency here isn't polish — a duplicated icon means two places look like one place.
+  </Card>
+</CardGrid>
+
+<Principle name="Endowed progress effect">
+  People are more likely to finish something when they can see they have already made headway on it. "Your Journey" shows 1 of 3 done rather than an empty tracker — the step the student has already taken is counted and named, so what is left reads as the rest of something started rather than the whole of something not.
+</Principle>
+
+Nine screens run on one component library. Every one of them is the same set of parts at a different density.
+
+<ScreenCarousel label="Student dashboard">
+  <Screen src="/work/careerlogica/student-01-dashboard.avif" name="Dashboard home" alt="Student dashboard home with greeting, journey tracker and counsellor widget" />
+  <Screen src="/work/careerlogica/student-02-counselling.avif" name="Career counselling" alt="Career counselling screen listing available counsellors" />
+  <Screen src="/work/careerlogica/student-03-sessions.avif" name="Scheduled sessions" alt="Scheduled counselling sessions with status per booking" />
+  <Screen src="/work/careerlogica/student-04-profile.avif" name="Profile" alt="Student profile with completion state" />
+  <Screen src="/work/careerlogica/student-05-admissions.avif" name="Admissions" alt="Admission assistant filtered by exam and university" />
+  <Screen src="/work/careerlogica/student-06-library.avif" name="Career library" alt="Career library with search and category filters" />
+  <Screen src="/work/careerlogica/student-07-payment.avif" name="Payment" alt="Payment screen with order summary" />
+  <Screen src="/work/careerlogica/student-08-plan.avif" name="My plan" alt="Plan comparison before upgrading" />
+  <Screen src="/work/careerlogica/student-09-active-plan.avif" name="Active plan" alt="Active plan showing what the student currently has access to" />
+</ScreenCarousel>
+
+### Same system, three more brains
+
+The other three roles run on the same library. What changes between them is density and tone, not the parts.
+
+<CardGrid cols="3">
+  <Card eyebrow="Counsellor" title="Same system, different brain">
+    Counsellors think in workflows, not journeys — throughput, not hand-holding. The home screen leads with status and action: pending students, test codes, verification progress. Student Connect replaces the WhatsApp-email-spreadsheet stack from section 01. Brand Content lets a counsellor put their own logo on a report, which makes them a partner rather than a tenant.
+  </Card>
+  <Card eyebrow="School" title="Institutional scale, simplified">
+    Schools manage hundreds of students and need overview, not depth. Test-code inventory assigned versus unassigned at a glance, a roster filtered by grade, counsellor oversight — and deliberately no individual student detail. Giving an administrator everything creates noise; giving them the right summary creates clarity.
+  </Card>
+  <Card eyebrow="Admin" title="The control room">
+    Seven management modules, one principle: density without confusion. Consistent column logic across every table, colour-coded status readable at a glance, and two explicit actions per row — approve or reject, verify or cancel — so no row ever ends in a question.
+  </Card>
+</CardGrid>
+
+<ScreenCarousel label="Counsellor, school and admin dashboards">
+  <Screen src="/work/careerlogica/counsellor-01-dashboard.avif" name="Counsellor — dashboard" alt="Counsellor dashboard leading with pending students and verification status" />
+  <Screen src="/work/careerlogica/counsellor-02-test-codes.avif" name="Counsellor — test codes" alt="Test code inventory for a counsellor" />
+  <Screen src="/work/careerlogica/counsellor-03-student-connect.avif" name="Counsellor — student connect" alt="Student Connect replacing the WhatsApp and spreadsheet workflow" />
+  <Screen src="/work/careerlogica/counsellor-04-appointments.avif" name="Counsellor — appointments" alt="Appointment management with per-row actions" />
+  <Screen src="/work/careerlogica/school-01-dashboard.avif" name="School — dashboard" alt="School dashboard summarising students, counsellors and test codes" />
+  <Screen src="/work/careerlogica/school-02-students.avif" name="School — manage students" alt="Student roster filtered by grade level" />
+  <Screen src="/work/careerlogica/school-03-test-codes.avif" name="School — test codes" alt="Bulk test code inventory, assigned versus unassigned" />
+  <Screen src="/work/careerlogica/school-04-add-codes.avif" name="School — add test codes" alt="Assigning bulk test codes to students" />
+  <Screen src="/work/careerlogica/admin-01-dashboard.avif" name="Admin — dashboard" alt="Admin dashboard across all platform roles" />
+  <Screen src="/work/careerlogica/admin-02-users.avif" name="Admin — manage users" alt="User management table with colour-coded status" />
+  <Screen src="/work/careerlogica/admin-03-verification.avif" name="Admin — verification" alt="Counsellor verification queue with approve and reject per row" />
+  <Screen src="/work/careerlogica/admin-04-payments.avif" name="Admin — payments" alt="Payment management table" />
+</ScreenCarousel>
+
+<Decision
+  decision="Same components at different densities, not four design languages"
+  why="Four roles with four mental models could have justified four tailored interfaces, and on a team with more designers it might have. One library meant a fix landed everywhere at once, and it kept the product legible across roles — a counsellor who opens a student's view to walk them through a result is not learning a second interface mid-conversation. Density and tone carried the differentiation instead: the same card, spaced generously for a fifteen-year-old and packed tight for someone processing forty students a week."
+  tradeoff="No role gets a layout perfectly tuned to it. The student dashboard carries more structure than a first-time teenager strictly needs, and the admin tables are less compact than someone living in them all day would build for themselves. A system that fits four roles well fits none of them perfectly, and I'd make the same call again at this team size."
+/>
 
 ## 06 — Building it in both directions
 
@@ -186,14 +280,6 @@ The product isn't live, so there are no conversion numbers and no retention data
   <Spec label="Timeline">Three months, solo. Not faster work — fewer wrong turns. Owning the problem end to end meant fewer reversals later.</Spec>
 </SpecList>
 
-### Targets I designed against
-
-| Target | Number | What it means |
-|---|---|---|
-| Conversion | 8–12% | Free-to-paid target, against the 2–5% typical of fully gated platforms |
-| Onboarding completion | 70%+ | Target for the 4-step flow, against 40–60% typical for single-page forms |
-| Assessment volume | 200,000+ | The founder's three-year goal for completed assessments — the scale this is built for |
-
 ### Working with a non-technical founder
 
 The client knew exactly what he wanted the business to do, and very little about how products get built. That turned out to help — I had to argue every real decision in business terms, not design terms. Why the paywall moved. Why onboarding split into four. Why RTL couldn't wait.
@@ -211,19 +297,5 @@ Once the reasoning landed, he stopped reviewing pixels and started trusting dire
   </Takeaway>
   <Takeaway title="Push back harder on scope in month one">
     The extra month wasn't slow work — it was scope growing without renegotiation. I should have flagged it in week three instead of absorbing it.
-  </Takeaway>
-</Takeaways>
-
-### What this project taught me
-
-<Takeaways>
-  <Takeaway title="Ownership means the failures too">
-    Solo, no team, no senior to check against. Stuck meant reasoning it out alone and living with the answer.
-  </Takeaway>
-  <Takeaway title="Strategy beats surface">
-    The best work happened before Figma opened — the freemium argument, the onboarding structure, understanding how UAE families actually decide. The interfaces were the easy part.
-  </Takeaway>
-  <Takeaway title="An unfamiliar market is a research problem first">
-    I had to learn the UAE education system and how families weigh options before a single screen made sense. Domain understanding wasn't prep — it was the work.
   </Takeaway>
 </Takeaways>

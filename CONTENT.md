@@ -71,8 +71,50 @@ Keep the section order — it's the order recruiters scan. The load-bearing part
 what it cost — that's the point. **Recruiters read tradeoffs as seniority.**
 Three honest decisions beat eight padded ones.
 
-Other components available in the body: `<ImageBlock>`, `<Compare>`,
-`<Callout>`, `<SystemGrid>` / `<SystemItem>`.
+Other components available in the body: `<ImageBlock>` (one image), `<Compare>`
+(exactly two, side by side), `<Callout>`, `<CardGrid>` / `<Card>`,
+`<Findings>` / `<Finding>`, `<Steps>` / `<Step>`, `<StatRow>` / `<Stat>`,
+`<SpecList>` / `<Spec>`, `<Takeaways>` / `<Takeaway>`, `<Principle>`, `<Quote>`,
+`<Deliverables>`.
+
+### Showing more than two screens — `<ScreenCarousel>`
+
+```mdx
+<ScreenCarousel label="Student dashboard">
+  <Screen src="/work/careerlogica/student-01-dashboard.avif" name="Dashboard home" alt="…" />
+  <Screen src="/work/careerlogica/student-02-counselling.avif" name="Career counselling" alt="…" />
+</ScreenCarousel>
+```
+
+One screen at a time at **705px**, with the next peeking at the edge. Arrows,
+dots, a live counter, keyboard `←`/`→`, and swipe on touch. Nothing moves on its
+own — there is no autoplay, deliberately.
+
+**Use it for shipped screens and for sets of tall artifacts.** Not for a single
+image (`<ImageBlock>`) and not for a genuine before/after pair (`<Compare>` —
+the side-by-side *is* the argument there, and a swipe hides it).
+
+The reason it exists: nine screens composed onto one board render each screen
+near 260px in the 820px column — enough to see a layout, not enough to read one.
+One at a time spends the same pixels on one screen. That means **one image file
+per screen**, not a composed board.
+
+> **`name` is optional but nearly always wanted** — it captions the slide. Keep
+> it short; it sits under the frame.
+
+### Tables don't render
+
+`remark-gfm` isn't configured, so a markdown table renders as raw pipes and
+dashes on the page. Use `<SpecList>`, `<StatRow>` or `<CardGrid>` instead —
+they all say "a set of label/value pairs" and they're responsive, which a table
+at this width isn't.
+
+`<MetaBar />` takes no props — it reads Role, Delivered, Tools, Platform,
+Industry and Timeline straight from the frontmatter. It is a body tag rather
+than something the page places automatically, so the facts land where the
+writing wants them. All three studies put it at the end of Context, so the
+reader gets the hook and then what the project is before six fields of
+metadata. Include it once per case study.
 
 ---
 
