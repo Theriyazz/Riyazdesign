@@ -77,7 +77,9 @@ export function Hero() {
       <DottedSurface />
 
       <div className="shell relative flex flex-1 flex-col justify-center">
-        <p data-hero-sub="0" className="mb-10">
+        {/* mb-8 (32px), down 20% from mb-10 (40px) — the eyebrow pill reads as
+            a label attached to the headline, and the wider gap let it float. */}
+        <p data-hero-sub="0" className="mb-8">
           <span className="inline-flex items-center gap-2.5 rounded-full border border-[var(--border)] px-3.5 py-2">
             <span className="relative grid h-2 w-2 place-items-center">
               <span
@@ -93,7 +95,13 @@ export function Hero() {
           </span>
         </p>
 
-        <h1 className="text-[length:var(--text-3xl)] font-bold">
+        {/* `--text-3xl` bottoms out at its 53px floor below ~630px, which is
+            wide enough that "Think, Design, Ship" wraps to two lines on a
+            phone — and the base `h1` rule's `line-height: 0.92` then sets
+            those two lines tighter than the glyphs are tall. Desktop keeps
+            0.92, where this is a single line and the tight leading is the
+            point. */}
+        <h1 className="text-[length:var(--text-3xl)] font-bold max-md:leading-[1.125]">
           {/* The line clips its own overflow so the entrance wipe reads cleanly. */}
           <span className="block overflow-hidden py-[0.06em]">
             {/* One face, one weight. The serif accent moved down to the

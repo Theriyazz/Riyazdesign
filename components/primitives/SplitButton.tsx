@@ -80,8 +80,42 @@ export function SplitButton({
           emphasis ? accentSkin : darkSkin
         )}
       >
-        <span className={cn("mono ctl-text leading-none", lg && "font-semibold")}>
-          {children}
+        {/*
+          The label is rendered twice, stacked in one grid cell. On hover the
+          visible copy rolls up and out while its twin rolls up into the space
+          it left, so the text reads as travelling through the pill — the same
+          motion the arrow chip below already makes, and the same reason it
+          needs `overflow-hidden` to sell it.
+
+          Only the first copy is readable. The second is `aria-hidden`, so the
+          <a> still computes a single accessible name from a single label.
+
+          `group-hover:`, never plain `hover:` — the custom variant in
+          globals.css teaches it about `[data-hovered]`, which is the only
+          thing that fires once Lenis has scrolled the page under a pointer
+          that has not itself moved. Written with `hover:` the label would
+          desync from the arrows in exactly that case.
+
+          `.mono` uppercases the label so there is nothing for the mask to clip,
+          but the padding/negative-margin pair is kept as insurance for a future
+          caller that is not uppercase — same trick as lib/splitText.ts.
+        */}
+        <span
+          className={cn(
+            "mono ctl-text grid overflow-hidden leading-none",
+            "mb-[-0.14em] pb-[0.14em]",
+            lg && "font-semibold"
+          )}
+        >
+          <span className="col-start-1 row-start-1 block transition-transform duration-[420ms] ease-[var(--ease-through)] group-hover:-translate-y-full group-focus-visible:-translate-y-full">
+            {children}
+          </span>
+          <span
+            aria-hidden
+            className="col-start-1 row-start-1 block translate-y-full transition-transform duration-[420ms] ease-[var(--ease-through)] group-hover:translate-y-0 group-focus-visible:translate-y-0"
+          >
+            {children}
+          </span>
         </span>
       </span>
 
@@ -120,7 +154,13 @@ export function SplitButton({
   const classes = cn(
     "group inline-flex w-fit items-stretch",
     // The gap is the whole idea — it opens on hover.
-    "gap-[var(--btn-gap)] hover:gap-[var(--btn-gap-hover)]",
+    //
+    // `data-[hovered]` has to be spelled out here. The `group-hover` variant
+    // only ever matches *descendants* of `.group`, and this is the group
+    // itself — so without the attribute selector the gap would be the one part
+    // of the button that ignores HoverSync, and it would lag behind the label
+    // and the arrows whenever the page scrolled under a stationary pointer.
+    "gap-[var(--btn-gap)] hover:gap-[var(--btn-gap-hover)] data-[hovered]:gap-[var(--btn-gap-hover)]",
     "transition-[gap] duration-300 ease-[var(--ease-out)]",
     className
   );

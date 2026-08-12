@@ -12,6 +12,13 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { Experience } from "@/components/sections/Experience";
 import { ContactCTA } from "@/components/sections/ContactCTA";
 
+/**
+ * Testimonials still has real client quotes in it — this isn't a content
+ * decision, just a "not yet" for the page. Flip back on rather than deleting
+ * the section or its render call.
+ */
+const SHOW_TESTIMONIALS = false;
+
 export default async function HomePage() {
   const studies = await getAllCaseStudies();
 
@@ -20,19 +27,23 @@ export default async function HomePage() {
     title: meta.title,
     industry: meta.industry,
     year: meta.year,
-    cover: meta.cover,
+    // The card's own image where one exists, the shared cover otherwise.
+    cover: meta.thumbnail ?? meta.cover,
   }));
 
   return (
     <>
       <HashScroller />
       <Hero />
+      {/* Ahead of the statement paragraphs on purpose: the tool row is a
+          credibility strip, and it reads better as something a visitor
+          passes on the way into the pitch than as a coda after it. */}
+      <ToolStack />
       <FirstFold />
       <SelectedWork projects={projects} />
       <About />
       <Capabilities />
-      <ToolStack />
-      <Testimonials />
+      {SHOW_TESTIMONIALS ? <Testimonials /> : null}
       <Experience />
       <ContactCTA />
     </>

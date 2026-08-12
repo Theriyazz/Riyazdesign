@@ -18,7 +18,6 @@ export const site = {
 
   email: "malekriyaz606@gmail.com",
   url: "https://riyazdesigns.com",
-  // TODO(riyaz): drop the PDF at public/riyaz-malek-resume.pdf
   resume: "/riyaz-malek-resume.pdf",
 
   socials: [

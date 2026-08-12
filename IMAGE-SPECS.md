@@ -93,7 +93,7 @@ rhythm least.
 
 ## 001 — CareerLogica
 
-Cover live, 4 research boards live. **25 body images missing.**
+**All 33 images live** — cover, the 4-board research carousel, and all 21 shipped screens.
 
 > **Research board sources live in `CareerLogica Images/`**, not
 > `Case Study Section Images/`. They are 2048×1280 against a 705px display —
@@ -115,54 +115,50 @@ artifact to study, not a set to browse.
 | # | Section | File | Kind | Display | Source | Description |
 |---|---------|------|------|---------|--------|-------------|
 | 1.0 | Hero | `/work/careerlogica/cover.avif` | Hero | 1280×580 | 2560×1160 | Live |
-| 1.1 | 02 — Persona, structure, then layout | `/work/careerlogica/research-01…04-*.avif` | **Carousel** ×4 | 705 | 1410 | **Live (2048×1280)** — persona, sitemap, marketing-site wireframes, dashboard wireframes |
-| 1.2 | 03 — Three separate signup flows | `/work/careerlogica/signup-flows.avif` | Standard | 820 | 1640 | Student / counsellor / school paths branching from one entry screen. Wide diagram — height is free |
-| 1.3 | 03 — 4-step onboarding | `/work/careerlogica/02.avif` | Standard | 820 | 1640 | The four-step onboarding flow, progress bar opening at 2 of 4 — Identity → Scholar → Explorer → Achiever |
-| 1.4 | 04 — The marketing website | `/work/careerlogica/03.avif` | Standard | 820 | 1640 | Full-page scroll of the CareerLogica marketing homepage — the approved direction the rest of the product inherited |
-| 1.5a | 05 — The student dashboard | `/work/careerlogica/dash-old.avif` | Compare — "CareerNaksha" | 398 | 840 | The CareerNaksha student dashboard home, **clean — no annotation callouts** |
-| 1.5b | 05 — The student dashboard | `/work/careerlogica/dash-new.avif` | Compare — "CareerLogica — UAE" | 398 | 840 | The rebuilt CareerLogica student dashboard home, **clean — no annotation callouts** |
-| 1.6 | 05 — The student dashboard | `/work/careerlogica/student-01…09-*.avif` | **Carousel** ×9 | 705 | 1410 | One file per screen: dashboard, counselling, sessions, profile, admissions, library, payment, plan, active-plan |
-| 1.7 | 05 — Same system, three more brains | `/work/careerlogica/{counsellor,school,admin}-*.avif` | **Carousel** ×12 | 705 | 1410 | One file per screen, 4 per role. Order in the MDX is counsellor → school → admin |
-| 1.8a | 06 — Building it in both directions | `/work/careerlogica/en.avif` | Compare — "English — LTR" | 398 | 840 | English left-to-right homepage layout |
-| 1.8b | 06 — Building it in both directions | `/work/careerlogica/ar.avif` | Compare — "Arabic — RTL" | 398 | 840 | Arabic right-to-left homepage layout, fully mirrored |
+| 1.1 | 02 — Persona, structure, then layout | `/work/careerlogica/research-01…04-*.avif` | **Carousel** ×4 | 705 | 1410 | Live (2048×1280) — persona, sitemap, marketing-site wireframes, dashboard wireframes |
+| 1.2 | 03 — Three separate signup flows | `/work/careerlogica/signup-flows.avif` | Standard | 820 | 1640 | Live — student / counsellor / school paths branching from one entry screen |
+| 1.3 | 03 — 4-step onboarding | `/work/careerlogica/02.avif` | Standard | 820 | 1640 | Live — the four-step onboarding flow, progress bar opening at 2 of 4 |
+| 1.4 | 04 — The marketing website | `/work/careerlogica/03.avif` | Standard | 820 | 1640 | Live — full-page scroll of the CareerLogica marketing homepage |
+| 1.5a | 05 — The student dashboard | `/work/careerlogica/dash-old.avif` | Compare — "CareerNaksha" | 398 | 840 | Live — the CareerNaksha student dashboard home |
+| 1.5b | 05 — The student dashboard | `/work/careerlogica/dash-new.avif` | Compare — "CareerLogica — UAE" | 398 | 840 | Live — the rebuilt CareerLogica student dashboard home |
+| 1.6 | 05 — The student dashboard | `/work/careerlogica/student-01…09-*.avif` | **Carousel** ×9 | 705 | 1410 | Live — one file per screen: dashboard, counselling, sessions, profile, admissions, library, payment, plan, active-plan |
+| 1.7 | 05 — Same system, three more brains | `/work/careerlogica/{counsellor,school,admin}-*.avif` | **Carousel** ×12 | 705 | 1410 | Live — one file per screen, 4 per role |
+| 1.8a | 06 — Building it in both directions | `/work/careerlogica/en.avif` | Compare — "English — LTR" | 398 | 840 | Live — English left-to-right homepage layout |
+| 1.8b | 06 — Building it in both directions | `/work/careerlogica/ar.avif` | Compare — "Arabic — RTL" | 398 | 840 | Live — Arabic right-to-left homepage layout, fully mirrored |
 
 ---
 
 ## 002 — PECUC
 
-Cover live. **23 body images missing** — the largest set, mostly the
-before/after wall.
+Cover live, 17 body images live. **1 missing** — the outcome full-scroll.
 
 | # | Section | File | Kind | Display | Source | Description |
 |---|---------|------|------|---------|--------|-------------|
 | 2.0 | Hero | `/work/pecuc/cover.avif` | Hero | 1280×580 | 2560×1160 | Live |
 | 2.1 | The problem | `/work/pecuc/01.avif` | Standard | 820 | 1640 | Full-page capture of the 2001-era PECUC homepage — eleven-message slider, seventeen links above the fold |
-| 2.2 | Stage 01 — The audit | `/work/pecuc/02.avif` | Standard | 820 | 1640 | The old navigation fully expanded, annotated with all 37 destinations |
+| 2.2 | Stage 01 — Sitemap and IA | `/work/pecuc/sitemap-ia.avif` | Standard | 820 | 1640 | The sitemap drawn as a tree, beside the IA table mapping every label to a URL and page type |
 | 2.3a | Stage 02 — Restructuring | `/work/pecuc/nav-old.avif` | Compare — "37 destinations" | 398 | 840 | Sitemap of the old 37-destination navigation |
 | 2.3b | Stage 02 — Restructuring | `/work/pecuc/nav-new.avif` | Compare — "7 destinations" | 398 | 840 | Sitemap of the new 7-destination navigation |
 | 2.4 | Stage 03 — Building the visual language | `/work/pecuc/03.avif` | Standard | 820 | 1640 | The PECUC visual design guide — palette, type sheet, photography treatment |
-| 2.5 | Stage 04 — Designing the two broken journeys | `/work/pecuc/04.avif` | Standard | 820 | 1640 | Full scroll of the redesigned tiered donation page |
+| 2.5a | Stage 04 — Designing the two broken journeys | `/work/pecuc/donation.avif` | Compare — "Donation" | 398 | 840 | Live — full scroll of the redesigned tiered donation page |
+| 2.5b | Stage 04 — Designing the two broken journeys | `/work/pecuc/volunteer.avif` | Compare — "Volunteering" | 398 | 840 | Live — full scroll of the staged volunteer signup |
 | 2.6a | Stage 05 — Iteration | `/work/pecuc/layout-v1.avif` | Compare — "Version 1 — rejected" | 398 | 840 | The first homepage layout, rejected at client review |
 | 2.6b | Stage 05 — Iteration | `/work/pecuc/layout-v2.avif` | Compare — "Version 2 — approved" | 398 | 840 | The approved homepage layout |
 | 2.7a | Before and after | `/work/pecuc/ba-01-old.avif` | Compare — "The hero — before" | 398 | 840 | Old homepage hero: eleven banners on cube transitions |
 | 2.7b | Before and after | `/work/pecuc/ba-01-new.avif` | Compare — "The hero — after" | 398 | 840 | New homepage hero: one child's photograph, one heading, one paragraph |
 | 2.8a | Before and after | `/work/pecuc/ba-02-old.avif` | Compare — "Programmes — before" | 398 | 840 | Nine programme themes hidden inside a dropdown menu |
-| 2.8b | Before and after | `/work/pecuc/ba-02-new.avif` | Compare — "Programmes — after" | 398 | 840 | "Where We Walk Together" as a full section, visible without interaction |
-| 2.9a | Before and after | `/work/pecuc/ba-03-old.avif` | Compare — "Credibility — before" | 398 | 840 | Partner links in a side table, one pointing to a Word document |
-| 2.9b | Before and after | `/work/pecuc/ba-03-new.avif` | Compare — "Credibility — after" | 398 | 840 | UNICEF and EU logo strip under the hero, consolidated credibility section |
-| 2.10a | Before and after | `/work/pecuc/ba-04-old.avif` | Compare — "The stories — before" | 398 | 840 | Truncated grey story text ending in a raw query-string link |
-| 2.10b | Before and after | `/work/pecuc/ba-04-new.avif` | Compare — "The stories — after" | 398 | 840 | "Stories That Will Move You", with full portraits of the people in them |
-| 2.11a | Before and after | `/work/pecuc/ba-05-old.avif` | Compare — "Donation — before" | 398 | 840 | The old donation link pointing to a dead anchor |
-| 2.11b | Before and after | `/work/pecuc/ba-05-new.avif` | Compare — "Donation — after" | 398 | 840 | The tiered giving page with programme-named tiers |
-| 2.12a | Before and after | `/work/pecuc/ba-06-old.avif` | Compare — "Volunteering — before" | 398 | 840 | The Get Involved link downloading a printable PDF form |
-| 2.12b | Before and after | `/work/pecuc/ba-06-new.avif` | Compare — "Volunteering — after" | 398 | 840 | The staged volunteer signup flow |
-| 2.13a | Before and after | `/work/pecuc/ba-07-old.avif` | Compare — "The footer — before" | 398 | 840 | Footer reading "All rights Reserved 2001-2023" |
-| 2.13b | Before and after | `/work/pecuc/ba-07-new.avif` | Compare — "The footer — after" | 398 | 840 | Footer stat strip carrying PECUC's own reported figures |
-| 2.14 | Outcome | `/work/pecuc/05.avif` | Standard | 820 | 1640 | Full-page scroll of the redesigned PECUC homepage |
+| 2.8b | Before and after | `/work/pecuc/ba-02-new.avif` | Compare — "Programmes — after" | 398 | 840 | Live — "Where We Walk Together" as a full section, visible without interaction |
+| 2.9a | Before and after | `/work/pecuc/ba-03-old.avif` | Compare — "Careers — before" | 398 | 840 | Live — the old careers page listing roles as plain links |
+| 2.9b | Before and after | `/work/pecuc/ba-03-new.avif` | Compare — "Careers — after" | 398 | 840 | Live — the redesigned careers page leading with the work and the team |
+| 2.10a | Before and after | `/work/pecuc/ba-04-old.avif` | Compare — "Press — before" | 398 | 840 | Live — the old press page as an undated list of links |
+| 2.10b | Before and after | `/work/pecuc/ba-04-new.avif` | Compare — "Press — after" | 398 | 840 | Live — the redesigned press and media page, dated and attributed |
+| 2.14 | Outcome | `/work/pecuc/05.avif` | Standard | 820 | 1640 | **Missing** — full-page scroll of the redesigned PECUC homepage |
 
-The before/after wall is 14 images that must read as pairs. Shoot them at
-matched crops — same framing, same scroll depth — or the comparison does the
-opposite of what it's there for.
+The before/after wall is 4 pairs: hero, programmes, careers, press. Credibility,
+the stories, donation, volunteering and the footer were cut — donation and
+volunteering now appear as their own two-up under Stage 04 instead. Pairs are
+shot at matched crops, same framing and scroll depth; anything else and the
+comparison does the opposite of what it's there for.
 
 ---
 
@@ -188,10 +184,10 @@ Cover live. **7 body images missing.**
 | | Live | Missing |
 |---|---|---|
 | Homepage | 13 files (3 covers, 1 portrait, 9 marks) | 0 |
-| CareerLogica body | 4 | 25 |
-| PECUC body | 0 | 23 |
+| CareerLogica body | 32 | 0 |
+| PECUC body | 17 | 1 |
 | ATRC body | 0 | 7 |
-| **Total** | **17 in use** (+3 generated, 1 unused) | **55** |
+| **Total** | **62 in use** (+3 generated, 1 unused) | **8** |
 
 ## Current files on disk
 

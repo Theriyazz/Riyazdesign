@@ -4,7 +4,7 @@ import { SmoothScroll } from "./SmoothScroll";
 import { Cursor } from "./Cursor";
 import { HoverSync } from "./HoverSync";
 import { Preloader } from "./Preloader";
-import { TransitionProvider } from "./TransitionOverlay";
+import { TransitionProvider } from "./PageTransition";
 
 /**
  * Every global motion system, mounted once at the layout root.

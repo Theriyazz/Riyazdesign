@@ -33,20 +33,26 @@ export function ContactCTA() {
         </a>
       </RevealGroup>
 
+      {/* Email is filtered out rather than removed from `site.socials`: the
+          giant mailto above is the same link at 20x the size, and a second
+          "Email" three rows under it reads as a different destination. The
+          entry stays in the config for anywhere else that wants the full set. */}
       <ul className="mt-14 flex flex-wrap gap-x-7 gap-y-3">
-        {site.socials.map((s) => (
-          <li key={s.label}>
-            <a
-              href={s.href}
-              className="link-sweep mono text-fg-muted transition-colors duration-200 hover:text-fg"
-              {...(s.href.startsWith("http")
-                ? { target: "_blank", rel: "noreferrer noopener" }
-                : {})}
-            >
-              {s.label}
-            </a>
-          </li>
-        ))}
+        {site.socials
+          .filter((s) => s.label !== "Email")
+          .map((s) => (
+            <li key={s.label}>
+              <a
+                href={s.href}
+                className="link-sweep mono text-fg-muted transition-colors duration-200 hover:text-fg"
+                {...(s.href.startsWith("http")
+                  ? { target: "_blank", rel: "noreferrer noopener" }
+                  : {})}
+              >
+                {s.label}
+              </a>
+            </li>
+          ))}
         <li>
           <a
             href={site.resume}

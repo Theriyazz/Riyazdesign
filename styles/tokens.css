@@ -133,6 +133,12 @@
   /* -- Motion ------------------------------------------------------------ */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Symmetric and strongly in-out: slow at both ends, fast through the middle.
+     That shape is what makes a scale read as travel rather than as a resize,
+     which is why it carries the page transition and the button text roll.
+     Registered in lib/gsap.ts under the name "through" — the two are twins,
+     so a change to one is a change to both. */
+  --ease-through: cubic-bezier(0.7, 0.01, 0.31, 1);
   --dur-fast: 180ms;
   --dur: 280ms;
   --dur-slow: 400ms;

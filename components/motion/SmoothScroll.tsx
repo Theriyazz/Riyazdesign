@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
 
@@ -14,6 +14,9 @@ import { useReducedMotion } from "@/lib/useReducedMotion";
  */
 let instance: Lenis | null = null;
 export const getLenis = () => instance;
+
+const useIsoLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 /**
  * Lenis, driven by GSAP's ticker so smooth scroll and ScrollTrigger share a
@@ -52,11 +55,28 @@ export function SmoothScroll() {
     };
   }, [reduced]);
 
-  // A new route is a new document height; stale triggers would fire at the
-  // wrong offsets. Recalculate once the fresh DOM has painted.
-  useEffect(() => {
+  /*
+   * A new route is a new document height; stale triggers would fire at the
+   * wrong offsets. Recalculate once the fresh DOM has painted.
+   *
+   * A layout effect, and the timing is load-bearing. `PageTransition` measures
+   * the viewport centre to pivot its bloom around, and this component is a
+   * child of that provider — React runs effects child-first, so putting the
+   * scroll reset here guarantees it has happened before the pivot is taken.
+   * As a passive effect it would land a frame late and the page would appear
+   * to slide as it bloomed.
+   */
+  useIsoLayoutEffect(() => {
     // Landing on /#work must not be yanked back to the top.
-    if (!window.location.hash) window.scrollTo(0, 0);
+    if (!window.location.hash) {
+      const lenis = instance;
+      // Lenis is stopped for the duration of a page transition, and a bare
+      // `window.scrollTo` would move the document without telling it — on
+      // `.start()` it would snap back to its own cached position. `force`
+      // scrolls even while stopped and keeps the two in agreement.
+      if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
+      else window.scrollTo(0, 0);
+    }
     const id = requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => cancelAnimationFrame(id);
   }, [pathname]);

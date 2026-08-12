@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 import { gsap } from "@/lib/gsap";
-import { imageProps } from "@/lib/images";
+import { imageMeta, imageProps } from "@/lib/images";
+import { MissingImage } from "@/components/primitives/MissingImage";
 import { takeHandoff } from "@/lib/flipHandoff";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
@@ -66,13 +67,17 @@ export function CaseHero({
       ref={ref}
       className="mt-14 h-[clamp(220px,42vw,580px)] w-full overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised"
     >
-      <Image
-        {...imageProps(cover)}
-        alt={`${title} — project cover`}
-        priority
-        sizes="(max-width: 1440px) 100vw, 1440px"
-        className="h-full w-full object-cover"
-      />
+      {imageMeta(cover) ? (
+        <Image
+          {...imageProps(cover)}
+          alt={`${title} — project cover`}
+          priority
+          sizes="(max-width: 1440px) 100vw, 1440px"
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <MissingImage src={cover} />
+      )}
     </div>
   );
 }

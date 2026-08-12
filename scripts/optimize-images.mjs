@@ -89,17 +89,102 @@ const CAREERLOGICA_WORK = [
   `work/careerlogica/${name}`,
 ]);
 
+/**
+ * Every PECUC figure, exported under the name the MDX references it by.
+ *
+ * Sources carry the same `.avif.png` double extension as the CareerLogica
+ * screens — PNGs named after the AVIF they become, left exactly as exported
+ * because this string has to match what is on disk.
+ *
+ * `cover` and `thumbnail` are two separate crops of the same shot, not one
+ * file pointed at twice: the case study hero is 2.22:1 and the homepage work
+ * card crops 4:5, and neither ratio survives the other's file.
+ */
+const PECUC = [
+  ...[
+    "01",
+    "sitemap-ia",
+    "nav-old",
+    "nav-new",
+    "03",
+    "layout-v1",
+    "layout-v2",
+    "05",
+    "donation",
+    "volunteer",
+    "ba-01-old",
+    "ba-01-new",
+    "ba-02-old",
+    "ba-02-new",
+    "ba-03-old",
+    "ba-03-new",
+    "ba-04-old",
+    "ba-04-new",
+    "cover",
+  ].map((name) => [`work/pecuc/${name}.avif.png`, `work/pecuc/${name}`]),
+  // Capital T, unlike the rest of the set. Matched as it is rather than
+  // renamed on disk, for the same reason as the double extension.
+  ["work/pecuc/Thumbnail.avif.png", "work/pecuc/thumbnail"],
+];
+
+/**
+ * ATRC, same convention as PECUC — one source per name the MDX references.
+ *
+ * `cover` (2.22:1) and `thumbnail` (1.33:1) are again two separate crops, so
+ * the wide case study hero and the 4:5 work card each get a file that survives
+ * its own aspect ratio.
+ */
+const ATRC = [
+  ...[
+    "proto-consumer",
+    "proto-institutional",
+    "pause",
+    "still-there",
+    "03",
+    "cover",
+  ].map((name) => [`work/atrc/${name}.avif.png`, `work/atrc/${name}`]),
+  ["work/atrc/Thumbnail.avif.png", "work/atrc/thumbnail"],
+  ["work/atrc/User Flow.png", "work/atrc/user-flow"],
+  ["work/atrc/Iteration 3.png", "work/atrc/iteration-3"],
+  // The wireframe spread, exported into the careerlogica folder by mistake.
+  // Pointed at where it actually sits rather than moved, so a re-export of that
+  // same file lands in the same place without a second manual step.
+  ["work/careerlogica/02.avif.png", "work/atrc/01"],
+];
+
+/**
+ * The Preloader's eight-image cycle. Own top-level folder, same reasoning as
+ * `riyaz/` and `tools/`: these previews aren't owned by any one case study, so
+ * they don't belong under `work/`.
+ *
+ * Ordered as a sequence rather than by source filename: three sources already
+ * carry a "03"/"04"/"05" position from how they were exported, so those hold
+ * their spot; the rest are placed around them — a cover and a thumbnail to
+ * open, two screens and a before/after in the run, a portrait to close, the
+ * same shape as the old six-image cycle.
+ */
+const PRELOAD = [
+  ["Loading SCreen images/Cover Image ATRC.png", "preload/01"],
+  ["Loading SCreen images/Thumbnail.avif.png", "preload/02"],
+  ["Loading SCreen images/03.avif.png", "preload/03"],
+  ["Loading SCreen images/04.avif.png", "preload/04"],
+  ["Loading SCreen images/05.avif.png", "preload/05"],
+  ["Loading SCreen images/counsellor-01-dashboard.avif.png", "preload/06"],
+  ["Loading SCreen images/ba-01-new.avif.png", "preload/07"],
+  ["Loading SCreen images/Image 3 wide.png", "preload/08"],
+];
+
 /** source (relative to repo root) -> output basename under public/ */
 const JOBS = [
-  ["Case Study Section Images/Cover Image ATRC.png", "work/atrc/cover"],
-  // Re-shot cover. This one file is both the homepage work card (4:5 crop) and
-  // the case study hero (~2.2:1), so it is cropped twice in opposite
-  // directions — keep the subject centred both ways.
+  // The wide (~2.2:1) case study hero.
   [
     "CareerLogica Images/Work/careerlogica/Main COver Image of CareerLogica Case Study/Main COver Image of CareerLogica Case Study.png",
     "work/careerlogica/cover",
   ],
-  ["Case Study Section Images/Cover Image Pecuc.png", "work/pecuc/cover"],
+  // The 1.33:1 crop of the same shot for the homepage work card, which crops
+  // 4:5 and would lose the laptop out of the wide one. Capital C on the
+  // directory is what is on disk — matched, not corrected.
+  ["work/work/Careerlogica/Thumbnail.avif.png", "work/careerlogica/thumbnail"],
   ["Riyaz Images/Profile Riyaz.png", "riyaz/portrait"],
   ["Riyaz Images/Image 3 wide.png", "riyaz/wide"],
   ["Riyaz Images/Riyaz Image 2.png", "riyaz/alt-1"],
@@ -107,6 +192,9 @@ const JOBS = [
 
   ...CAREERLOGICA_RESEARCH,
   ...CAREERLOGICA_WORK,
+  ...PECUC,
+  ...ATRC,
+  ...PRELOAD,
 ];
 
 /**

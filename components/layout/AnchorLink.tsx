@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getLenis } from "@/components/motion/SmoothScroll";
+import { useTransition } from "@/components/motion/PageTransition";
 
 /**
  * Nav link to a homepage section.
@@ -26,7 +27,7 @@ export function AnchorLink({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
+  const { navigate } = useTransition();
   const onHome = pathname === "/";
 
   return (
@@ -38,7 +39,10 @@ export function AnchorLink({
         onNavigate?.();
 
         if (!onHome) {
-          router.push(`/#${hash}`);
+          // Through the page transition, like every other route change. Left
+          // as a bare push this was the one nav control that jumped, which
+          // stood out badly next to the wordmark beside it.
+          navigate(`/#${hash}`);
           return;
         }
         scrollToSection(hash);
@@ -52,12 +56,26 @@ export function AnchorLink({
   );
 }
 
-export function scrollToSection(hash: string) {
+/**
+ * `immediate` is for the cross-page case: the reader asked to land at a
+ * section, and the page transition is already the motion of getting there, so
+ * a second 1.1s glide underneath it is one movement too many.
+ *
+ * `force` because the page transition stops Lenis for its duration, and a
+ * `scrollTo` on a stopped instance is otherwise silently dropped.
+ */
+export function scrollToSection(hash: string, immediate = false) {
   const el = document.getElementById(hash);
   if (!el) return;
   const lenis = getLenis();
-  if (lenis) lenis.scrollTo(el, { offset: -12, duration: 1.1 });
-  else el.scrollIntoView({ behavior: "auto", block: "start" });
+  if (lenis) {
+    lenis.scrollTo(el, {
+      offset: -12,
+      duration: immediate ? 0 : 1.1,
+      immediate,
+      force: true,
+    });
+  } else el.scrollIntoView({ behavior: "auto", block: "start" });
 }
 
 /**
@@ -75,7 +93,7 @@ export function HashScroller() {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
     const id = requestAnimationFrame(() =>
-      requestAnimationFrame(() => scrollToSection(hash))
+      requestAnimationFrame(() => scrollToSection(hash, true))
     );
     return () => cancelAnimationFrame(id);
   }, [ready, pathname]);

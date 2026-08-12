@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import type { ComponentProps } from "react";
-import { useTransition } from "./TransitionOverlay";
+import { useTransition } from "./PageTransition";
 
 type Props = ComponentProps<typeof Link>;
 
 /**
- * A real <Link> that plays the curtain before navigating.
+ * A real <Link> that plays the page transition before navigating.
  *
  * It stays a genuine anchor with a genuine href, so middle-click, cmd-click,
  * "open in new tab", crawlers and the no-JS path all keep working — we only

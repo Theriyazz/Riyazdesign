@@ -32,6 +32,16 @@ export const caseStudySchema = z.object({
   timeline: z.string().min(1),
   cover: z.string().startsWith("/"),
   /**
+   * Optional separate image for the homepage work card.
+   *
+   * The card crops 4:5 portrait and the case study hero crops ~2.2:1
+   * landscape, so one file has to survive both — and a 2.2:1 cover loses about
+   * 64% of its width to the card's crop. Where a case study supplies a
+   * squarer thumbnail, the card uses it and the hero keeps the wide cover.
+   * Omitted, the card falls back to `cover` and nothing changes.
+   */
+  thumbnail: z.string().startsWith("/").optional(),
+  /**
    * The opening hook, verbatim from the case study source — the line the page
    * leads with under the meta bar.
    *

@@ -21,6 +21,27 @@ export interface SplitResult {
 const WORD_CLASS = "reveal-word";
 const CHAR_CLASS = "reveal-char";
 
+/**
+ * Rebuilds the chain of inline elements a word was nested inside, innermost
+ * first, so formatting survives the split.
+ *
+ * Shallow clones only — the children are the words we just made. Without this
+ * the splitter read `textContent` and every heading came back as flat text:
+ * `<span class="serif-em">every second</span>` lost its span, and with it the
+ * Instrument Serif italic that all five section headings depend on.
+ */
+function rewrap(word: HTMLElement, ancestors: HTMLElement[]): HTMLElement {
+  let out: HTMLElement = word;
+  for (let i = ancestors.length - 1; i >= 0; i--) {
+    const clone = ancestors[i].cloneNode(false) as HTMLElement;
+    // An id copied onto every word would be a duplicate several times over.
+    clone.removeAttribute("id");
+    clone.appendChild(out);
+    out = clone;
+  }
+  return out;
+}
+
 export function splitText(
   el: HTMLElement,
   kind: SplitKind = "words",
@@ -47,52 +68,69 @@ export function splitText(
   const frag = document.createDocumentFragment();
   const parts: HTMLElement[] = [];
 
-  // Split on whitespace but keep it, so spacing survives the round trip.
-  const tokens = text.split(/(\s+)/);
-
-  for (const token of tokens) {
-    if (token === "") continue;
-
-    if (/^\s+$/.test(token)) {
-      frag.appendChild(document.createTextNode(token));
-      continue;
-    }
-
-    const word = document.createElement("span");
-    word.className = WORD_CLASS;
-    // inline-block is what makes y/rotate transforms possible at all.
-    word.style.display = "inline-block";
-    word.style.willChange = "transform, opacity";
-
-    if (kind === "chars") {
-      for (const ch of Array.from(token)) {
-        const c = document.createElement("span");
-        c.className = CHAR_CLASS;
-        c.style.display = "inline-block";
-        c.textContent = ch;
-        word.appendChild(c);
-        parts.push(c);
+  /** Walks the real tree rather than a flattened string, carrying the inline
+      elements each text node sits inside down to the words it produces. */
+  const walk = (node: Node, ancestors: HTMLElement[], into: Node) => {
+    for (const child of Array.from(node.childNodes)) {
+      if (child.nodeType === Node.ELEMENT_NODE) {
+        walk(child, [...ancestors, child as HTMLElement], into);
+        continue;
       }
-    } else {
-      word.textContent = token;
-      parts.push(word);
-    }
+      if (child.nodeType !== Node.TEXT_NODE) continue;
 
-    if (mask) {
-      const box = document.createElement("span");
-      box.style.display = "inline-block";
-      box.style.overflow = "hidden";
-      box.style.verticalAlign = "bottom";
-      // overflow:hidden clips descenders against the line box, so the mask is
-      // grown downward and the extra height pulled back out of the layout.
-      box.style.paddingBottom = "0.14em";
-      box.style.marginBottom = "-0.14em";
-      box.appendChild(word);
-      frag.appendChild(box);
-    } else {
-      frag.appendChild(word);
+      // Split on whitespace but keep it, so spacing survives the round trip.
+      for (const token of (child.textContent ?? "").split(/(\s+)/)) {
+        if (token === "") continue;
+
+        if (/^\s+$/.test(token)) {
+          into.appendChild(document.createTextNode(token));
+          continue;
+        }
+
+        const word = document.createElement("span");
+        word.className = WORD_CLASS;
+        // inline-block is what makes y/rotate transforms possible at all.
+        word.style.display = "inline-block";
+        word.style.willChange = "transform, opacity";
+
+        if (kind === "chars") {
+          for (const ch of Array.from(token)) {
+            const c = document.createElement("span");
+            c.className = CHAR_CLASS;
+            c.style.display = "inline-block";
+            c.textContent = ch;
+            word.appendChild(c);
+            parts.push(c);
+          }
+        } else {
+          word.textContent = token;
+          parts.push(word);
+        }
+
+        // The formatting wraps the word; the mask wraps the formatting. That
+        // order matters — the mask has to be the outermost box for the clip to
+        // apply to the whole rendered word, italic and all.
+        const formatted = rewrap(word, ancestors);
+
+        if (mask) {
+          const box = document.createElement("span");
+          box.style.display = "inline-block";
+          box.style.overflow = "hidden";
+          box.style.verticalAlign = "bottom";
+          // overflow:hidden clips descenders against the line box, so the mask
+          // is grown downward and the extra height pulled back out of layout.
+          box.style.paddingBottom = "0.14em";
+          box.style.marginBottom = "-0.14em";
+          box.appendChild(formatted);
+          into.appendChild(box);
+        } else {
+          into.appendChild(formatted);
+        }
+      }
     }
-  }
+  };
+
+  walk(el, [], frag);
 
   visual.appendChild(frag);
   el.replaceChildren(visual, spoken);

@@ -2,8 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-
+import { TransitionLink } from "@/components/motion/TransitionLink";
 import { AnchorLink } from "./AnchorLink";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
@@ -247,9 +246,17 @@ export function Nav() {
           aria-label="Primary"
           className="shell relative flex items-center justify-between gap-4 py-5"
         >
-          <Link href="/" className="shrink-0 text-[length:var(--text-base)] font-medium tracking-[-0.02em] text-fg">
+          {/* A TransitionLink, not a plain one. As a plain Link this was the
+              single internal navigation on the site that skipped the page
+              transition — barely noticeable against the old curtain, glaring
+              now that the transition is the thing the site is built around.
+              Clicking it while already home scrolls to the top instead. */}
+          <TransitionLink
+            href="/"
+            className="shrink-0 text-[length:var(--text-base)] font-medium tracking-[-0.02em] text-fg"
+          >
             {site.wordmark}
-          </Link>
+          </TransitionLink>
 
           {/* Below `md` these three labels plus the resume button crowd a 375px
               bar, so they move into a panel. */}

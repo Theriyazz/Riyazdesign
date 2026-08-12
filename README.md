@@ -200,7 +200,7 @@ block. See the comment in `components/layout/Footer.tsx`.
 app/                 / and work/[slug] — that's all four pages
 components/
   primitives/        SplitButton · MicroLabel · Tag · WorkCard · Marquee
-  motion/            Preloader · Cursor · TransitionOverlay · SmoothScroll · Reveal*
+  motion/            Preloader · Cursor · PageTransition · SmoothScroll · Reveal*
   sections/          the homepage, one file per section
   case-study/        MDX components, meta bar, metrics band, section rail
   layout/            Nav · Footer · AnchorLink · LocalTime

@@ -4,13 +4,14 @@ index: "002"
 title: PECUC
 subtitle: Website redesign for a 35-year-old non-profit
 detail: Cut navigation from 37 destinations to 7 and clicks-to-content from 4 to 2. Consolidated 9 disconnected sub-sites into one filterable hub, and built the organisation's first documented design guide.
-role: [UX design]
+role: [UX design, UI design, Website redesign, Responsive UI]
 delivered: [Figma designs, Component library, Mobile responsive UI]
 tools: [Figma, FigJam, Perplexity]
 platform: [Web — desktop + mobile, Responsive]
 industry: Non-profit organisation
 timeline: 2 months
 cover: /work/pecuc/cover.avif
+thumbnail: /work/pecuc/thumbnail.avif
 headline: 35 years of real impact. A website that made it invisible.
 year: "2026"
 featured: true
@@ -24,12 +25,12 @@ PECUC has protected children's rights in Odisha since 1990 — with UNICEF and t
 
 People's Cultural Centre is a non-profit development organisation working for the rights of children, women, older people, indigenous communities and the rural and urban poor. It began with a children's festival attended by 5,000 children, and has since run more than 178 projects across 30 districts of Odisha and 4 districts of Delhi. It holds UN ECOSOC Special Consultative Status, is FCRA compliant and ISO certified, and the Government of Odisha has adopted some of its community models into state policy.
 
-<Deliverables items="Homepage · About us · Programs · Donation flow · Volunteer flow · Careers · Blog · News · Impact reports · Gallery · Contact · Resources hub · 404 · Privacy & terms · Visual design guide · Component library" />
+<Deliverables items="User flow · UX audit · UX strategy · Research · Final UI · Dev handoff" />
 
 <Callout>
-  I didn't document this project while I built it, so this isn't a
-  reconstructed process diary. It's an account of what I found and what I
-  decided. Everything I describe about the old site is verifiable at
+  **Note** — I didn't document this project while I built it, so this isn't
+  a reconstructed process diary. It's an account of what I found and what
+  I decided. Everything I describe about the old site is verifiable at
   pecuc.org today.
 </Callout>
 
@@ -39,17 +40,15 @@ People's Cultural Centre is a non-profit development organisation working for th
 
 An organisation with UNICEF's logo, 178 projects and thirty-five years of photographs was presenting itself online in a way that made a first-time visitor doubt all of it.
 
-The old site opened with a banner slider running eleven messages on 2000s-era cube transitions. Content sat in bordered boxes packed edge to edge. Seventeen links appeared above the fold before a single sentence explaining what PECUC does. Photographs of the children whose lives this organisation changed were shrunk to thumbnails beside links labelled `homedetails.aspx?id=H1`.
+The old site opened with a slider running eleven messages. Seventeen links sat above the fold before a single sentence explaining what PECUC does. Photographs of the children this organisation changed were shrunk to thumbnails beside links labelled `homedetails.aspx?id=H1`.
 
-No hierarchy, no breathing room, no type system. Every element shouting at the same volume, which reads as silence.
-
-**And the two links that matter most were broken.** Donation pointed to an empty anchor — clicking it did nothing. Volunteering downloaded a PDF to print and fill by hand. For a non-profit, those two links *are* the product. An organisation this credible, presenting itself this badly, doesn't just look dated — it loses donations it will never know it lost.
+**And the two links that matter most were broken.** Donation pointed to an empty anchor. Volunteering downloaded a PDF to print and fill by hand. For a non-profit, those two links *are* the product — **an organisation this credible, presenting itself this badly, loses donations it will never know it lost.**
 
 <ImageBlock src="/work/pecuc/01.avif" alt="Full-page capture of the 2001-era PECUC homepage" caption="The site as it stood: an eleven-message slider, seventeen links above the fold, and photographs reduced to thumbnails." />
 
 ## Stage 01 — The audit
 
-I didn't run user research on this project. I didn't need to. I needed to open the site and count.
+I didn't run user research on this project. **I didn't need to. I needed to open the site and count.**
 
 <Findings>
   <Finding n="37" title="Navigation destinations">
@@ -67,13 +66,24 @@ I didn't run user research on this project. I didn't need to. I needed to open t
   The content was never the problem. PECUC's writing is better than most NGO copy I've read — Gauri, who joined a self-help group and changed her family's circumstances; Mamata, who returned to school after losing her mother to COVID-19; a clean water project for 132 households in Baidabaja. Specific, human, unsentimental. It was buried behind links labelled `id=H1`.
 </Quote>
 
-None of this was neglect. PECUC were still publishing to this site in 2025. It was a site structurally unable to hold what the organisation had become.
+None of this was neglect. PECUC were still publishing to this site in 2025. **It was a site structurally unable to hold what the organisation had become.**
 
-<ImageBlock src="/work/pecuc/02.avif" alt="The old navigation fully expanded, annotated with all 37 destinations" caption="All 37 destinations, expanded and annotated." />
+### Sitemap and IA
+
+Twelve content pages and three utility ones, drawn as a tree before a single screen existed. Everything that used to be its own scattered property now hangs off one Resources parent.
+
+Mapping every label to a URL and a page type is unglamorous work that catches naming mistakes here instead of in a build. It caught two:
+
+- the footer links **"Annual Report"** at a path the tree calls **Impact Reports**
+- **Career** is a dropdown with nothing designed behind it yet
+
+Both are flagged rather than quietly fixed. **A structure with a known gap is more useful to the next person than one pretending to be finished.**
+
+<ImageBlock src="/work/pecuc/sitemap-ia.avif" alt="The PECUC sitemap drawn as a tree, beside the information architecture table mapping every label to a URL and page type" caption="Seven primary destinations and one Resources parent, with every label mapped to a URL — including the two gaps the mapping exposed." />
 
 ## Stage 02 — Restructuring
 
-Before any visual work, I rebuilt the map. A visitor arrives doing one of four things: understanding the work, verifying the organisation, giving money, or offering time. The old navigation served none of those — it served the org chart.
+Before any visual work, I rebuilt the map. A visitor arrives doing one of four things: understanding the work, verifying the organisation, giving money, or offering time. **The old navigation served none of those — it served the org chart.**
 
 Thirty-seven destinations became seven, and the nine scattered properties were consolidated into a single filterable Resources hub with one visual language and a path from any piece of content to any other.
 
@@ -94,8 +104,6 @@ Thirty-seven destinations became seven, and the nine scattered properties were c
 />
 
 ## Stage 03 — Building the visual language
-
-With the structure settled, the design's job became a single argument: *this organisation is real, and the work is real.*
 
 <CardGrid cols="2">
   <Card title="Photography first">
@@ -118,7 +126,31 @@ With the structure settled, the design's job became a single argument: *this org
 
 <ImageBlock src="/work/pecuc/03.avif" alt="The PECUC visual design guide showing palette, type sheet and photography treatment" caption="The design guide — the organisation's first." />
 
-## Stage 04 — Designing the two broken journeys
+## Stage 04 — Iteration
+
+My first layout didn't survive client review, and it's still in the file because it earned its place in this story.
+
+The client liked the type. Liked the colour. Didn't like the layout. **So the visual language I'd built was right and the arrangement wasn't** — a far better failure than the reverse, because a system that survives its first layout being thrown out is a system, not a lucky composition.
+
+I redesigned the structure, kept the identity, and version two was approved. A round of small fixes followed, and the file went to development.
+
+<Compare
+  before="/work/pecuc/layout-v1.avif"
+  after="/work/pecuc/layout-v2.avif"
+  beforeAlt="The first homepage layout, rejected at client review"
+  afterAlt="The approved homepage layout"
+  beforeLabel="Version 1 — rejected"
+  afterLabel="Version 2 — approved"
+  caption="Same type, same palette, different arrangement. A system that survives its first layout being thrown out is a system."
+/>
+
+### Homepage
+
+The approved layout carried through to the built homepage — photography-first, one heading, one clear next step, and the hierarchy the old slider never had.
+
+<ImageBlock src="/work/pecuc/05.avif" alt="Full-page scroll of the redesigned PECUC homepage" />
+
+## Stage 05 — Designing the two broken journeys
 
 There was no funnel to improve here. Donation and volunteering both had to be designed from a blank page.
 
@@ -136,24 +168,14 @@ There was no funnel to improve here. Donation and volunteering both had to be de
   <Step n="03" name="Availability">When and how often, so the match is real before anyone follows up.</Step>
 </Steps>
 
-<ImageBlock src="/work/pecuc/04.avif" alt="Full scroll of the redesigned tiered donation page" caption="Frequency first, then programme-named tiers — the visitor picks which part of the work to belong to, not a number." />
-
-## Stage 05 — Iteration
-
-My first layout didn't survive client review, and it's still in the file because it earned its place in this story.
-
-The client liked the type. Liked the colour. Didn't like the layout. So the visual language I'd built was right and the arrangement wasn't — a far better failure than the reverse, because a system that survives its first layout being thrown out is a system, not a lucky composition.
-
-I redesigned the structure, kept the identity, and version two was approved. A round of small fixes followed, and the file went to development.
-
 <Compare
-  before="/work/pecuc/layout-v1.avif"
-  after="/work/pecuc/layout-v2.avif"
-  beforeAlt="The first homepage layout, rejected at client review"
-  afterAlt="The approved homepage layout"
-  beforeLabel="Version 1 — rejected"
-  afterLabel="Version 2 — approved"
-  caption="Same type, same palette, different arrangement. A system that survives its first layout being thrown out is a system."
+  before="/work/pecuc/donation.avif"
+  after="/work/pecuc/volunteer.avif"
+  beforeAlt="Full scroll of the redesigned tiered donation page"
+  afterAlt="Full scroll of the staged volunteer signup"
+  beforeLabel="Donation"
+  afterLabel="Volunteering"
+  caption="The two journeys that had no funnel to improve. Donation asks which part of the work to belong to rather than for a number; volunteering asks three questions instead of shipping a PDF to print."
 />
 
 ## The decision log
@@ -162,7 +184,7 @@ Every significant call, what drove it, and what it cost.
 
 <Decision
   decision="Make their photo archive the design, not the decoration"
-  why="A SaaS product earns trust through polish. An NGO earns it through proof. Stock photography signals an organisation describing work rather than showing it, and PECUC had 35 years of receipts. Their own field photography now leads every section at full bleed."
+  why="Stock photography signals an organisation describing work rather than showing it, and PECUC had 35 years of receipts. Their own field photography now leads every section at full bleed."
   tradeoff="The design is dependent on image quality — a weak photo breaks a whole section, where the old boxed layout hid everything equally. Roughly 10% is AI-generated where the archive couldn't supply an image, and none of that stands in for programme evidence."
 />
 
@@ -170,12 +192,6 @@ Every significant call, what drove it, and what it cost.
   decision="Keep their blue, add yellow"
   why="After 35 years, that blue is the organisation — replacing it would have thrown away recognition I didn't create. Yellow signals youth and warmth for an organisation working with children, and prosperity, which is the outcome every programme reaches for. Institutional trust plus hope, in the first screen."
   tradeoff="The inherited blue constrained the palette. A free choice might have given a fresher result — it would also have made the site look like someone else's."
-/>
-
-<Decision
-  decision="Anton for headings, Inter for everything else"
-  why="NGO headings run long — 'Reviving Nutritional Wealth: Millet's Resurgence in Keonjhar District' is real. Condensation holds a sentence like that together as one visual unit instead of letting it wrap into mush, and the weight makes it land as a statement rather than a label. Inter does the opposite job: readable at small sizes, scales across breakpoints, never competes with the photography."
-  tradeoff="Anton has one weight and no italic. Every display-level nuance has to come from size and colour."
 />
 
 <Decision
@@ -191,21 +207,9 @@ Every significant call, what drove it, and what it cost.
 />
 
 <Decision
-  decision="Tier the donation, and name the tiers after programmes"
-  why="A single button asking for an open-ended amount is the hardest possible ask — the visitor has to invent an appropriate number alone, and most resolve that uncertainty by leaving. Naming tiers after programmes changes what's being decided: not a figure, but which part of the work to belong to."
-  tradeoff="Fixed tiers can anchor a large donor lower than they'd have given. It needs a custom-amount option alongside."
-/>
-
-<Decision
   decision="Replace the volunteer PDF with a staged signup"
   why="Every step between intent and action loses people, and the old flow had six — download, print, fill by hand, find an address, email, wait. Staging looks like it adds steps but removes them, because the visitor never faces a wall of fields."
   tradeoff="Multi-step forms can raise abandonment if the stages feel arbitrary. Ordering them by what a volunteer can answer immediately is what makes it work."
-/>
-
-<Decision
-  decision="Build one card component, not many templates"
-  why="PECUC publish constantly, and they publish without a designer. Any system I handed over had to survive years of unsupervised content entry. A reusable card means new content inherits the design instead of degrading it — precisely how the old site got into the state I found it in."
-  tradeoff="Uniformity. Every content type now looks structurally similar, which costs some editorial variety in exchange for durability."
 />
 
 ## Before and after
@@ -222,6 +226,8 @@ Old-site capture on the left, new design on the right.
   caption="A slider is what you build when you can't decide what matters most."
 />
 
+**Programmes.** Nine themes sat inside a dropdown, which meant the work itself was something you had to go looking for. The rebuild puts them on the page as a section you scroll past rather than a menu you open.
+
 <Compare
   before="/work/pecuc/ba-02-old.avif"
   after="/work/pecuc/ba-02-new.avif"
@@ -232,54 +238,30 @@ Old-site capture on the left, new design on the right.
   caption="Anything that constitutes proof belongs on the page, not in a menu."
 />
 
+Two more pages were doing real organisational work behind a presentation that undid it.
+
+**Careers.** The old page read like a noticeboard — roles as undifferentiated links, nothing about what it's like to work there. The rebuild leads with the work and the people, then the openings.
+
 <Compare
   before="/work/pecuc/ba-03-old.avif"
   after="/work/pecuc/ba-03-new.avif"
-  beforeAlt="Partner links in a side table, one pointing to a Word document"
-  afterAlt="A UNICEF and EU logo strip under the hero with a consolidated credibility section"
-  beforeLabel="Credibility — before"
-  afterLabel="Credibility — after"
-  caption="ECOSOC status, government policy adoption, 225 Gram Panchayats and 1,553 villages, gathered into one answer to 'why trust them'."
+  beforeAlt="The old careers page listing roles as plain links"
+  afterAlt="The redesigned careers page leading with the work and the team"
+  beforeLabel="Careers — before"
+  afterLabel="Careers — after"
+  caption="A careers page is a recruitment argument, not a list of vacancies."
 />
+
+**Press and media.** Thirty-five years of regional coverage — the most credible proof an NGO has — was sitting in an undated list of raw links.
 
 <Compare
   before="/work/pecuc/ba-04-old.avif"
   after="/work/pecuc/ba-04-new.avif"
-  beforeAlt="Truncated grey story text ending in a raw query-string link"
-  afterAlt="Stories That Will Move You, with full portraits of the people in the stories"
-  beforeLabel="The stories — before"
-  afterLabel="The stories — after"
-  caption="The thesis of the whole project: identical content, one design burying it, one design making it the argument."
-/>
-
-<Compare
-  before="/work/pecuc/ba-05-old.avif"
-  after="/work/pecuc/ba-05-new.avif"
-  beforeAlt="The old donation link pointing to a dead anchor"
-  afterAlt="The tiered giving page with programme-named tiers"
-  beforeLabel="Donation — before"
-  afterLabel="Donation — after"
-  caption="From a link that did nothing to a decision a visitor can actually make."
-/>
-
-<Compare
-  before="/work/pecuc/ba-06-old.avif"
-  after="/work/pecuc/ba-06-new.avif"
-  beforeAlt="The Get Involved link downloading a printable PDF form"
-  afterAlt="The staged volunteer signup flow"
-  beforeLabel="Volunteering — before"
-  afterLabel="Volunteering — after"
-  caption="Six offline steps replaced by three questions a volunteer can answer immediately."
-/>
-
-<Compare
-  before="/work/pecuc/ba-07-old.avif"
-  after="/work/pecuc/ba-07-new.avif"
-  beforeAlt="Footer reading All rights Reserved 2001-2023"
-  afterAlt="Footer stat strip carrying PECUC's own reported figures"
-  beforeLabel="The footer — before"
-  afterLabel="The footer — after"
-  caption="The last thing a visitor sees should reinforce the first thing they read."
+  beforeAlt="The old press page as an undated list of links"
+  afterAlt="The redesigned press and media page with dated, attributed coverage"
+  beforeLabel="Press — before"
+  afterLabel="Press — after"
+  caption="Coverage someone else wrote about you is worth more than anything you write about yourself — if a visitor can tell what it is and when it ran."
 />
 
 ## Outcome
@@ -293,7 +275,7 @@ Old-site capture on the left, new design on the right.
   <Spec label="Status">Approved, handed off, in development.</Spec>
 </SpecList>
 
-<ImageBlock src="/work/pecuc/05.avif" alt="Full-page scroll of the redesigned PECUC homepage" caption="The new homepage, full scroll." />
+### Client's words
 
 <Quote cite="Ranjan Kumar Mohanty — Secretary-cum-CEO, PECUC">
   Riyaz has a remarkable ability to balance aesthetic appeal with seamless user functionality. Thanks to his expertise, we now have a powerful, visually compelling web presence that resonates with our community.
@@ -303,7 +285,7 @@ Old-site capture on the left, new design on the right.
 
 <Takeaways>
   <Takeaway title="Document as I go">
-    I reconstructed this reasoning afterwards. The reasoning held; the record didn't.
+    I reconstructed this reasoning afterwards. **The reasoning held; the record didn't.**
   </Takeaway>
   <Takeaway title="Test the tiers with a real donor">
     I set the amounts and programme mappings without talking to anyone who had given to PECUC before.
@@ -317,7 +299,7 @@ Old-site capture on the left, new design on the right.
 
 <Takeaways>
   <Takeaway title="Visual design is an argument, not a coat of paint">
-    Every choice here exists to make one claim: this organisation is real, and the work is real. Once I knew that was the argument, every decision got easier.
+    Every choice here exists to make one claim: **this organisation is real, and the work is real.** Once I knew that was the argument, every decision got easier.
   </Takeaway>
   <Takeaway title="The best material is usually already there">
     I didn't create PECUC's credibility — 35 years of photographs and UNICEF's logo did. My job was to stop the design from hiding it.

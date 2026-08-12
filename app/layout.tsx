@@ -109,8 +109,20 @@ export default function RootLayout({
         </a>
         <MotionRoot>
           <Nav />
-          <main id="main">{children}</main>
-          <Footer />
+          {/* The page transition scales and fades this on the way out and back
+              in on arrival, so it has to hold everything that belongs to the
+              page — the footer included, or a case study would sail away and
+              leave its own footer standing.
+
+              The nav is deliberately outside it. A transformed ancestor turns
+              `position: fixed` into `position: absolute`, so wrapping the nav
+              would drop it from the top of the viewport to the top of the
+              document the instant a transition began. Chrome that holds still
+              while the content passes through also just reads better. */}
+          <div data-page-stage>
+            <main id="main">{children}</main>
+            <Footer />
+          </div>
         </MotionRoot>
       </body>
     </html>

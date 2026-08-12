@@ -316,12 +316,6 @@ body:has([data-page="case-study"]) {
   color: var(--accent);
 }
 
-.work-card:hover .work-card-arrow,
-.work-card[data-hovered] .work-card-arrow {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
 .work-card-cover {
   transition: transform 900ms var(--ease-out);
 }

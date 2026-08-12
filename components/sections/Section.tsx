@@ -52,7 +52,15 @@ export function Section({
              already doing by virtue of fitting. */
           <h2
             data-sec-heading
-            className="mt-6 text-[length:var(--text-2xl)] [text-wrap:wrap]"
+            /* The base `h1-h4` rule in globals.css sets `line-height: 0.92`
+               for single-line display type, which is what most of these
+               headings are on desktop — but several wrap to two lines below
+               `md` ("Case studies worth every second", "Skills and tools
+               I'm using to build experiences"), and at 0.92 the descenders
+               of the first line sit inside the ascenders of the second.
+               `max-md:` only, so the desktop single-line reading is
+               untouched. */
+            className="mt-6 text-[length:var(--text-2xl)] [text-wrap:wrap] max-md:leading-[1.125]"
           >
             {heading}
           </h2>

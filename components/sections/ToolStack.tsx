@@ -56,13 +56,19 @@ function Run() {
           // WebP already sized for this exact spot (see optimize-images.mjs),
           // so there's no per-request resize or blur placeholder for
           // next/image to add value with.
+          //
+          // `width`/`height` still reserve the box at the desktop size for
+          // CLS; the display size below `md` comes from `max-md:` classes
+          // instead of the old inline `style`, which — being inline — would
+          // have outranked any responsive class trying to shrink it. The
+          // export is resampled well above ICON_PX already, so displaying it
+          // smaller only sharpens it.
           width={ICON_PX}
           height={ICON_PX}
           alt=""
           loading="lazy"
           decoding="async"
-          className="ticker-mark"
-          style={{ height: ICON_PX, width: ICON_PX }}
+          className="ticker-mark h-[84px] w-[84px] max-md:h-[56px] max-md:w-[56px]"
         />
       ))}
     </div>
@@ -82,7 +88,17 @@ function Half() {
 
 export function ToolStack() {
   return (
-    <section className="pt-[var(--section-y)]">
+    // `pb-[var(--section-y)]` alongside the top padding: every other section
+    // on the page gets its gap for free from the *next* section's own
+    // `pt-[var(--section-y)]`, but this one is followed by FirstFold's top
+    // border — with no bottom padding here the marks sat flush against that
+    // line. Section-y again keeps the rhythm the same size, just paid for on
+    // this side instead.
+    //
+    // Halved below `md`: at phone width the two full section-y gaps around a
+    // single ticker row read as dead air between Hero and the pitch, not as
+    // breathing room.
+    <section className="pt-[var(--section-y)] pb-[var(--section-y)] max-md:pt-[calc(var(--section-y)/2)] max-md:pb-[calc(var(--section-y)/2)]">
       {/* Through `SectionChrome` rather than a bare rule + label. This section
           builds its own header instead of going through `<Section>` (the
           ticker needs to escape the shell), which is why it was the one

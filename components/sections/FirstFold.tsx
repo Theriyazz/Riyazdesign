@@ -34,9 +34,9 @@ export function FirstFold() {
           </p>
 
           <p data-sheen-line className={`mt-10 ${statement}`}>
-            Most recently a 140+ screen bilingual career-guidance platform,
-            designed solo from research through handoff. Teams bring me the
-            problem. I own it end to end.
+            Most recently I designed a 140+ screen bilingual career-guidance
+            platform, designed solo from research through final screens. Founder
+            came with one vision, I delivered end to end product.
           </p>
         </RevealSheen>
       </div>

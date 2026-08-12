@@ -12,18 +12,21 @@ const PANELS = 7;
 /**
  * Previews shown one at a time while the counter climbs.
  *
- * The three case study covers are the real work; the portraits are standing in
- * until dedicated 16:9 preview crops exist. Hardcoded rather than read from
- * `lib/content.ts`, which is `server-only` — these paths are validated at build
- * time by the pages that own them, so a rename fails there first.
+ * Dedicated 16:9 crops made for this exact card, not reused case-study covers
+ * — see `PRELOAD` in `scripts/optimize-images.mjs` for the source mapping and
+ * why each one sits where it does in the sequence. Hardcoded rather than read
+ * from `lib/content.ts`, which is `server-only` — these paths are validated at
+ * build time by the pages that own them, so a rename fails there first.
  */
 const PREVIEWS = [
-  "/work/careerlogica/cover.avif",
-  "/work/pecuc/cover.avif",
-  "/work/atrc/cover.avif",
-  "/riyaz/wide.avif",
-  "/riyaz/alt-1.avif",
-  "/riyaz/portrait.avif",
+  "/preload/01.avif",
+  "/preload/02.avif",
+  "/preload/03.avif",
+  "/preload/04.avif",
+  "/preload/05.avif",
+  "/preload/06.avif",
+  "/preload/07.avif",
+  "/preload/08.avif",
 ] as const;
 
 /** Loading phase, before the overlay blooms to full white. */

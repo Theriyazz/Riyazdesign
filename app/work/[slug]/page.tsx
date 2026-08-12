@@ -76,7 +76,10 @@ export default async function CaseStudyPage({
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:items-end">
           <div>
             <MicroLabel>Case study · {meta.index}</MicroLabel>
-            <h1 className="mt-6 text-[length:var(--text-2xl)]">{meta.title}</h1>
+            {/* Same fix as Section.tsx's h2: a two-word-plus title
+                ("ATRC STEM Career Test") wraps below `md`, and the base
+                `0.92` line-height crowds the wrapped lines. */}
+            <h1 className="mt-6 text-[length:var(--text-2xl)] max-md:leading-[1.125]">{meta.title}</h1>
             <p className="mt-5 max-w-[52ch] text-[length:var(--text-lg)] leading-snug text-fg-muted">
               {meta.subtitle}
             </p>

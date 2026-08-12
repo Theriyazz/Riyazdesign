@@ -26,6 +26,18 @@ Inspirarion/
 # needs them, and git history is the wrong place to keep 37MB forever.
 CareerLogica Images/
 
+# Same reasoning, same pattern: raw PECUC/ATRC source exports (60MB) and the
+# Preloader's source crops (15MB). Optimized derivatives land in public/work/
+# and public/preload/ via `npm run images` and are what's committed.
+# Anchored to the repo root — unanchored `work/` also matches `public/work/`,
+# which is the committed output, not the source.
+/work/
+/Loading SCreen images/
+
+# The resume's source file. public/riyaz-malek-resume.pdf is the copy the site
+# actually serves and is committed; this is the backup, not the asset.
+Resume/
+
 # Local-only agent permissions. launch.json is shared on purpose (it is how the
 # dev server gets started); this one is per-machine.
 .claude/settings.local.json

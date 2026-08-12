@@ -74,7 +74,13 @@ export function About() {
           style={{ background: "var(--accent)" }}
         />
         <RevealGroup y={16}>
-          <p className="max-w-[28ch] text-[length:var(--text-2xl)] leading-[1.08] tracking-[-0.03em] text-fg">
+          {/* No `max-w`, and greedy wrapping rather than the base `pretty`.
+              The 28ch cap ended the measure around 700px whatever the shell was
+              doing, so the line broke after "open" and left the right third of
+              the row empty — at this size that reads as a layout mistake, not
+              as space. Filling to the container is the whole point of setting a
+              line this large. */}
+          <p className="text-[length:var(--text-2xl)] leading-[1.08] tracking-[-0.03em] text-fg [text-wrap:wrap]">
             I ask a lot of questions before I open{" "}
             <span className="serif-em">Figma</span>. That&rsquo;s where most of
             the design actually happens.

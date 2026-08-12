@@ -1,8 +1,11 @@
 import Image from "next/image";
+import { Children, isValidElement } from "react";
 import type { MDXComponents } from "mdx/types";
 import { imageMeta, imageProps } from "@/lib/images";
 import { Tag } from "@/components/primitives/MicroLabel";
+import { MissingImage } from "@/components/primitives/MissingImage";
 import { ScreenCarousel } from "./ScreenCarousel";
+import { Lens } from "@/components/ui/lens";
 
 /*
  * Case study building blocks.
@@ -27,6 +30,37 @@ import { ScreenCarousel } from "./ScreenCarousel";
 const MEASURE = "max-w-[68ch]";
 
 /**
+ * Column classes chosen so the track count always divides the item count.
+ *
+ * These grids draw their hairlines with `gap-px` over a `--border` background:
+ * the gaps between cells are the container showing through. That makes a
+ * partial last row expensive — an unfilled cell is not whitespace, it is a
+ * visible grey block the width of a card, and the eye reads it as a card whose
+ * content failed to load.
+ *
+ * Three items in a two-column grid was the common case, and it was wrong at
+ * every width between `sm` and the point the third column appeared. So the
+ * ladder here only ever steps through counts that divide exactly: three items
+ * go straight from one column to three, skipping two entirely. A slightly
+ * narrower card at `md` is a much cheaper cost than a hole.
+ *
+ * `max` is the widest the component's content can survive — cards carry
+ * paragraphs and stop at three, steps carry a line each and can take four.
+ */
+function evenCols(count: number, max: 3 | 4): string {
+  if (count <= 1) return "";
+  if (count === 2) return "sm:grid-cols-2";
+  if (count === 3) return "md:grid-cols-3";
+  if (count === 4) {
+    return max >= 4 ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-2";
+  }
+  if (count === 6) return "sm:grid-cols-2 lg:grid-cols-3";
+  // Even counts tile safely two-up. Anything odd and larger than three has no
+  // arrangement without a hole, so it stacks rather than showing one.
+  return count % 2 === 0 ? "sm:grid-cols-2" : "";
+}
+
+/**
  * The block that makes a case study read as senior work.
  *
  * Recruiters read tradeoffs as evidence of judgement. A portfolio that only
@@ -49,16 +83,25 @@ export function Decision({
     >
       <p className="text-[length:var(--text-lg)] leading-snug text-fg">{decision}</p>
 
+      {/* `Why` and `Tradeoff` name the structure of the block, so they are set
+          a step above `.label` (20px against 16) and in full-strength `--fg`
+          rather than inheriting. At label size they read as small print on the
+          one component whose whole point is that the cost is stated as loudly
+          as the decision. */}
       <dl className="mt-7 grid gap-7 sm:grid-cols-2">
         <div>
-          <dt className="label">Why</dt>
-          <dd className="mt-2 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted">
+          <dt className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
+            Why
+          </dt>
+          <dd className="mt-3 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted">
             {why}
           </dd>
         </div>
         <div>
-          <dt className="label">Tradeoff</dt>
-          <dd className="mt-2 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted">
+          <dt className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
+            Tradeoff
+          </dt>
+          <dd className="mt-3 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted">
             {tradeoff}
           </dd>
         </div>
@@ -80,28 +123,62 @@ function CaseImage({
   alt,
   sizes,
   aspect = "aspect-[16/10]",
+  lensSize = 180,
 }: {
   src: string;
   alt: string;
   sizes: string;
   aspect?: string;
+  /**
+   * Diameter of the magnifier, in px. Sized against the figure it sits in
+   * rather than fixed: 180 over an 820px body image reads as a loupe, but the
+   * same circle over a 420px `Compare` panel covers nearly half of it and
+   * stops being a magnifier at all.
+   */
+  lensSize?: number;
 }) {
   const meta = imageMeta(src);
 
   if (!meta) {
     return (
-      <div
-        className={`flex ${aspect} flex-col items-center justify-center gap-2 border border-dashed border-[var(--border-strong)] p-8 text-center`}
-      >
-        <span className="label">Image not yet added</span>
-        <code className="text-[length:var(--text-label)] text-fg-muted" style={{ fontFamily: "var(--font-mono)" }}>
-          {src}
-        </code>
+      <div className={aspect}>
+        <MissingImage src={src} />
       </div>
     );
   }
 
-  return <Image {...imageProps(src)} alt={alt} sizes={sizes} className="h-auto w-full" />;
+  /*
+   * Magnifier on every real figure.
+   *
+   * These pages carry full-page scroll captures, flow diagrams and shipped
+   * screens whose interface text renders far below the 16px this site holds
+   * everything else to. Without this the only way to read any of it is to open
+   * the file in a new tab, which loses the page.
+   *
+   * 2x rather than the component's 1.3 default — 1.3 reads as a soft highlight
+   * and does not make dense screenshots legible, which is the entire reason
+   * this is here.
+   *
+   * Deliberately inside the `imageMeta` guard: a missing asset renders its
+   * placeholder with no lens, so a stand-in never gets a magnifier over an
+   * error message.
+   *
+   * `data-cursor="hide"` retires the site cursor for the duration. The lens is
+   * already a 180px circle centred exactly on the pointer, so the dot and ring
+   * would just be two more things floating over magnified content.
+   */
+  return (
+    <span className="block" data-cursor="hide">
+      <Lens
+        zoomFactor={2}
+        lensSize={lensSize}
+        className=""
+        ariaLabel={`Magnified view of ${alt}`}
+      >
+        <Image {...imageProps(src)} alt={alt} sizes={sizes} className="h-auto w-full" />
+      </Lens>
+    </span>
+  );
 }
 
 /**
@@ -176,6 +253,57 @@ export function ImageBlock({
 }
 
 /**
+ * A body video. Same frame, column width and caption treatment as `ImageBlock`,
+ * so a moving figure sits in the reading column exactly like a still one.
+ *
+ * Click to play rather than autoplay, for two reasons that happen to agree: a
+ * multi-megabyte file that downloads itself on scroll is the single most
+ * expensive thing on a case study page, and WCAG 2.2.2 wants a stop control on
+ * anything that moves for more than five seconds. `preload="metadata"` fetches
+ * the header only — enough for the browser to paint the first frame and size
+ * the box — so the body is transferred when someone actually asks for it.
+ *
+ * `width`/`height` are the intrinsic pixel dimensions, present so the box is
+ * reserved before metadata lands. Same reason the image manifest exists.
+ */
+export function VideoBlock({
+  src,
+  width,
+  height,
+  caption,
+  label,
+}: {
+  src: string;
+  width: number;
+  height: number;
+  caption?: string;
+  /** Describes the recording for anyone who cannot watch it. */
+  label: string;
+}) {
+  return (
+    <figure className="my-16">
+      <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
+        <video
+          src={src}
+          width={width}
+          height={height}
+          controls
+          muted
+          playsInline
+          loop
+          preload="metadata"
+          aria-label={label}
+          className="h-auto w-full"
+        />
+      </div>
+      {caption ? (
+        <figcaption className={`label mt-4 ${MEASURE}`}>{caption}</figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
+/**
  * A labelled image pair.
  *
  * Not always literally "before/after" — the labels are props so the same
@@ -211,7 +339,14 @@ export function Compare({
           <div key={s.label}>
             <span className="label mb-3 block">{s.label}</span>
             <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
-              <CaseImage src={s.src} alt={s.alt} sizes="(max-width: 640px) 100vw, 420px" />
+              {/* 140, not the 180 default: these panels are 420px, and the
+                  larger circle covered nearly half of one. */}
+              <CaseImage
+                src={s.src}
+                alt={s.alt}
+                sizes="(max-width: 640px) 100vw, 420px"
+                lensSize={140}
+              />
             </div>
           </div>
         ))}
@@ -223,7 +358,14 @@ export function Compare({
   );
 }
 
-/** The chip row of what actually shipped — scope, stated plainly. */
+/**
+ * The chip row of what actually shipped — scope, stated plainly.
+ *
+ * The heading lives in the component rather than being typed above each call
+ * site, so all three case studies carry it and no author has to remember. It
+ * is an h3 and not an h2: this sits inside Context, and at h2 it would read as
+ * a top-level section standing alongside "01 — The problem worth solving".
+ */
 export function Deliverables({ items }: { items: string }) {
   const parts = items
     .split("·")
@@ -231,10 +373,13 @@ export function Deliverables({ items }: { items: string }) {
     .filter(Boolean);
 
   return (
-    <div className="my-10 flex flex-wrap gap-2">
-      {parts.map((item) => (
-        <Tag key={item}>{item}</Tag>
-      ))}
+    <div className="my-14">
+      <h3 className="text-[length:var(--text-lg)] leading-tight">Deliverables</h3>
+      <div className="mt-5 flex flex-wrap gap-2">
+        {parts.map((item) => (
+          <Tag key={item}>{item}</Tag>
+        ))}
+      </div>
     </div>
   );
 }
@@ -309,31 +454,30 @@ export function Callout({ children }: { children: React.ReactNode }) {
  * Two-to-four parallel items, each a short title and a few lines.
  *
  * The workhorse: audience problems, signup flows, competitor findings,
- * question types. `cols` is capped at 3 — four across drops each card under
- * ~20 characters a line on a laptop.
+ * question types. Capped at three across — four drops each card under ~20
+ * characters a line on a laptop.
+ *
+ * The layout is derived from how many cards are inside rather than declared,
+ * because the only arrangement that is ever right is the one with no holes in
+ * it. See `evenCols`.
  */
 export function CardGrid({
   children,
-  cols = 3,
+  cols,
 }: {
   children: React.ReactNode;
   /**
-   * Write this as a *string* in MDX — `cols="2"`, never `cols={2}`.
-   *
-   * This toolchain drops JSX expression attributes on the way through, so
-   * `cols={2}` arrived here as `undefined` and silently fell back to 3. Both
-   * four-card grids were written as `cols={2}` and both rendered three across
-   * with the fourth card stranded beside two empty cells. `<Deliverables>`
-   * takes a delimited string for the same reason.
+   * Ignored, and kept only so the existing `cols="2"` call sites keep parsing.
+   * The column count now comes from the number of children — a declared count
+   * is a second source of truth that drifts the moment a card is added or
+   * removed, which is exactly how three cards ended up in a two-column grid.
    */
   cols?: 2 | 3 | "2" | "3";
 }) {
-  const twoUp = Number(cols) === 2;
+  const count = Children.toArray(children).filter(isValidElement).length;
   return (
     <div
-      className={`my-12 grid gap-px border border-[var(--border)] bg-[var(--border)] ${
-        twoUp ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"
-      }`}
+      className={`my-12 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
     >
       {children}
     </div>
@@ -344,10 +488,17 @@ export function Card({
   title,
   children,
   eyebrow,
+  accent,
 }: {
   title: string;
   children: React.ReactNode;
   eyebrow?: string;
+  /**
+   * Colours the title with `--case-accent` instead of `--fg`. Off by default —
+   * every other Card on the site relies on the title reading as plain text, so
+   * this is opt-in per grid rather than a sitewide style.
+   */
+  accent?: boolean;
 }) {
   return (
     <div className="bg-bg p-7">
@@ -356,7 +507,10 @@ export function Card({
           {eyebrow}
         </span>
       ) : null}
-      <h3 className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
+      <h3
+        className="text-[length:var(--text-base)] font-medium leading-snug text-fg"
+        style={accent ? { color: "var(--case-accent)" } : undefined}
+      >
         {title}
       </h3>
       <div className="mt-3 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
@@ -414,8 +568,11 @@ export function Finding({
  * ordered list would lose the names' prominence, which is the point.
  */
 export function Steps({ children }: { children: React.ReactNode }) {
+  const count = Children.toArray(children).filter(isValidElement).length;
   return (
-    <ol className="my-12 grid list-none gap-px bg-[var(--border)] p-0 sm:grid-cols-2 lg:grid-cols-4">
+    <ol
+      className={`my-12 grid list-none gap-px bg-[var(--border)] p-0 ${evenCols(count, 4)}`}
+    >
       {children}
     </ol>
   );
@@ -445,8 +602,11 @@ export function Step({
 
 /** Before → after figures, where the change *is* the result. */
 export function StatRow({ children }: { children: React.ReactNode }) {
+  const count = Children.toArray(children).filter(isValidElement).length;
   return (
-    <div className="my-14 grid gap-px border border-[var(--border)] bg-[var(--border)] sm:grid-cols-3">
+    <div
+      className={`my-14 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
+    >
       {children}
     </div>
   );
@@ -473,8 +633,11 @@ export function Stat({ value, label }: { value: string; label: string }) {
  * labels with a line each, and that is exactly what a `<dl>` is for.
  */
 export function SpecList({ children }: { children: React.ReactNode }) {
+  const count = Children.toArray(children).filter(isValidElement).length;
   return (
-    <dl className="my-12 grid gap-px bg-[var(--border)] sm:grid-cols-2">{children}</dl>
+    <dl className={`my-12 grid gap-px bg-[var(--border)] ${evenCols(count, 3)}`}>
+      {children}
+    </dl>
   );
 }
 
@@ -514,8 +677,11 @@ export function Takeaway({ title, children }: { title: string; children: React.R
  * lists, which is too much for a `Card` and too structured for prose.
  */
 export function Pathways({ children }: { children: React.ReactNode }) {
+  const count = Children.toArray(children).filter(isValidElement).length;
   return (
-    <div className="my-14 grid gap-px border border-[var(--border)] bg-[var(--border)] lg:grid-cols-3">
+    <div
+      className={`my-14 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
+    >
       {children}
     </div>
   );
@@ -547,6 +713,7 @@ export function Pathway({
 export const mdxComponents: MDXComponents = {
   Decision,
   ImageBlock,
+  VideoBlock,
   Compare,
   ScreenCarousel,
   Screen,
@@ -575,8 +742,17 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
+  /* `text-wrap: wrap` overrides the base `balance` set on headings in
+     globals.css. Balance evens the lines, so a two-line h3 breaks early and
+     leaves half the column empty — "The student dashboard — the hardest screen
+     in the product" wrapped after "the" with 300px of space to its right.
+     Greedy wrap fills the measure first. Same fix, same reason, as the section
+     h2 in Section.tsx. */
   h3: (props) => (
-    <h3 className="mt-14 text-[length:var(--text-lg)] leading-tight" {...props} />
+    <h3
+      className="mt-14 text-[length:var(--text-lg)] leading-tight [text-wrap:wrap]"
+      {...props}
+    />
   ),
   /* 1.75 rather than `leading-relaxed` (1.625). At 20px that is a 35px line,
      and it is the single biggest reason the old pages read as congested. */
