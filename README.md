@@ -79,7 +79,7 @@ time is a net loss however good it looks.
 
 | System | Budget | Guard |
 |---|---|---|
-| Preloader | 1.4s hard cap, resolves early | First visit only, **desktop only** |
+| Preloader | ~4s fixed: 0.3s entry, 2.6s count, then the reveal | First visit only, per session |
 | Custom cursor | — | `(pointer: fine)` only |
 | Page transitions | 420ms in / 360ms out | Overlay at layout root, max-wait timeout |
 | Scroll reveals | scrubbed | Text stays in the DOM, readable with JS off |

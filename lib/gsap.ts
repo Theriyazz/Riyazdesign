@@ -68,9 +68,24 @@ if (typeof window !== "undefined") {
   // than each carrying their own copy of four numbers.
   gsap.registerEase("through", cubicBezier(0.7, 0.01, 0.31, 1));
 
+  // Twin of `--ease-settle`. A mild overshoot for things that should land with
+  // some weight rather than glide to a stop. The solver only inverts the x
+  // curve, so a y control point past 1 is fine — that is where the overshoot
+  // comes from.
+  gsap.registerEase("settle", cubicBezier(0.34, 1.56, 0.64, 1));
+
   // We only ever animate transform/opacity, so force3D is safe and keeps
   // work on the compositor.
-  gsap.defaults({ ease: "power2.out", duration: 0.6, force3D: true });
+  //
+  // It belongs in `config`, not `defaults`. `defaults` merges its keys into
+  // every tween's vars, and force3D is a CSSPlugin property — on a tween that
+  // targets a plain object (the preloader counter) or animates opacity alone,
+  // GSAP finds no such property on the target and warns "Invalid property
+  // force3D ... Missing plugin?" on every single tween. `config` is the global
+  // switch CSSPlugin actually reads, so transforms still get the 3D hint and
+  // nothing is handed a property it cannot use.
+  gsap.config({ force3D: true });
+  gsap.defaults({ ease: "power2.out", duration: 0.6 });
 }
 
 export { gsap, ScrollTrigger, useGSAP };

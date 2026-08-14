@@ -152,27 +152,10 @@ const ATRC = [
   ["work/careerlogica/02.avif.png", "work/atrc/01"],
 ];
 
-/**
- * The Preloader's eight-image cycle. Own top-level folder, same reasoning as
- * `riyaz/` and `tools/`: these previews aren't owned by any one case study, so
- * they don't belong under `work/`.
- *
- * Ordered as a sequence rather than by source filename: three sources already
- * carry a "03"/"04"/"05" position from how they were exported, so those hold
- * their spot; the rest are placed around them — a cover and a thumbnail to
- * open, two screens and a before/after in the run, a portrait to close, the
- * same shape as the old six-image cycle.
- */
-const PRELOAD = [
-  ["Loading SCreen images/Cover Image ATRC.png", "preload/01"],
-  ["Loading SCreen images/Thumbnail.avif.png", "preload/02"],
-  ["Loading SCreen images/03.avif.png", "preload/03"],
-  ["Loading SCreen images/04.avif.png", "preload/04"],
-  ["Loading SCreen images/05.avif.png", "preload/05"],
-  ["Loading SCreen images/counsellor-01-dashboard.avif.png", "preload/06"],
-  ["Loading SCreen images/ba-01-new.avif.png", "preload/07"],
-  ["Loading SCreen images/Image 3 wide.png", "preload/08"],
-];
+/* The Preloader used to cycle eight dedicated crops out of a `preload/` folder
+   here. The intro is typographic now — a counter set large on three odometer
+   columns, no imagery — so the job is gone and the sources under
+   `Loading SCreen images/` are left unused rather than deleted. */
 
 /** source (relative to repo root) -> output basename under public/ */
 const JOBS = [
@@ -194,7 +177,6 @@ const JOBS = [
   ...CAREERLOGICA_WORK,
   ...PECUC,
   ...ATRC,
-  ...PRELOAD,
 ];
 
 /**

@@ -139,6 +139,12 @@
      Registered in lib/gsap.ts under the name "through" — the two are twins,
      so a change to one is a change to both. */
   --ease-through: cubic-bezier(0.7, 0.01, 0.31, 1);
+  /* A gentle overshoot — the y2 control point sits past 1, so whatever is
+     moving sails a little beyond its mark and eases back. Kept mild on
+     purpose: at 1.56 it reads as weight settling, and anything springier
+     starts to look like a toy. Registered in lib/gsap.ts as "settle", so the
+     two are twins and a change to one is a change to both. */
+  --ease-settle: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur-fast: 180ms;
   --dur: 280ms;
   --dur-slow: 400ms;
@@ -188,4 +194,11 @@
 
   --cursor-dot: var(--accent);
   --cursor-ring: var(--paper-300);
+
+  /* The preloader's counter. Larger than --text-wordmark: this is three digits
+     and a percent glyph alone in the middle of the screen, and the wordmark
+     scale reads timid at that width. Three tabular Geist digits plus the
+     percent come to roughly 2.2em, so this lands near 57% of a 375px viewport
+     at the floor and 49% of a 1440px one at the cap. */
+  --preload-count: clamp(5.5rem, 26vw, 18rem);
 }
