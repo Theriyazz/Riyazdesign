@@ -17,7 +17,7 @@ import { ContactCTA } from "@/components/sections/ContactCTA";
  * decision, just a "not yet" for the page. Flip back on rather than deleting
  * the section or its render call.
  */
-const SHOW_TESTIMONIALS = false;
+const SHOW_TESTIMONIALS = true;
 
 export default async function HomePage() {
   const studies = await getAllCaseStudies();

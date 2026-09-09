@@ -6,19 +6,13 @@ const QUOTES = [
     name: "Ranjan Kumar Mohanty",
     title: "Secretary-cum-CEO, PECUC",
     quote:
-      "Riyaz has a remarkable ability to balance aesthetic appeal with seamless user functionality. He transformed our ideas into an intuitive, engaging digital experience while remaining attentive to every detail throughout the process. Thanks to Riyaz's expertise, we now have a powerful, visually compelling web presence that resonates with our community.",
+      "Working with Riyaz on PECUC's UI/UX was an exceptional experience — he understood our vision and translated it into a clean, modern, and highly accessible platform. He balances aesthetic appeal with seamless user functionality, backed by attention to detail, responsiveness to feedback, and deep UI/UX knowledge. The result: a powerful, visually compelling web presence that resonates with our community. Highly recommend him for his creativity and strategic execution.",
   },
   {
-    name: "Sarah Ahmed",
-    title: "Head of Product, Careernet",
+    name: "Himanshu Parmar",
+    title: "IT Manager, EdLogica (CareerLogica)",
     quote:
-      "Riyaz quickly understood our product vision and translated complex workflows into a clean, intuitive experience. His structured UX process, attention to detail, and ability to create scalable design systems significantly improved both usability and visual consistency. Working with him felt like having a true product partner rather than just a designer.",
-  },
-  {
-    name: "David Wilson",
-    title: "Program Director, ARCK",
-    quote:
-      "From research to final UI, Riyaz approached every challenge with clarity and precision. He simplified complicated user journeys into experiences that felt effortless while maintaining a polished, modern interface. His communication, responsiveness, and commitment to quality made the entire collaboration smooth and highly productive.",
+      "Riyaz did an excellent job designing our website. His creativity, technical expertise, and attention to detail helped bring our vision to life. He was professional, responsive, and delivered a modern, user-friendly website. I highly recommend Riyaz for professional website design and development.",
   },
 ];
 
@@ -32,7 +26,7 @@ export function Testimonials() {
         </>
       }
     >
-      <RevealGroup className="grid gap-px border border-[var(--border)] bg-[var(--border)] lg:grid-cols-3">
+      <RevealGroup className="grid gap-px border border-[var(--border)] bg-[var(--border)] lg:grid-cols-2">
         {QUOTES.map((q) => (
           <figure
             key={q.name}
