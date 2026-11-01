@@ -8,10 +8,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.dirname(fileURLToPath(import.meta.url)),
   },
+  // Lets a phone on the same Wi-Fi load the dev server by LAN address; Next 16
+  // blocks dev-only requests (HMR, client chunks) from unlisted origins.
+  allowedDevOrigins: ["10.253.20.133"],
   images: {
-    formats: ["image/avif", "image/webp"],
-    // Matches the widths emitted by scripts/optimize-images.mjs
-    deviceSizes: [640, 828, 1080, 1280, 1920, 2560],
+    // Serve the files in /public exactly as `npm run images` wrote them.
+    // Next's optimizer re-encodes every request lossy (default quality 75) and
+    // resizes to a device width, which is the opposite of "original quality".
+    unoptimized: true,
   },
   experimental: {
     optimizePackageImports: ["gsap"],

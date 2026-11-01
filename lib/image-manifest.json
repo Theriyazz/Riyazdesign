@@ -1,7 +1,7 @@
 {
   "/work/careerlogica/cover.avif": {
-    "width": 2560,
-    "height": 1153,
+    "width": 3214,
+    "height": 1448,
     "blurDataURL": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwBACdASoUAAkAPt1cp0yopSOiMAgBEBuJbACdMoRwHuAiwDebAMeyNDFPLMGUTMAA/CATVVTfWIKQ7/Z+fqmpYT8lm5y9CayCR0p5wWE4LecWiGBcJHmGoy9FWDoIFtrTpw2B7xmZO7ZG+JyR6SSGT9saua0ovld0yiL3AB5l8y+2thTqjmOKd7+5mex3/PjHp7Gn4q8vafJ53vQtAAAA"
   },
   "/work/careerlogica/thumbnail.avif": {
@@ -28,6 +28,11 @@
     "width": 1023,
     "height": 1537,
     "blurDataURL": "data:image/webp;base64,UklGRswAAABXRUJQVlA4IMAAAACQBQCdASoUAB4APt1WqUyopCQiMBgMARAbiWgAuyEAuoOejBOvSRyR7gOF4853WClaGevCYAD+nT3JJpvLJ5c/Y56M/HRIaU0GAZMz5HYQYBEJ7NFnqyD5ZzfHEzlh+776avGb7Uyt0g4rtMUVf3anBQCvrFd4K0YZg5OD/29iRMBb8Pt07giYQa4kZBecdhM2qoV5FBwUvRc+qTP32H2tRDSBuxURCAMLTADKMnRrDJcpLagGmvJ8mOlu0RQAAAA="
+  },
+  "/riyaz-intro-poster.avif": {
+    "width": 1920,
+    "height": 1080,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADQAwCdASoUAAsAPt1apkyopSOiMAgBEBuJQBfnMXwTc0i5ak/+iwAA/thKVU56QvxoByeNxv2qCr9PinDg2qB0OctWHIgsm+jGb8org2aPQ29HtfOJZnT2sU80R3TnxFGL8cV5ZthCPAuXNwIBRx1zs+z25FwpKaNKmVzzqO5wNjZLBGUUAA=="
   },
   "/work/careerlogica/research-01-persona.avif": {
     "width": 2048,
@@ -280,8 +285,8 @@
     "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAQBACdASoUAA0APt1apkyopSOiMAgBEBuJYwCdAYv039Fv9W8paOf8nAD+t7ceklg+DrVZpG8a8+Ig+qZTozi3lXvmoeobbzONeI2Yxp22L9/CJRmTEW/UEEjAzW/fdS6Pg7AFDQcVTRixpPxNVS4MaOE6UOPvis88+IrUeaYVJUyRfAA="
   },
   "/work/pecuc/cover.avif": {
-    "width": 2560,
-    "height": 1153,
+    "width": 3214,
+    "height": 1448,
     "blurDataURL": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADQAwCdASoUAAkAPt1cpkyopSOiMAgBEBuJbACdACHrJJP+5K9qmIAA/mtMNPFCaEilZ0QK82vfrDUyNSLkVFRVsJglKvvn57Pu9TJxwsaiP+7/bvuOZKJalqi1MmqjS812p8TOJd7KPD/VmL3gGf7Ht7s//6yv//neN368/CgAAA=="
   },
   "/work/pecuc/thumbnail.avif": {
@@ -315,8 +320,8 @@
     "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAQBACdASoUAA0APt1apkyopSOiMAgBEBuJaAC7ACIKDW/043bkZde28AD+iZQz2WjmwmX7hYpVczVr1YFgSJbRJmfvGycuv9NcxnycYUKqbQlctZ604eIKn7Ksz/0ief7NvkvYwXxuPrxn9TZ36H1ZHSJrLsE5+uvBd26aIYhOnUAA"
   },
   "/work/atrc/cover.avif": {
-    "width": 2560,
-    "height": 1153,
+    "width": 3214,
+    "height": 1448,
     "blurDataURL": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQAwCdASoUAAkAPt1apkyopSOiMAgBEBuJbACdACPSWFeLawC3VwAA/BEZZ6mKqN6x4sx+JwGTy0924yM/9eJVcRLzGri/BfeY+hG3+TeJ9rBXwJDZxBp4YGBKEMg/5mOzX+0b2J/Ix35qtEoklAAA"
   },
   "/work/atrc/thumbnail.avif": {
@@ -333,6 +338,11 @@
     "width": 2048,
     "height": 1280,
     "blurDataURL": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADQAwCdASoUAA0APt1cp0yopSOiMAgBEBuJQBhQBDvmumFwlb/heAAA+XQFc8PsaJKXTNsZSjKiRzLmp8gz5A0yv9SJrcTZwVjwu9QGLK04RxMR/mEfpzDH4ZC/t1p7l1vfv133tG+mFG1RHQg6rp7KW5GVoi6WSnBwAA=="
+  },
+  "/work/atrc/milestone-toast.avif": {
+    "width": 1440,
+    "height": 1024,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoUAA4APt1apkyopSOiMAgBEBuJZACdACHgPW4yYCVqbGeYAP7xIl8nO+Xc5KQZU0bu7nV6TSNasArTozbPcUHYn4qZOQUs1sckWF3/ajfc0oEkxwRhnVEAAAA="
   },
   "/work/atrc/01.avif": {
     "width": 2048,

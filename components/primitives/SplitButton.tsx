@@ -21,6 +21,8 @@ interface Props {
    * would try to client-side navigate to a PDF.
    */
   download?: boolean;
+  /** Event name for lib/track.ts, read off the `data-track` attribute. */
+  track?: string;
 }
 
 /**
@@ -37,7 +39,7 @@ interface Props {
  *
  * Everything is one <a>: a single tab stop with one accessible name.
  */
-function ArrowUpRight({ className }: { className?: string }) {
+export function ArrowUpRight({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 16 16"
@@ -59,6 +61,7 @@ export function SplitButton({
   emphasis,
   size = "md",
   download,
+  track,
 }: Props) {
   const lg = size === "lg";
   const external = !href.startsWith("/");
@@ -169,7 +172,8 @@ export function SplitButton({
   // client-side navigation.
   if (download) {
     return (
-      <a href={href} download className={classes} data-cursor="hide">
+      <a href={href} download className={classes} data-cursor="hide"
+        data-track={track}>
         {inner}
       </a>
     );
@@ -182,6 +186,7 @@ export function SplitButton({
         href={href}
         className={classes}
         data-cursor="hide"
+        data-track={track}
         onClick={(e) => {
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
           e.preventDefault();
@@ -200,6 +205,7 @@ export function SplitButton({
         href={href}
         className={classes}
         data-cursor="hide"
+        data-track={track}
         {...(href.startsWith("http")
           ? { target: "_blank", rel: "noreferrer noopener" }
           : {})}
@@ -210,7 +216,8 @@ export function SplitButton({
   }
 
   return (
-    <TransitionLink href={href} className={classes} data-cursor="hide">
+    <TransitionLink href={href} className={classes} data-cursor="hide"
+        data-track={track}>
       {inner}
     </TransitionLink>
   );

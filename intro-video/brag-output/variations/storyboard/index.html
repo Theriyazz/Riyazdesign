@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Film Storyboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;900&family=Geist+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg:#08080a; --raised:#141418; --line:#2a2a31; --fg:#f4f3f0; --muted:#a8a8a4; --accent:#b9ef4a; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--fg); font-family:Geist,system-ui,sans-serif; padding-bottom:110px; }
+  .wrap { width:min(1500px,100%); margin:auto; padding:0 28px; }
+  header { padding:48px 0 20px; }
+  h1 { font-size:clamp(36px,5vw,64px); font-weight:900; letter-spacing:-.05em; line-height:1; margin-bottom:12px; }
+  header p { color:var(--muted); font-size:18px; line-height:1.5; max-width:70ch; }
+  .themes { position:sticky; top:0; z-index:5; background:rgba(8,8,10,.96); border-bottom:1px solid var(--line); padding:14px 0; margin-bottom:8px; }
+  .themes .wrap { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .themes b { font-size:14px; color:var(--muted); font-weight:500; margin-right:6px; }
+  .t { display:flex; align-items:center; gap:9px; border:2px solid var(--line); background:var(--raised); color:var(--fg); padding:8px 13px 8px 9px; border-radius:99px; font:500 14px Geist,sans-serif; cursor:pointer; white-space:nowrap; }
+  .t[aria-pressed=true] { border-color:var(--fg); }
+  .t:focus-visible, .opt:focus-visible { outline:3px solid var(--fg); outline-offset:2px; }
+  .sw { display:flex; width:40px; height:22px; border-radius:6px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(255,255,255,.2); }
+  .sw i { flex:1; }
+  .beat { border-top:1px solid var(--line); padding:30px 0 38px; }
+  .beat:first-of-type { border-top:0; }
+  .head { display:flex; flex-wrap:wrap; gap:6px 16px; align-items:baseline; margin-bottom:6px; }
+  .head h2 { font-size:28px; font-weight:700; letter-spacing:-.03em; }
+  .head span { font:500 14px "Geist Mono",monospace; color:var(--muted); }
+  .tag { font:500 12px "Geist Mono",monospace !important; padding:4px 9px; border-radius:99px; border:1px solid var(--line); }
+  .tag.new { color:var(--bg) !important; background:var(--accent); border-color:var(--accent); }
+  .job { color:var(--muted); font-size:16px; margin-bottom:18px; max-width:80ch; line-height:1.45; }
+  .opts { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .opts.one { grid-template-columns:minmax(0,860px); }
+  .card { display:block; background:var(--raised); border:2px solid transparent; border-radius:10px; overflow:hidden; text-align:left; color:inherit; font:inherit; padding:0; width:100%; }
+  button.card { cursor:pointer; }
+  button.card:hover { border-color:var(--line); }
+  button.card[aria-pressed=true] { border-color:var(--accent); }
+  .card img { display:block; width:100%; aspect-ratio:16/9; background:#222; }
+  .card .b { padding:14px 16px 18px; }
+  .card h3 { display:flex; justify-content:space-between; gap:10px; font-size:18px; font-weight:700; letter-spacing:-.02em; margin-bottom:8px; }
+  .card h3 i { font:500 13px "Geist Mono",monospace; color:var(--accent); visibility:hidden; font-style:normal; }
+  .card[aria-pressed=true] h3 i { visibility:visible; }
+  .card p { color:var(--muted); font-size:14.5px; line-height:1.45; }
+  .card .say { color:var(--fg); margin-bottom:8px; font-weight:500; }
+  .bar { position:fixed; left:0; right:0; bottom:0; background:rgba(14,14,17,.97); border-top:1px solid var(--line); padding:14px 0; z-index:10; }
+  .bar .wrap { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 18px; }
+  #cut { font:500 15px "Geist Mono",monospace; overflow-wrap:anywhere; }
+  #copy { border:0; background:var(--accent); color:#111014; font:700 15px Geist,sans-serif; padding:12px 20px; border-radius:99px; cursor:pointer; white-space:nowrap; }
+  @media (max-width:900px) { .opts { grid-template-columns:1fr; } .wrap { padding:0 16px; } header { padding-top:28px; } .themes { position:static; } }
+</style>
+</head>
+<body>
+  <div class="wrap"><header>
+    <h1>Pick a colour, then frames 3 and 4.</h1>
+    <p>Your seven picks are kept. Frames 3 and 4 are new, and every frame updates when you change the colour.</p>
+  </header></div>
+  <div class="themes"><div class="wrap" id="themes"><b>Colour</b></div></div>
+  <div class="wrap"><main id="beats"></main></div>
+  <div class="bar"><div class="wrap"><div id="cut" aria-live="polite"></div><button id="copy" type="button">Copy my picks</button></div></div>
+  <script>
+    const THEMES = [
+      ["lime-dark","Lime, dark",["#121613","#1e2420","#b9ef4a"]],
+      ["lime-light","Lime, light",["#e9eddf","#f9faf4","#a4e02c"]],
+      ["cobalt-dark","Cobalt, dark",["#10162a","#1b2340","#8fa8ff"]],
+      ["cobalt-light","Cobalt, light",["#e6ebf8","#fbfcff","#2f55d4"]],
+      ["clay-dark","Clay, dark",["#1b1412","#2a1f1b","#f09470"]],
+      ["clay-light","Clay, light",["#f3e4da","#fffaf6","#c9502a"]],
+    ];
+    const BEATS = [
+      { n:1, t:"The statement", time:"0:00 to 0:05", job:"Also the thumbnail.", kept:[["1C","Sticky notes","I solve business problems with UX. Strategy. Planning. Execution.","Three stickies slap down in rhythm, each with a small paper bounce."]]},
+      { n:2, t:"Who it’s for", time:"0:05 to 0:09", job:"Your three audiences.", kept:[["2A","Three frames","Built for three kinds of team. Small and medium businesses. Early-stage startups. Non-profits.","The camera pulls back as each frame draws itself. Your cursor selects them in turn."]]},
+      { n:3, t:"Customers and donors", time:"0:09 to 0:14", job:"Three new options. The outcome: reaching more of the right people.", pick:[
+        ["3D","Two clients, two goals","Find the people who say yes. Customers. Donors. CRO landing pages and websites.","CareerLogica’s site and PECUC’s donate page each draw in as their own frame, with no line between them."],
+        ["3E","How a page converts","Built to turn visitors into customers and donors. A clear promise. Proof people trust. One next step.","Your cursor drops three pins on PECUC’s page, and each pin lights its line on the right. It shows how you think."],
+        ["3F","Swap the word","Reach more customers. Reach more donors. With CRO landing pages and websites.","Your cursor opens a property menu and switches “customers” to “donors”, and the big word changes. The simplest and most typographic."]]},
+      { n:4, t:"0 to 1", time:"0:14 to 0:18", job:"Three new options. Startups: from a landing page to a complete dashboard-powered product.", pick:[
+        ["4D","One product, end to end","0 to 1. Just a landing page, or a full dashboard-powered product. One product, built end to end.","CareerLogica only: its site wires to its student dashboard, then to its other dashboards. The strongest proof."],
+        ["4E","Choose your size","Startup? Start at any size. Landing page. Website. Product. Dashboards. From 0 to 1, whatever you need.","Your cursor clicks each size and a blank wireframe grows to match. No client work is shown, so it speaks directly to founders."],
+        ["4F","Big numbers","0 to 1. From idea to live product. Landing page. Website. Dashboards. For startups, at any stage.","The 0 sits alone, then the arrow shoots across and the 1 slams down. Your illustration stays in the frame."]]},
+      { n:5, t:"The name", time:"0:18 to 0:21", job:"", kept:[["5A","The cursor tag grows","Hi, I’m Riyaz Malek. Product designer, based in Vadodara.","The Riyaz cursor flies to centre and its small tag swells into your full name."]]},
+      { n:6, t:"The work", time:"0:21 to 0:31", job:"6C, now as three separate scenes, one per client. The camera flies between them, and no line ever connects two clients.", three:true, kept:[
+        ["6C-pecuc","PECUC","A 2001 website hid 35 years of work. Organise around what visitors want. 37 links to 7. 4 clicks to 2.","Three cards wire into the real screen."],
+        ["6C-careerlogica","CareerLogica","Students pick careers with no credible tool. Free until the first real result. 140+ screens, 5 roles, English and Arabic.","Same structure, its own client and screen."],
+        ["6C-atrc","ATRC","Fifteen-year-olds quit long tests midway. Keep it long. Design reasons to finish. 25 questions. Every exit a way back.","Same structure, its own client and screen."]]},
+      { n:7, t:"Skills", time:"0:31 to 0:34", job:"", kept:[["7A","Component set","One person, the whole job. UX strategy, research, information architecture, UI design, prototyping, design systems, CRO landing pages, AI-assisted workflow.","Skills drop into a Figma-style component set, and each snaps into its row."]]},
+      { n:8, t:"What clients say", time:"0:34 to 0:40", job:"Each client is named against their own product.", kept:[["8A","Comment thread","Don’t take my word for it. Then Ranjan on PECUC and Himanshu on CareerLogica.","Two chat bubbles spring in, one after the other."]]},
+      { n:9, t:"The close", time:"0:40 to 0:44", job:"Returns to the first frame, so the loop has no cut.", kept:[["9C","The direct ask","Your next site shouldn’t be AI slop. Let’s build one that makes you money. riyazdesigns.netlify.app","Big type lands line by line. The visitor’s You cursor glides onto your link and clicks."]]},
+    ];
+    const KEY = "film-storyboard-v2";
+    let state = { theme:"lime-dark", picks:{} };
+    try { state = Object.assign(state, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+    const src = (id) => `img/${state.theme}/${id}.jpg`;
+    const bar = document.getElementById("themes");
+    THEMES.forEach(([id, label, c]) => {
+      const b = document.createElement("button");
+      b.className = "t"; b.type = "button"; b.dataset.t = id;
+      b.innerHTML = `<span class="sw">${c.map((x) => `<i style="background:${x}"></i>`).join("")}</span>${label}`;
+      b.onclick = () => { state.theme = id; render(); };
+      bar.append(b);
+    });
+    const root = document.getElementById("beats");
+    const body = (o, picked) => `<img data-id="${o[0]}" alt="Frame ${o[0]}: ${o[1]}" /><div class="b"><h3>${o[0].startsWith("6C") ? o[1] : o[0] + ". " + o[1]}${picked ? " <i>Picked</i>" : ""}</h3><p class="say">${o[2]}</p><p>${o[3]}</p></div>`;
+    BEATS.forEach((b) => {
+      const s = document.createElement("section");
+      s.className = "beat";
+      s.innerHTML = `<div class="head"><h2>${b.n}. ${b.t}</h2><span>${b.time}</span><span class="tag ${b.pick ? "new" : ""}">${b.pick ? "New, pick one" : "Kept"}</span></div>${b.job ? `<p class="job">${b.job}</p>` : ""}<div class="opts ${b.kept && !b.three ? "one" : ""}"></div>`;
+      const box = s.querySelector(".opts");
+      (b.pick || []).forEach((o) => {
+        const el = document.createElement("button");
+        el.className = "card opt"; el.type = "button"; el.dataset.id = o[0]; el.dataset.n = b.n;
+        el.innerHTML = body(o, true);
+        el.onclick = () => { state.picks[b.n] = o[0]; render(); };
+        box.append(el);
+      });
+      (b.kept || []).forEach((o) => {
+        const el = document.createElement("div");
+        el.className = "card"; el.innerHTML = body(o, false);
+        box.append(el);
+      });
+      root.append(s);
+    });
+    function line() {
+      const name = THEMES.find((t) => t[0] === state.theme)[1];
+      return `${name}: 1C 2A ${state.picks[3] || "3?"} ${state.picks[4] || "4?"} 5A 6C 7A 8A 9C`;
+    }
+    function render() {
+      document.querySelectorAll(".t").forEach((b) => b.setAttribute("aria-pressed", b.dataset.t === state.theme));
+      document.querySelectorAll("img[data-id]").forEach((i) => (i.src = src(i.dataset.id)));
+      document.querySelectorAll(".opt").forEach((o) => o.setAttribute("aria-pressed", state.picks[o.dataset.n] === o.dataset.id));
+      document.getElementById("cut").textContent = line();
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    }
+    document.getElementById("copy").onclick = async (e) => {
+      try { await navigator.clipboard.writeText(line()); e.target.textContent = "Copied"; }
+      catch (err) { e.target.textContent = "Select the text to copy"; }
+      setTimeout(() => (e.target.textContent = "Copy my picks"), 1800);
+    };
+    render();
+  </script>
+</body>
+</html>

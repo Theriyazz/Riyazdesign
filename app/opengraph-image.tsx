@@ -26,7 +26,7 @@ export default function OpenGraphImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ width: 12, height: 12, background: "#FF4D2E" }} />
+          <div style={{ width: 12, height: 12, background: "#AAFF00" }} />
           <div
             style={{
               color: "#A8A8A4",
@@ -35,7 +35,7 @@ export default function OpenGraphImage() {
               textTransform: "uppercase",
             }}
           >
-            {site.role}
+            {`${site.role} · ${site.specialty}`}
           </div>
         </div>
 

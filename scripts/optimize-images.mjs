@@ -1,11 +1,10 @@
 /**
- * Converts the source PNGs (1.6–2.4MB each) into web-ready AVIF + WebP and
+ * Converts the source PNGs into LOSSLESS AVIF + WebP at their native size and
  * emits a manifest of intrinsic dimensions and blur placeholders.
  *
- * We deliberately emit ONE large derivative per image rather than a full
- * width ladder: next/image already generates responsive sizes on demand, so
- * a ladder here would just duplicate that work. What this script is actually
- * for is getting the *source* off multi-megabyte PNG.
+ * Nothing is resized or quantised: the output decodes to the same pixels as
+ * the source. next.config.ts sets `images.unoptimized`, so these files are
+ * what the browser receives.
  *
  *   npm run images
  *
@@ -146,6 +145,7 @@ const ATRC = [
   ["work/atrc/Thumbnail.avif.png", "work/atrc/thumbnail"],
   ["work/atrc/User Flow.png", "work/atrc/user-flow"],
   ["work/atrc/Iteration 3.png", "work/atrc/iteration-3"],
+  ["work/atrc/Milestone Toast.png", "work/atrc/milestone-toast"],
   // The wireframe spread, exported into the careerlogica folder by mistake.
   // Pointed at where it actually sits rather than moved, so a re-export of that
   // same file lands in the same place without a second manual step.
@@ -172,6 +172,10 @@ const JOBS = [
   ["Riyaz Images/Image 3 wide.png", "riyaz/wide"],
   ["Riyaz Images/Riyaz Image 2.png", "riyaz/alt-1"],
   ["Riyaz Images/Image 3.png", "riyaz/alt-2"],
+  // The intro film's poster (IntroFilm.tsx uses the WebP: `poster` takes one
+  // URL, so there is no AVIF negotiation). Remotion renders it as a JPEG,
+  // which also sits in public/ as-is as riyaz-intro-poster.jpg.
+  ["intro-video/brag-output/poster.jpg", "riyaz-intro-poster"],
 
   ...CAREERLOGICA_RESEARCH,
   ...CAREERLOGICA_WORK,
@@ -193,8 +197,6 @@ const JOBS = [
  *
  * source (relative to repo root) -> output basename under public/
  */
-const ICON_DISPLAY_PX = 84;
-const ICON_EXPORT_SCALE = 2;
 const ICON_JOBS = [
   ["Tools Icon/Figma.png", "tools/figma"],
   ["Tools Icon/Framer.png", "tools/framer"],
@@ -207,7 +209,6 @@ const ICON_JOBS = [
   ["Tools Icon/GitHub.png", "tools/github"],
 ];
 
-const MAX_WIDTH = 2560;
 const manifest = {};
 
 const kb = (n) => `${(n / 1024).toFixed(0)}KB`;
@@ -231,14 +232,17 @@ async function run() {
     const pipeline = sharp(input).rotate();
     const meta = await pipeline.metadata();
 
-    const width = Math.min(meta.width ?? MAX_WIDTH, MAX_WIDTH);
-    const height = Math.round(((meta.height ?? width) * width) / (meta.width ?? width));
+    // Native size, no downscale. `.rotate()` applies EXIF orientation only and
+    // does not touch pixels. `lossless: true` is pixel-identical to the source
+    // (checked by decoding both and comparing raw buffers).
+    const width = meta.width;
+    const height = meta.height;
 
-    await sharp(input).rotate().resize({ width, withoutEnlargement: true })
-      .avif({ quality: 62, effort: 6 }).toFile(`${base}.avif`);
+    await sharp(input).rotate()
+      .avif({ lossless: true, effort: 4 }).toFile(`${base}.avif`);
 
-    await sharp(input).rotate().resize({ width, withoutEnlargement: true })
-      .webp({ quality: 80 }).toFile(`${base}.webp`);
+    await sharp(input).rotate()
+      .webp({ lossless: true, effort: 4 }).toFile(`${base}.webp`);
 
     // 20px blur placeholder, inlined as a data URI so there is no extra request.
     const blur = await sharp(input).rotate().resize({ width: 20 })
@@ -272,11 +276,9 @@ async function run() {
 
     const input = await readFile(srcPath);
     const dest = path.join(ROOT, "public", `${out}.webp`);
-    const exportPx = ICON_DISPLAY_PX * ICON_EXPORT_SCALE;
-    await sharp(input)
-      .resize(exportPx, exportPx, { kernel: "lanczos3" })
-      .webp({ quality: 92 })
-      .toFile(dest);
+    // Native pixels, lossless. The old path resampled 136px up to 168px, which
+    // adds no detail; the browser scales the true source instead.
+    await sharp(input).webp({ lossless: true }).toFile(dest);
 
     const srcSize = (await stat(srcPath)).size;
     const outSize = (await stat(dest)).size;

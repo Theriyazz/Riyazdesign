@@ -219,7 +219,7 @@ export function ScreenCarousel({
             role="group"
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${count}`}
-            className="w-[86%] shrink-0 snap-start"
+            className="w-[86%] shrink-0 snap-start [&>figure]:my-0"
           >
             {slide}
           </div>

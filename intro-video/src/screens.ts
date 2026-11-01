@@ -1,0 +1,23 @@
+// Generated from the shared screen exports. aspect = width / height.
+export const screens = [
+  { file: "screens/01.webp", aspect: 0.526 },
+  { file: "screens/02.webp", aspect: 1.380 },
+  { file: "screens/03.webp", aspect: 0.738 },
+  { file: "screens/04.webp", aspect: 1.366 },
+  { file: "screens/05.webp", aspect: 0.526 },
+  { file: "screens/06.webp", aspect: 0.728 },
+  { file: "screens/07.webp", aspect: 1.151 },
+  { file: "screens/08.webp", aspect: 1.406 },
+  { file: "screens/09.webp", aspect: 1.406 },
+  { file: "screens/10.webp", aspect: 1.406 },
+  { file: "screens/11.webp", aspect: 0.526 },
+  { file: "screens/12.webp", aspect: 1.360 },
+  { file: "screens/13.webp", aspect: 1.406 },
+  { file: "screens/14.webp", aspect: 1.406 },
+  { file: "screens/15.webp", aspect: 1.406 },
+  { file: "screens/16.webp", aspect: 1.406 },
+  { file: "screens/17.webp", aspect: 0.526 },
+  { file: "screens/18.webp", aspect: 1.721 },
+  { file: "screens/19.webp", aspect: 1.848 },
+  { file: "screens/20.webp", aspect: 1.829 },
+] as const;

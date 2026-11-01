@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "film-variations",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "4173", "--directory", "intro-video/brag-output/variations"],
+      "port": 4173
+    },
+    {
       "name": "start",
       "runtimeExecutable": "npm",
       "runtimeArgs": [

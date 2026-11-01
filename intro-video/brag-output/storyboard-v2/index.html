@@ -1,0 +1,231 @@
+<title>Riyaz Intro Storyboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap">
+<style>
+/* Layout: one row per scene; scene facts in a narrow rail, three option frames beside it; a sticky picks bar at the foot. Dark-only, matching the portfolio. */
+:root {
+  --ink: #08080a;
+  --raised: #111114;
+  --line: #24242a;
+  --line-strong: #3a3a43;
+  --paper: #f4f3f0;
+  --muted: #a8a8a4;
+  --quiet: #7a7a7e;
+  --signal: #aaff00;
+  --on-signal: #08080a;
+  --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 120px;
+}
+.wrap { max-width: 1440px; margin: 0 auto; }
+em.s { font-family: var(--serif); font-style: italic; font-weight: 400; }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--quiet); }
+
+header { padding-block: 56px 40px; border-bottom: 1px solid var(--line); display: grid; gap: 20px; }
+header h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; margin: 0; text-wrap: balance; }
+header p { margin: 0; max-width: 68ch; color: var(--muted); font-size: 17px; }
+.rules { display: flex; flex-wrap: wrap; gap: 8px; }
+.rules span { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 12px; }
+
+section.scene { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; padding-block: 48px; border-bottom: 1px solid var(--line); }
+.rail { display: grid; align-content: start; gap: 10px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); height: max-content; }
+.rail .n { font-family: var(--mono); font-size: 13px; color: var(--quiet); }
+.rail h2 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+.rail p { margin: 0; color: var(--muted); font-size: 15px; }
+.rail .note { color: var(--quiet); font-size: 13px; border-left: 2px solid var(--line-strong); padding-left: 10px; }
+
+.options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.opt { display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; background: var(--raised); border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 16px; min-width: 0; transition: border-color 160ms ease; }
+.opt.on { border-color: var(--signal); }
+.opt .frame { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 9; }
+.opt .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.opt .frame:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-inline: 4px; }
+.head h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }
+.head h3 b { font-family: var(--mono); font-weight: 500; color: var(--quiet); margin-right: 8px; }
+.pick-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); white-space: nowrap; }
+.body { display: grid; gap: 12px; padding-inline: 4px; align-content: start; }
+.copy { margin: 0; font-size: 17px; line-height: 1.35; color: var(--paper); letter-spacing: -0.01em; }
+.body dl { margin: 0; display: grid; gap: 10px; }
+.body dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--quiet); }
+.body dd { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.use { justify-self: start; margin-inline: 4px; font: 500 14px var(--sans); color: var(--paper); background: transparent; border: 1px solid var(--line-strong); border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+.use:hover { border-color: var(--paper); }
+.opt.on .use { background: var(--signal); color: var(--on-signal); border-color: var(--signal); }
+
+.bar { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(8, 8, 10, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--line); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
+.bar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.bar .label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--quiet); }
+.picks { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
+.picks span { font-family: var(--mono); font-size: 14px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--quiet); font-variant-numeric: tabular-nums; }
+.picks span.set { color: var(--paper); border-color: var(--paper); }
+.bar button { font: 500 14px var(--sans); border-radius: 999px; padding: 9px 16px; cursor: pointer; border: 1px solid var(--line-strong); background: transparent; color: var(--paper); }
+.bar button.primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+#status { font-size: 13px; color: var(--muted); min-height: 1em; }
+#copybox { width: 100%; font-family: var(--mono); font-size: 13px; background: var(--raised); color: var(--paper); border: 1px solid var(--line-strong); border-radius: 8px; padding: 8px; }
+
+.zoom { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); cursor: zoom-out; z-index: 10; }
+.zoom img { max-width: min(1600px, 100%); max-height: 100%; border-radius: 12px; }
+
+@media (max-width: 1100px) {
+  section.scene { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .rail { position: static; }
+}
+@media (max-width: 860px) { .options { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .opt { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mono">Portfolio intro film · storyboard v2</div>
+    <h1>Eight scenes, three ways each. Pick <em class="s">one</em> per scene.</h1>
+    <p>Every line is new, written for the person hiring you, and every fact is still true to your work. Each frame is a real 1920&times;1080 keyframe built with your screens and brand. Tap a frame to see it large, choose an option per scene, then copy your picks back to me and I&rsquo;ll animate that cut.</p>
+    <div class="rules">
+      <span>~24s at 60fps</span><span>Silent: plays muted on the site</span><span>Lime only where the film points</span><span>No portfolio lines reused</span>
+    </div>
+  </header>
+  <main id="scenes"></main>
+</div>
+
+<div class="bar" role="region" aria-label="Your picks">
+  <div class="wrap">
+    <span class="label">Your cut</span>
+    <div class="picks" id="picks"></div>
+    <button type="button" id="rec">Use my recommended cut</button>
+    <button type="button" class="primary" id="copy">Copy picks</button>
+    <span id="status" aria-live="polite"></span>
+  </div>
+</div>
+
+<div class="zoom" id="zoom" hidden><img alt="" id="zoomimg"></div>
+
+<script>
+const SCENES = [
+  { n: "01", t: "0 to 3s", name: "Hook", job: "Stop the scroll and speak to the person doing the hiring.", rec: "A", opts: [
+    { id: "A", title: "The question", copy: "Hiring a product designer? <br>Give me twenty seconds.", motion: "The question types out letter by letter with the lime dot as the text cursor. It blinks twice, then the second line fades up.", why: "It talks straight to the decision-maker and makes a time promise they can hold you to. It pairs with sign-off 8A." },
+    { id: "B", title: "The contrast", copy: "Most designers hand off screens. <br>I hand off <em class='s'>products.</em>", motion: "Line one settles, then a grey strike runs through “screens”. Line two rises word by word, and the lime rule draws under “products”.", why: "One sentence moves you from ‘UI designer’ to ‘owns the outcome’, which is the thing hiring managers screen for." },
+    { id: "C", title: "The signature", copy: "Riyaz Malek. <br>One designer. Whole products.", motion: "The dot clicks on black, lobs onto the ı and becomes its dot. The name rises letter by letter.", why: "People remember your name first, and it keeps the best moment from the current film." },
+  ]},
+  { n: "02", t: "3 to 6s", name: "Who I am", job: "Make ‘self-taught’ read as a strength.", rec: "B", opts: [
+    { id: "A", title: "Origin", copy: "I started as a graphic designer. Six months later, I was designing <em class='s'>the product.</em>", motion: "A lime frame closes into your portrait. The sentence rises line by line, and the rule draws under “the product”.", why: "It turns ‘no degree in UX’ into proof of how fast you learn." },
+    { id: "B", title: "Timeline", copy: "Three years. Four chapters. <br>The next one is <em class='s'>yours.</em>", motion: "The dot travels the timeline and pauses at each chapter. The last node is a dashed lime ring marked “Your team”, and it pulses.", why: "It shows your growth at a glance, and the viewer becomes the next step, so the ask is made without asking." },
+    { id: "C", title: "Four jobs", copy: "Four jobs. <br>One designer.", motion: "Researcher, Strategist, UI designer and Prototyper fly in from the corners, lines draw into your portrait, then the headline lands.", why: "It frames you as the hire a lean team needs." },
+  ]},
+  { n: "03", t: "6 to 9s", name: "Proof", job: "Numbers a muted viewer takes in at a glance.", rec: "B", opts: [
+    { id: "A", title: "Scale", copy: "140+ screens, designed solo. <br>5 user roles. 2 reading directions.", motion: "Odometer digits roll in one after another while the dot draws the rule above them.", why: "Big, simple numbers survive a muted autoplay glance." },
+    { id: "B", title: "Speed", copy: "I move fast because <br>nothing gets lost between people.", motion: "Three bars grow 1, 2 and 3 months long, each drawn by the dot. Labels settle beside them.", why: "Speed plus ownership is what startups hire for, and these are your real project timelines." },
+    { id: "C", title: "Subtraction", copy: "My best work is <br>what I <em class='s'>took out.</em>", motion: "37, 4 and 9 count down to 7, 2 and 1.", why: "It shows judgement over decoration. It reuses PECUC numbers, so pair it with 5A." },
+  ]},
+  { n: "04", t: "9 to 12s", name: "CareerLogica", job: "Show scope, systems thinking and solo ownership.", rec: "C", opts: [
+    { id: "A", title: "Four users", copy: "Four users who want different things. <br>One system for all of them.", motion: "The laptop scrolls through the student, counsellor, school and admin dashboards, and the matching role chip lights up each time.", why: "It shows you can design one system across competing needs." },
+    { id: "B", title: "Both directions", copy: "Designed in English. <br>Rebuilt for Arabic, <em class='s'>right to left.</em>", motion: "The English page mirrors into the Arabic one across a centre line, with the dot riding the seam.", why: "RTL work is rare and concrete, which matters for UAE and MENA hiring." },
+    { id: "C", title: "The wall", copy: "140+ screens. <br>Work usually split across two or three designers. <br>I did it <em class='s'>alone.</em>", motion: "A tilted wall of real dashboards drifts upward. The three lines land one at a time.", why: "Scale and solo ownership in one image. The ‘two or three designers’ comes from your own scope note." },
+  ]},
+  { n: "05", t: "12 to 15s", name: "PECUC", job: "Show you find the problem that actually costs money.", rec: "A", opts: [
+    { id: "A", title: "Trust gap", copy: "UNICEF trusted their work. <br>Their website <em class='s'>didn’t.</em>", motion: "The dot drags a lime wipe across the laptop, from the 2001 site to the redesign.", why: "A before and after reads instantly, even with the sound off." },
+    { id: "B", title: "The broken link", copy: "Their Donate link went <em class='s'>nowhere.</em>", motion: "A struck <code>href=\"#\"</code> chip flips into “a real journey” while the donation page slides in.", why: "It proves you hunt business-critical problems, not cosmetic ones." },
+    { id: "C", title: "Nine to one", copy: "Nine scattered sites. <br><em class='s'>One home.</em>", motion: "Nine tiles drift, then get pulled along curves into the dot and onto one laptop.", why: "It makes information architecture, a senior skill, visible." },
+  ]},
+  { n: "06", t: "15 to 18s", name: "ATRC", job: "Show empathy for real behaviour, framed as a design decision.", rec: "A", opts: [
+    { id: "A", title: "Way back", copy: "Fifteen-year-olds leave mid-test. <br>So every exit got a <em class='s'>way back.</em>", motion: "The question screen dims and the “Still there?” recovery card rises into place.", why: "It names a real user behaviour and your answer to it in two lines." },
+    { id: "B", title: "Prototype first", copy: "Two working prototypes <br>before a single <em class='s'>wireframe.</em>", motion: "Two prototype screens deal in from the sides and tilt, and the A and B labels tick in.", why: "It signals a modern, build-first, AI-assisted way of working." },
+    { id: "C", title: "The flow", copy: "Start. Pause. Come back. Finish.", motion: "The dot walks a line under four real screens, and each verb lights up as it passes.", why: "End-to-end flow thinking in four words." },
+  ]},
+  { n: "07", t: "18 to 21s", name: "How I work", job: "Answer the questions a hiring manager would ask in an interview.", rec: "A", opts: [
+    { id: "A", title: "AI in the loop", copy: "AI writes the first draft. <br>I make the <em class='s'>calls.</em>", motion: "Your tools orbit the dot, then the orbit collapses into it and the line lands.", why: "Does this person use AI well? Every team asks that in 2026, and this answers it." },
+    { id: "B", title: "Trade-offs", copy: "Every call I make comes <br>with its <em class='s'>cost</em> written down.", motion: "A decision card builds row by row: Decision, Why, Trade-off.", why: "Writing down the cost of each decision reads as seniority. The card uses a real PECUC decision." },
+    { id: "C", title: "Handoff", copy: "Developers get answers <br>before they <em class='s'>ask.</em>", motion: "Spec annotations draw themselves over a real dashboard.", why: "Engineering leads care about clean handoff. The annotations are illustrative, not real spec values." },
+  ]},
+  { n: "08", t: "21 to 24s", name: "The ask", job: "End with one clear next step, then loop.", rec: "A", opts: [
+    { id: "A", title: "Bookend", copy: "Riyazdesigns. <br>Hiring a product designer? Let’s talk.", motion: "The wordmark rises and the dot lands as its full stop. The links stagger in, then the dot flies home to frame 0.", why: "It answers the hook in 1A and loops cleanly on the site." },
+    { id: "B", title: "One email", copy: "Your next designer is <br>one <em class='s'>email</em> away.", motion: "Your email types out with the lime cursor, and the availability dot pulses.", why: "The lowest-friction call to action there is." },
+    { id: "C", title: "Ready", copy: "If you’re hiring, <br>I’m <em class='s'>ready.</em>", motion: "Your portrait scales in, the line rises, then your links.", why: "Personal and direct, and it ends on your face." },
+  ]},
+];
+
+const KEY = "riyaz-storyboard-v2-picks";
+let picks = {};
+try { picks = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { picks = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(picks)); } catch (e) {} };
+
+const root = document.getElementById("scenes");
+root.innerHTML = SCENES.map((s, si) => `
+  <section class="scene" aria-labelledby="h${s.n}">
+    <div class="rail">
+      <span class="n">${s.n} &middot; ${s.t}</span>
+      <h2 id="h${s.n}">${s.name}</h2>
+      <p>${s.job}</p>
+      <p class="note">My pick: ${s.n.replace(/^0/, "")}${s.rec}</p>
+    </div>
+    <div class="options" role="radiogroup" aria-label="${s.name} options">
+      ${s.opts.map((o) => {
+        const id = s.n.replace(/^0/, "") + o.id;
+        return `
+        <article class="opt" data-scene="${si}" data-id="${id}">
+          <button type="button" class="frame" data-zoom="img/${id}.jpg" aria-label="Enlarge frame ${id}"><img src="img/${id}.jpg" alt="Storyboard frame ${id}, ${o.title}" loading="${si < 2 ? "eager" : "lazy"}" width="1280" height="720"></button>
+          <div class="head"><h3><b>${id}</b>${o.title}</h3>${o.id === s.rec ? '<span class="pick-tag">My pick</span>' : ""}</div>
+          <div class="body">
+            <p class="copy">${o.copy}</p>
+            <dl><div><dt>Motion</dt><dd>${o.motion}</dd></div><div><dt>Why it lands</dt><dd>${o.why}</dd></div></dl>
+          </div>
+          <button type="button" class="use" role="radio" aria-checked="false" id="use-${id}">Use ${id}</button>
+        </article>`;
+      }).join("")}
+    </div>
+  </section>`).join("");
+
+function render() {
+  document.querySelectorAll(".opt").forEach((el) => {
+    const on = picks[el.dataset.scene] === el.dataset.id;
+    el.classList.toggle("on", on);
+    const b = el.querySelector(".use");
+    b.setAttribute("aria-checked", on ? "true" : "false");
+    b.textContent = on ? `Using ${el.dataset.id}` : `Use ${el.dataset.id}`;
+  });
+  document.getElementById("picks").innerHTML = SCENES.map((s, i) => picks[i] ? `<span class="set">${picks[i]}</span>` : `<span>${s.n.replace(/^0/, "")}?</span>`).join("");
+}
+
+root.addEventListener("click", (e) => {
+  const use = e.target.closest(".use");
+  if (use) { const o = use.closest(".opt"); picks[o.dataset.scene] = o.dataset.id; save(); render(); return; }
+  const f = e.target.closest(".frame");
+  if (f) { document.getElementById("zoomimg").src = f.dataset.zoom; document.getElementById("zoom").hidden = false; }
+});
+document.getElementById("zoom").addEventListener("click", (e) => { e.currentTarget.hidden = true; });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.getElementById("zoom").hidden = true; });
+
+document.getElementById("rec").addEventListener("click", () => {
+  SCENES.forEach((s, i) => { picks[i] = s.n.replace(/^0/, "") + s.rec; });
+  save(); render(); setStatus("Recommended cut selected.");
+});
+
+function setStatus(t) { document.getElementById("status").textContent = t; }
+document.getElementById("copy").addEventListener("click", () => {
+  const missing = SCENES.filter((s, i) => !picks[i]).map((s) => s.n.replace(/^0/, ""));
+  const text = "My intro picks: " + SCENES.map((s, i) => picks[i] || `${s.n.replace(/^0/, "")}?`).join(" ");
+  const done = () => setStatus(missing.length ? `Copied. Scenes ${missing.join(", ")} still open.` : "Copied. Paste it in our chat.");
+  const fallback = () => {
+    let box = document.getElementById("copybox");
+    if (!box) { box = document.createElement("input"); box.id = "copybox"; box.readOnly = true; document.querySelector(".bar .wrap").appendChild(box); }
+    box.value = text; box.focus(); box.select();
+    setStatus("Copy blocked here. The text is selected, so press Ctrl+C.");
+  };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (err) { fallback(); }
+});
+
+render();
+</script>

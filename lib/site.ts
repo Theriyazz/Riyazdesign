@@ -7,29 +7,32 @@
 
 export const site = {
   name: "Riyaz Malek",
-  wordmark: "Riyazdesigns.",
-  role: "UX Designer",
+  wordmark: "Riyaz Malek",
+  role: "Product Designer",
+  /** The specialty that sits beside the title wherever there is room for it. */
+  specialty: "AI-native products, EdTech & SaaS",
   positioning:
-    "UX designer with 3+ years across SaaS platforms, EdTech, career assessment tools, and non-profit websites.",
+    "Product designer with 3+ years of experience in EdTech, SaaS and AI-native products. Sole designer on a 140+ screen platform and a 25-question STEM assessment for Abu Dhabi's ATRC.",
   location: "Vadodara, India",
   timezone: "Asia/Kolkata",
   available: true,
-  availableLabel: "Open to full-time UX roles",
+  availableLabel: "Open to product design roles",
 
   email: "malekriyaz606@gmail.com",
-  url: "https://riyazdesigns.com",
+  url: "https://riyazdesigns.netlify.app",
   resume: "/riyaz-malek-resume.pdf",
 
   socials: [
     { label: "Email", href: "mailto:malekriyaz606@gmail.com" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/riyazmalek" },
-    { label: "Instagram", href: "https://instagram.com/riyazdesigns" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/riyaz-malek-a283751b2/" },
+    { label: "Instagram", href: "https://instagram.com/riyaz.designs" },
   ],
 
   /** In-page anchors. Case study cards are the only outbound links. */
   nav: [
     { label: "Work", hash: "work" },
     { label: "About", hash: "about" },
+    { label: "Experience", hash: "experience" },
     { label: "Contact", hash: "contact" },
   ],
 

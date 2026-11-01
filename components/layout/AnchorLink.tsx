@@ -20,11 +20,14 @@ export function AnchorLink({
   children,
   className,
   onNavigate,
+  track,
 }: {
   hash: string;
   children: React.ReactNode;
   className?: string;
   onNavigate?: () => void;
+  /** Event name for lib/track.ts, read off the `data-track` attribute. */
+  track?: string;
 }) {
   const pathname = usePathname();
   const { navigate } = useTransition();
@@ -50,6 +53,7 @@ export function AnchorLink({
         history.replaceState(null, "", `/#${hash}`);
       }}
       className={className}
+      data-track={track}
     >
       {children}
     </Link>

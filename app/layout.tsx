@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { site } from "@/lib/site";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { BackdropField } from "@/components/layout/BackdropField";
+import { TrackClicks } from "@/components/layout/TrackClicks";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 
@@ -104,6 +105,7 @@ export default function RootLayout({
             anything else has to think about. It is fixed and `z-index: -1`, so
             its position in the tree is about reading order, not stacking. */}
         <BackdropField />
+        <TrackClicks />
         <a className="skip-link" href="#main">
           Skip to content
         </a>

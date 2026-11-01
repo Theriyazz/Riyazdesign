@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "images": "node scripts/optimize-images.mjs",
+    "images": "node scripts/optimize-images.mjs && node scripts/phone-covers.mjs",
     "verify": "node scripts/verify.mjs"
   },
   "dependencies": {

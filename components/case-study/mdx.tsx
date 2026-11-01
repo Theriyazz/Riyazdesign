@@ -26,8 +26,8 @@ import { Lens } from "@/components/ui/lens";
  *    `--fg-muted` is 8.4:1 and is the quietest tone used here.
  */
 
-/** Shared measure. Long enough to avoid ragged lines, short enough to scan. */
-const MEASURE = "max-w-[68ch]";
+/** Text runs the full reading column, so sections stay short and scannable. */
+const MEASURE = "max-w-none";
 
 /**
  * Column classes chosen so the track count always divides the item count.
@@ -71,40 +71,38 @@ export function Decision({
   decision,
   why,
   tradeoff,
+  spaced,
 }: {
   decision: string;
   why: string;
   tradeoff: string;
+  /** Opens a new section rather than following on from the block above it. */
+  spaced?: boolean;
 }) {
+  // Built to be scanned: the decision reads as a headline, and Why and
+  // Tradeoff are labelled rows in full-strength text. Copy is kept under ~95
+  // characters, which holds every row to 2 lines on desktop and 3 on a phone. Stacked
+  // rows rather than two columns: side by side, the same copy wrapped to
+  // four or five lines in a 390px column.
   return (
     <div
-      className="my-14 border-l-2 pl-7"
+      className={`${spaced ? "mt-14" : "mt-6"} mb-6 border-l-2 bg-[var(--bg-inset)] p-6`}
       style={{ borderColor: "var(--case-accent)" }}
     >
-      <p className="text-[length:var(--text-lg)] leading-snug text-fg">{decision}</p>
+      <p className="text-[length:var(--text-xl)] font-medium leading-[1.15] tracking-[-0.02em] text-fg">{decision}</p>
 
-      {/* `Why` and `Tradeoff` name the structure of the block, so they are set
-          a step above `.label` (20px against 16) and in full-strength `--fg`
-          rather than inheriting. At label size they read as small print on the
-          one component whose whole point is that the cost is stated as loudly
-          as the decision. */}
-      <dl className="mt-7 grid gap-7 sm:grid-cols-2">
-        <div>
-          <dt className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
-            Why
-          </dt>
-          <dd className="mt-3 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted">
-            {why}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
-            Tradeoff
-          </dt>
-          <dd className="mt-3 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted">
-            {tradeoff}
-          </dd>
-        </div>
+      <dl className="mt-6 grid gap-5">
+        {(
+          [
+            ["Why", why],
+            ["Tradeoff", tradeoff],
+          ] as const
+        ).map(([label, text]) => (
+          <div key={label} className="grid gap-1.5 md:grid-cols-[120px_1fr] md:gap-6">
+            <dt className="mono pt-[0.35em] text-[color:var(--case-accent)]">{label}</dt>
+            <dd className="text-[length:var(--text-base)] leading-[1.45] text-fg max-md:text-[18px]">{text}</dd>
+          </div>
+        ))}
       </dl>
     </div>
   );
@@ -241,7 +239,7 @@ export function ImageBlock({
   caption?: string;
 }) {
   return (
-    <figure className="my-16">
+    <figure className="my-6">
       <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
         <CaseImage src={src} alt={alt} sizes="(max-width: 900px) 100vw, 820px" />
       </div>
@@ -281,7 +279,7 @@ export function VideoBlock({
   label: string;
 }) {
   return (
-    <figure className="my-16">
+    <figure className="my-6">
       <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
         <video
           src={src}
@@ -330,7 +328,7 @@ export function Compare({
   caption?: string;
 }) {
   return (
-    <figure className="my-16">
+    <figure className="my-6">
       <div className="grid gap-6 sm:grid-cols-2">
         {[
           { src: before, alt: beforeAlt, label: beforeLabel },
@@ -424,10 +422,10 @@ export function Quote({
 }) {
   return (
     <figure
-      className="my-16 border-l-2 pl-7"
+      className="my-6 border-l-2 pl-7"
       style={{ borderColor: "var(--case-accent)" }}
     >
-      <blockquote className="text-[length:var(--text-lg)] leading-snug text-fg [&_p]:mt-0">
+      <blockquote className="text-[length:var(--text-md)] leading-snug text-fg [&_p]:mt-0">
         {children}
       </blockquote>
       <figcaption className="label mt-5">{cite}</figcaption>
@@ -477,7 +475,7 @@ export function CardGrid({
   const count = Children.toArray(children).filter(isValidElement).length;
   return (
     <div
-      className={`my-12 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
+      className={`my-6 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
     >
       {children}
     </div>
@@ -486,12 +484,15 @@ export function CardGrid({
 
 export function Card({
   title,
+  also,
   children,
   eyebrow,
   accent,
 }: {
   title: string;
-  children: React.ReactNode;
+  /** A second line at the title's size, for a card that states two facts. */
+  also?: string;
+  children?: React.ReactNode;
   eyebrow?: string;
   /**
    * Colours the title with `--case-accent` instead of `--fg`. Off by default —
@@ -513,9 +514,14 @@ export function Card({
       >
         {title}
       </h3>
-      <div className="mt-3 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
-        {children}
-      </div>
+      {also ? (
+        <p className="mt-3 text-[length:var(--text-base)] font-medium leading-snug text-fg">{also}</p>
+      ) : null}
+      {children ? (
+        <div className="mt-3 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
+          {children}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -528,7 +534,7 @@ export function Card({
  * A grid would throw that away.
  */
 export function Findings({ children }: { children: React.ReactNode }) {
-  return <ol className="my-12 flex list-none flex-col gap-px bg-[var(--border)] p-0">{children}</ol>;
+  return <ol className="my-6 flex list-none flex-col gap-px bg-[var(--border)] p-0">{children}</ol>;
 }
 
 export function Finding({
@@ -552,7 +558,7 @@ export function Finding({
         <h3 className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
           {title}
         </h3>
-        <div className="mt-2 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
+        <div className="mt-2 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted [&_p+p]:mt-1 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
           {children}
         </div>
       </div>
@@ -571,7 +577,7 @@ export function Steps({ children }: { children: React.ReactNode }) {
   const count = Children.toArray(children).filter(isValidElement).length;
   return (
     <ol
-      className={`my-12 grid list-none gap-px bg-[var(--border)] p-0 ${evenCols(count, 4)}`}
+      className={`my-6 grid list-none gap-px bg-[var(--border)] p-0 ${evenCols(count, 4)}`}
     >
       {children}
     </ol>
@@ -593,7 +599,7 @@ export function Step({
         {n}
       </span>
       <h3 className="mt-2 text-[length:var(--text-base)] font-medium text-fg">{name}</h3>
-      <div className="mt-2 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
+      <div className="mt-2 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
         {children}
       </div>
     </li>
@@ -605,7 +611,7 @@ export function StatRow({ children }: { children: React.ReactNode }) {
   const count = Children.toArray(children).filter(isValidElement).length;
   return (
     <div
-      className={`my-14 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
+      className={`my-6 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
     >
       {children}
     </div>
@@ -635,7 +641,7 @@ export function Stat({ value, label }: { value: string; label: string }) {
 export function SpecList({ children }: { children: React.ReactNode }) {
   const count = Children.toArray(children).filter(isValidElement).length;
   return (
-    <dl className={`my-12 grid gap-px bg-[var(--border)] ${evenCols(count, 3)}`}>
+    <dl className={`my-6 grid gap-px bg-[var(--border)] ${evenCols(count, 3)}`}>
       {children}
     </dl>
   );
@@ -647,7 +653,7 @@ export function Spec({ label, children }: { label: string; children: React.React
       <dt className="label" style={{ color: "var(--case-accent)" }}>
         {label}
       </dt>
-      <dd className="mt-2 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
+      <dd className="mt-2 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
         {children}
       </dd>
     </div>
@@ -656,7 +662,7 @@ export function Spec({ label, children }: { label: string; children: React.React
 
 /** Numbered reflections — what I'd do differently, what it taught me. */
 export function Takeaways({ children }: { children: React.ReactNode }) {
-  return <ol className="my-12 flex list-none flex-col gap-8 p-0">{children}</ol>;
+  return <ol className="my-6 flex list-none flex-col gap-5 p-0">{children}</ol>;
 }
 
 export function Takeaway({ title, children }: { title: string; children: React.ReactNode }) {
@@ -665,7 +671,7 @@ export function Takeaway({ title, children }: { title: string; children: React.R
       <h3 className="text-[length:var(--text-base)] font-medium leading-snug text-fg">
         {title}
       </h3>
-      <div className="mt-2 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
+      <div className="mt-2 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
         {children}
       </div>
     </li>
@@ -680,7 +686,7 @@ export function Pathways({ children }: { children: React.ReactNode }) {
   const count = Children.toArray(children).filter(isValidElement).length;
   return (
     <div
-      className={`my-14 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
+      className={`my-6 grid gap-px border border-[var(--border)] bg-[var(--border)] ${evenCols(count, 3)}`}
     >
       {children}
     </div>
@@ -694,7 +700,7 @@ export function Pathway({
 }: {
   name: string;
   role: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
     <div className="bg-bg p-7">
@@ -702,10 +708,31 @@ export function Pathway({
       <span className="label mt-1 block" style={{ color: "var(--case-accent)" }}>
         {role}
       </span>
-      <div className="mt-4 [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
-        {children}
-      </div>
+      {children ? (
+        <div className="mt-4 text-[length:var(--text-sm)] leading-[1.75] text-fg-muted [&_p]:mt-0 [&_p]:max-w-none [&_p]:text-[length:var(--text-sm)] [&_p]:leading-[1.75] [&_p]:text-fg-muted">
+          {children}
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+/** The opening context, set apart so a skimmer can pass it by. */
+export function ContextCard({ children }: { children: React.ReactNode }) {
+  return (
+    <section className="mb-14 bg-[var(--border)] p-4">
+      <h2 className="text-[length:var(--text-xl)] leading-tight">Context</h2>
+      <div className="mt-6 [&_p:first-child]:mt-0 [&_p]:mt-3 [&_p]:text-fg-muted">{children}</div>
+    </section>
+  );
+}
+
+/** The one sentence a skimmer should take from a section. */
+export function Highlight({ lead, strong }: { lead: string; strong: string }) {
+  return (
+    <p className="mt-6 text-[length:var(--text-md)] leading-[1.5] text-fg-muted">
+      {lead} <strong className="font-bold text-fg">{strong}</strong>
+    </p>
   );
 }
 
@@ -735,10 +762,12 @@ export const mdxComponents: MDXComponents = {
   Takeaway,
   Pathways,
   Pathway,
+  ContextCard,
+  Highlight,
 
   h2: (props) => (
     <h2
-      className="mt-24 scroll-mt-28 text-[length:var(--text-xl)] leading-tight first:mt-0"
+      className="mt-14 scroll-mt-28 text-[length:var(--text-xl)] normal-case leading-tight text-[color:var(--case-accent)] first:mt-0"
       {...props}
     />
   ),
@@ -750,7 +779,7 @@ export const mdxComponents: MDXComponents = {
      h2 in Section.tsx. */
   h3: (props) => (
     <h3
-      className="mt-14 text-[length:var(--text-lg)] leading-tight [text-wrap:wrap]"
+      className="mt-14 text-[length:var(--text-md)] leading-tight [text-wrap:wrap]"
       {...props}
     />
   ),

@@ -1,0 +1,23 @@
+LINKEDIN
+
+I made a 24-second intro for my portfolio.
+
+A dot that lands on the i in my name, then three projects:
+
+CareerLogica: 140+ screens, five roles, English and Arabic with RTL.
+PECUC: navigation cut from 37 destinations to 7.
+ATRC: a 25-question STEM test, designed so students finish it.
+
+It plays right under the hero on riyazdesigns.netlify.app.
+Open to full-time UX roles.
+
+
+X / THREADS
+
+Made an intro film for my portfolio. One lime dot carries all of it, from my name to the full stop.
+riyazdesigns.netlify.app
+
+
+SITE <video> (first fold, under the hero)
+
+<video src="/riyaz-intro.mp4" poster="/riyaz-intro-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Intro film: Riyaz Malek, UX designer. CareerLogica, PECUC and ATRC case studies."></video>

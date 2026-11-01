@@ -3,7 +3,7 @@ slug: atrc
 index: "003"
 title: ATRC STEM Career Test
 subtitle: STEM career assessment for UAE school students
-detail: Designed a 25-question assessment in four formats, with pause and resume, inactivity recovery and a three-pathway report — solo, from working prototype to the shipped product live at careertest.atrc.ae.
+detail: Designed a 25-question assessment in four formats, gamified with a picture, progress bar and timer on every question, milestone celebrations and a three-pathway report — solo, from working prototype to the final design handed off for development.
 role: [Research, Strategy, UI design, Prototyping]
 delivered: [Assessment flow design, UX decisions, Figma prototype, Component library]
 tools: [Figma, FigJam, Lovable, Claude AI, Perplexity]
@@ -11,44 +11,38 @@ platform: [Web — desktop + mobile, Responsive]
 industry: EdTech · STEM
 timeline: 1 month
 cover: /work/atrc/cover.avif
+coverPhone: /work/atrc/cover-phone.avif
 thumbnail: /work/atrc/thumbnail.avif
-headline: STEM assessments are long. Students quit in the middle. I didn't shorten the test — I designed the reasons to finish it.
+cardColor: "#4809f9"
+headline: 25 questions is a long time for a fifteen-year-old, so I made the test feel like a game.
+outcome: "A 25-question test, designed so students finish it. Handed off to Abu Dhabi's ATRC."
+summary:
+  problem: "ATRC set the test at 25 questions, and fifteen-year-olds quit long tests in the middle."
+  decision: "Gamify the test: a picture, progress bar and timer on every question, and a toast with a clap GIF at milestones like 25%."
+  outcomes:
+    - "25 questions in 4 formats, ending in a 3-pathway report"
+    - "Pictures, progress bar and timer on every question, with milestone celebrations"
+    - "Solo, from working prototype to developer handoff in 1 month"
 year: "2025"
 featured: true
 order: 3
 draft: false
 ---
 
-## Context
+<ContextCard>
+  For ATRC, Abu Dhabi's research and development body, I designed a STEM career test for school students, solo, from working prototype to developer handoff.
 
-For the Advanced Technology Research Council, UAE, I designed a STEM career assessment for school students — solo, from working prototype to the product now live at careertest.atrc.ae.
+  ATRC set the test at 25 questions. My job was to carry a student all the way through.
+</ContextCard>
 
-ATRC is Abu Dhabi's research and development body, and it runs youth STEM initiatives alongside the deep-tech work. **The long-term supply of Emirati engineers starts with a fifteen-year-old deciding what to study**, and this test is the front door of that decision.
+## 01 — The problem
 
-The test stays long, because the psychometrics need it to. My job was to carry a student all the way through it.
+- **Attention drifts, a notification lands, the tab closes, and twenty minutes of honest answers disappear.**
+- **The brief was a contradiction: a fixed 25 questions, experienced as something a student wants to finish.**
 
-<Deliverables items="Lovable prototype · Sketch wireframes · Final UI · UX strategy · Desktop-mobile responsiveness · Dev handoff" />
+## 02 — Prototype first
 
-<Callout>
-  **Note** — This case study shows three stages of the same product: the
-  throwaway prototypes, the flow, and the shipped screens — including
-  decisions from the prototypes that I deliberately reversed. The gaps
-  between the stages are the point.
-</Callout>
-
-<MetaBar />
-
-## The problem
-
-Serious STEM assessments run 60–70 questions, and there's no way around it — a five-question quiz can't map a student to a career pathway.
-
-But the test-taker is fifteen. Attention drifts, a notification lands, the tab closes, and twenty minutes of honest answers disappear. **So the brief was a contradiction: a test long enough to be credible, experienced as something a student wants to finish.**
-
-## Stage 01 — Prototype first
-
-I started by building, not sketching: two working prototypes in Lovable, with 8 placeholder questions — enough to make the flow real without writing a full question bank. **The point was never the question count.** It was that a test flow can't be judged from static screens; I needed to *take it* to feel where it breaks.
-
-I built it twice deliberately — one consumer-toned, one institutional — to force a comparison instead of a default.
+I built two working prototypes in Lovable, one consumer-toned and one institutional, because a test flow can't be judged from static screens.
 
 <Compare
   before="/work/atrc/proto-consumer.avif"
@@ -60,108 +54,79 @@ I built it twice deliberately — one consumer-toned, one institutional — to f
   caption="Built twice on purpose. Comparing two real builds surfaces decisions that comparing two static mockups never would."
 />
 
-### Three findings came out of clicking through them
+### Three findings from clicking through them
 
 <Findings>
   <Finding n="01" title="State the cost before asking for the effort">
-    The version that told students the time, the question count, and "no registration required" *before* the start button made starting feel safe. The version that only promised benefits didn't. This became the landing page principle.
+    Telling students the time, question count and “no registration” before the start button made starting feel safe.
   </Finding>
   <Finding n="02" title="A selected answer should still look like an answer">
-    One prototype flooded the chosen option solid and dropped its letter badge — the item you picked stopped resembling the list around it. The fix, keeping the badge and marking selection with fill and border, carried into the final system.
+    One prototype flooded the chosen option and dropped its badge. The final keeps the badge and marks selection with fill and border.
   </Finding>
   <Finding n="03" title="A verdict closes doors; a ranking opens them">
-    One prototype ended with a single career. The other ranked every path with a percentage. For a teenager who'll be a different person next year, ranked is more honest — this finding became the three-pathway report.
+    One prototype ended with one career, the other ranked every path. Ranked is more honest for a teenager, so it became the three-pathway report.
   </Finding>
 </Findings>
 
-## Stage 02 — Mapping the flow
+## 03 — Mapping the flow
 
-Three findings tell you what's wrong with a screen. They don't tell you what happens when a student does something the happy path didn't plan for — and across twenty minutes, off-path *is* the normal case.
+<Highlight lead="One question node, four formats," strong="every path returning to the same place." />
 
-So before sketching a single screen, I drew the product as one diagram: three phases, every decision point, every branch, and every way back in.
+<ImageBlock src="/work/atrc/user-flow.avif" alt="The end-to-end ATRC user flow: three phases with decision points, the four question-format branches, and the loop-backs" caption="Three phases, every branch, and the loop-backs underneath." />
 
-<Steps>
-  <Step n="01" name="Entry and onboarding">Almost a straight line, with one branch — a student who isn't ready to commit can read a sample report instead of starting.</Step>
-  <Step n="02" name="The 25-question loop">One question node fanning into the four formats, every path returning to the same place.</Step>
-  <Step n="03" name="Results and report">Ends in four actions rather than one, with the retake path looping back into Phase 2.</Step>
-</Steps>
+## 04 — From wireframes to final
 
-Three things only became visible once it was a diagram.
+With the flow mapped, I sketched every screen and state on paper. This is where the timer, the progress bar and a picture beside every question first appeared.
 
-- **The sample-report branch** is the flow-level version of finding 01 — *state the cost before asking for the effort.* On the map it stopped being a landing-page detail.
-- **Every question format returns to the same node**, so adding a fifth type later is a branch, not a redesign.
-- **The retake loop runs back to the start of Phase 2**, which is what makes *"hit rewind"* a real route rather than a line of copy.
+<ImageBlock src="/work/atrc/01.avif" alt="Wireframe spread covering the landing screen, onboarding, all four question formats, the report, the pause screen and the Still there? state" caption="Every screen and state on one sheet: the four question templates, the report and the supporting states." />
 
-Underneath all of it: the pause and inactivity returns. Drawing them made the obvious thing impossible to ignore — **a student can leave from almost anywhere, so every exit needed a matching way back.**
-
-<ImageBlock src="/work/atrc/user-flow.avif" alt="The end-to-end ATRC user flow: three phases with decision points, the four question-format branches, and the pause and retake loop-backs" caption="Three phases, every branch, and the loop-backs underneath — the exits a long test has to plan for." />
-
-## Stage 03 — Wireframes: designing the full system
-
-With the flow mapped, I sketched every screen and state on paper — and this is where the product became much bigger than the prototypes. The wireframes added everything the prototypes never had:
-
-- **Two-step onboarding** — an intro video with three highlights about the test, so a student knows what they're walking into.
-- **A per-question layout** with timer, progress bar showing how many questions remain, and a question-related image beside every question.
-- **Four question formats** — five-option choice, picture selection, drag-to-arrange, and connect/match — sketched as separate templates.
-- **Pause as a first-class flow** — "Pause this test" on every screen, with a reminder scheduler drawn right into the wireframe.
-- **Inactivity recovery** — a "Still there?" state triggered after minutes of no activity, progress already saved.
-- **Loading and analysing states** — the moment between finishing and results, treated as its own screen.
-- **The report skeleton** — avatar, About, Skills, Subjects, Careers, Quick Tip, download and retake.
-
-<ImageBlock src="/work/atrc/01.avif" alt="Wireframe spread covering the landing screen, onboarding, all four question formats, the report, the pause screen and the Still there? state" caption="Every screen and state on one sheet — the four question templates, the report, and the two screens for not taking the test." />
-
-## Stage 04 — Iteration 3
-
-The interface took three passes. This is the third, and the one that went to development.
-
-What makes it the third is that it stopped being a set of screens. Tutorial through report, reviewed as one continuous run — because the question a long test has to survive isn't *does this screen work*, it's **does screen nineteen still feel like screen one.** Reviewing it that way settled three things that only show up in sequence:
+<Highlight lead="A long test has to survive one question:" strong="does screen nineteen still feel like screen one?" />
 
 - one dark violet carrying the whole run, so nothing reads as a different product
 - the guide character holding its position from question to question
 - the milestone celebration landing as a break in a rhythm the student has already learned, not as a surprise
 
-<ImageBlock src="/work/atrc/iteration-3.avif" alt="The third design iteration shown as a sequence: test tutorial, starting screen, first question, second question, milestone celebration and the final report" caption="Iteration three, reviewed as a journey — tutorial through report — instead of screen by screen." />
+<ImageBlock src="/work/atrc/iteration-3.avif" alt="The final design shown as a sequence: test tutorial, starting screen, first question, second question, milestone celebration and the final report" caption="The final run, reviewed as a journey from tutorial through report instead of screen by screen." />
 
-## Stage 05 — The final design
+## 05 — The final design
 
-### Keeping engagement high across 25 questions
-
-The shipped test runs 25 questions — and the count can grow, because the design doesn't depend on it staying small. **Length is handled by design, not denial.**
-
-**Gamified progress.** A progress bar tracks questions remaining, next to a per-question timer — answering "how much is left?" before it's asked. At milestones the test celebrates: 25% lands with a confetti moment and an encouraging message, and again at 50% and beyond. Long tests die in the middle; the milestones put small finish lines inside the big one.
-
-<Principle name="Goal gradient effect">
-  Motivation rises the closer someone gets to a goal — not steadily, but sharply near the end. Splitting one long test into milestone finish lines means the student feels that acceleration four times instead of once.
-</Principle>
-
-**A guide, not an invigilator.** An illustrated Emirati character stands beside every question — a doctor for the health-science ones, a builder in a VR headset for the technology ones. Students see a test made *for* them, and a companion turns exam pressure into conversation. The character set was AI-generated to my direction, doing the work of an illustration budget a solo freelance project doesn't have.
-
-**Friendly failure.** Skip without answering and the error matches the product's voice — *"Ohh no… something missing"* — **no red scolding on a test that promised there are no wrong answers.**
+<Decision
+  decision="Make every question feel like a game"
+  why="A picture, a progress bar and a timer on every question keep the test intuitive and answer “how much is left?” before it's asked, so more students may finish."
+  tradeoff="More on each screen competing with the question."
+/>
 
 <VideoBlock
   src="/work/atrc/walkthrough.mp4"
   width={1432}
   height={1024}
-  label="Screen recording of the shipped test: onboarding, the question formats, a milestone celebration, and the three-pathway report."
-  caption="The shipped product end to end. The milestones are the finish lines inside the finish line."
+  label="Screen recording of the final design: onboarding, the question formats, a milestone celebration, and the three-pathway report."
+  caption="The final design end to end: progress bar, timer, and the milestone moments."
 />
+
+The guide beside each question is an illustrated Emirati character, AI-generated to my direction. Skip a question and the error matches the same voice: “Ohh no… something missing”, with no red scolding.
+
+<Decision
+  spaced
+  decision="Celebrate the milestones"
+  why="At 25%, a toast notification with a clap GIF encourages the student to keep going. Motivation rises near a goal (goal gradient effect), so each milestone is a small finish line."
+  tradeoff="Each celebration interrupts the rhythm of the test."
+/>
+
+<ImageBlock src="/work/atrc/milestone-toast.avif" alt="A question screen at 25% progress with a green toast and clap GIF over it, reading: Awesome! You're already 25% done." caption="At 25%, a toast and a clap GIF: “Awesome! You're already 25% done. Every answer brings you closer to your perfect career match.”" />
 
 ### Four question types in rotation
 
-The variety serves the psychometrics — different formats surface different signals — and it breaks the rhythm, so question 19 doesn't feel like question 4 again.
-
-<CardGrid cols="2">
-  <Card title="Standard choice" accent>Five options with letter badges. The baseline format, and the one the selection-state finding came from.</Card>
-  <Card title="Picture choice" accent>Image options instead of text, for preferences a sentence describes badly.</Card>
-  <Card title="Drag to rank" accent>Ordering rather than picking — surfaces relative preference, not just presence.</Card>
-  <Card title="Build a sentence" accent>Assembling blocks into a statement, for questions about how a student frames a problem.</Card>
+<CardGrid>
+  <Card title="Standard choice">Five options with letter badges. The baseline format.</Card>
+  <Card title="Picture choice">Image options, for preferences a sentence describes badly.</Card>
+  <Card title="Drag to rank">Ordering surfaces relative preference, not just presence.</Card>
+  <Card title="Build a sentence">Assembling blocks shows how a student frames a problem.</Card>
 </CardGrid>
 
-### The safety nets
+<div className="mt-14" />
 
-**Pause, with a promise.** Pausing saves progress for 7 days and offers a reminder email — in 1 hour, tomorrow, or this week. **The student picks when they'll return; the product gently holds them to it.**
-
-**Inactivity recovery.** Ten minutes idle triggers "Still there?" — one tap to break or continue, nothing lost to a closed tab.
+If a student has to leave, progress saves for 7 days with a reminder, and 10 idle minutes triggers “Still there?”.
 
 <Compare
   before="/work/atrc/pause.avif"
@@ -170,56 +135,43 @@ The variety serves the psychometrics — different formats surface different sig
   afterAlt="The Still there? inactivity recovery screen"
   beforeLabel="Pause, with a reminder"
   afterLabel="Inactivity recovery"
-  caption="The most valuable screens in the product are the ones for not taking the test."
+  caption="If a student does have to leave, the way back is one tap."
 />
 
-### The report — three pathways, not one answer
-
-Every student gets a Primary, Secondary and Tertiary pathway, each a full identity rather than a job title.
+<Decision
+  spaced
+  decision="Three pathways, not a verdict"
+  why="For a teenager who'll be a different person next year, a ranking is more honest than a single answer. Each pathway ends in one concrete activity to try this month."
+  tradeoff="A less decisive answer for students who want to be told."
+/>
 
 <Pathways>
-  <Pathway name="Future Builder" role="The Maker">
-    Skills to build, subjects to focus on, and career clusters to explore — plus one concrete activity for this month, like building a prototype in CAD or LEGO.
-  </Pathway>
-  <Pathway name="Future Analyst" role="The Decoder">
-    The same four lists, tuned to a student who reads patterns — with a Try This such as modelling predictions in Excel.
-  </Pathway>
-  <Pathway name="Future Leader" role="The Guide">
-    For the student who organises people rather than systems, ending in a Try This like running a school initiative.
-  </Pathway>
+  <Pathway name="Future Builder" role="The Maker" />
+  <Pathway name="Future Analyst" role="The Decoder" />
+  <Pathway name="Future Leader" role="The Guide" />
 </Pathways>
 
-A result you can only read is a label; **a result you can act on this week is guidance.** And at the bottom: *"Not sure? Hit rewind and see where your curiosity takes you."* Retake framed as exploration, never as failure.
+<ImageBlock src="/work/atrc/03.avif" alt="Full scroll of the Future Builder pathway report" caption="The Future Builder report. Not sure? Hit rewind: retake is framed as exploration, never failure." />
 
-<ImageBlock src="/work/atrc/03.avif" alt="Full scroll of the Future Builder pathway report" caption="The Future Builder report, full scroll." />
-
-## Outcome
+## 06 — Outcome
 
 <SpecList>
-  <Spec label="Shipped">Landing, video onboarding, a 25-question test in four formats, gamified progress with milestone celebrations, pause and resume with reminders, inactivity recovery, an analysing state, a 3-pathway report, and retake.</Spec>
-  <Spec label="Status">Live at careertest.atrc.ae.</Spec>
+  <Spec label="Delivered">Landing, onboarding, a 25-question test in four formats, and a 3-pathway report.</Spec>
+  <Spec label="Status">Designed and handed off for development. Not yet public.</Spec>
   <Spec label="Role">Solo freelance product designer, September 2025.</Spec>
-  <Spec label="Approach">Prototype first, then the flow, then wireframes, then UI — with decisions from the prototypes deliberately reversed along the way.</Spec>
+  <Spec label="Completion">Designed to improve completion. Not yet measured, as the test isn't public.</Spec>
 </SpecList>
 
-### What I'd do differently
+### What I learned
 
 <Takeaways>
   <Takeaway title="Watch five students take it">
-    Every finding came from testing my own prototypes — better than nothing, but **I was a designer simulating a fifteen-year-old.**
+    Every finding came from testing my own prototypes. Next time I'd watch real students, and measure completion first.
   </Takeaway>
   <Takeaway title="Prototype the final interactions too">
-    Drag-to-rank and build-a-sentence went to development from Figma. They deserved the same working-prototype test the early flow got.
+    Drag-to-rank and build-a-sentence went to development from Figma.
   </Takeaway>
-</Takeaways>
-
-### What it taught me
-
-<Takeaways>
   <Takeaway title="Prototype-first is a research method">
-    The findings that shaped this product are invisible in static screens. **A rough working build cost two days and bought the strategy.**
-  </Takeaway>
-  <Takeaway title="Length is a design material">
-    The most valuable screens are the ones for *not* taking the test — pausing, returning, recovering. I designed the gaps, and the gaps are why students finish.
+    These findings are invisible in static screens. A rough build cost two days and bought the strategy.
   </Takeaway>
 </Takeaways>
