@@ -32,7 +32,7 @@
   "/riyaz-intro-poster.avif": {
     "width": 1920,
     "height": 1080,
-    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADQAwCdASoUAAsAPt1apkyopSOiMAgBEBuJQBfnMXwTc0i5ak/+iwAA/thKVU56QvxoByeNxv2qCr9PinDg2qB0OctWHIgsm+jGb8org2aPQ29HtfOJZnT2sU80R3TnxFGL8cV5ZthCPAuXNwIBRx1zs+z25FwpKaNKmVzzqO5wNjZLBGUUAA=="
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAwBACdASoUAAsAPt1cpkyopSOiMAgBEBuJQACiA9yxrF5o21O9L/7NugAA/t4CemEH9hHTk0CRbhXdbnjexkT4Vsee1R5senSy90jJVZSuI47Jxrhd+qpqmiKD9zcCU6lr2YQDePBhVwZBGgz7WEQkwNmolf2w//ZSGcXSSmuSGedJk6Kfg5z986xJARriqoAAAA=="
   },
   "/work/careerlogica/research-01-persona.avif": {
     "width": 2048,
@@ -178,16 +178,6 @@
     "width": 2048,
     "height": 1280,
     "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoUAA0APt1apkyopSOiMAgBEBuJQBYdsWMY11BU+6MZuWAAAP7r/Rm2hbL41GO4AtQ2vqrNkvjHuRY1zaqrery2MuVobFqGmUfIImpZ6QzyxqfEdkHOIY8Ly59CAr57o6ECyEqUYwmkm1Y4SETnW1rpkA/EJD68xOjWNrWAAAA="
-  },
-  "/work/careerlogica/en.avif": {
-    "width": 1000,
-    "height": 620,
-    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAwCdASoUAAwAPt0+s1SooiWjmAEQG4lmAJ0AId/czS2tDGnC/AAA/u4QQ/sjETU/+oyONpvTqPQV4x95cGahbqsYNAQeEZS1QtJsMy51Fu2desbaMud9oBpXGw0wAAA="
-  },
-  "/work/careerlogica/ar.avif": {
-    "width": 1000,
-    "height": 620,
-    "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoUAAwAPt1cqUyopSQiMAgBEBuJZgCdACPyaQHVp3z0RvVQAAD+8GjSIRPNOtmnJe86w8rBnYLP9tUUueBi0mvG+6KKCYYgtAIMbFb27tyhHOzH71fNpXGxq9QAAA=="
   },
   "/work/careerlogica/04.avif": {
     "width": 2048,

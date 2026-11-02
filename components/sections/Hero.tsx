@@ -1,12 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { imageProps } from "@/lib/images";
 import { site } from "@/lib/site";
 import { SplitButton } from "@/components/primitives/SplitButton";
 import { DottedSurface } from "./DottedSurface";
+
+/**
+ * Off for now: the card shows a still and the film is not embedded, so its
+ * files are never requested. Set to true to bring back the film and its buttons.
+ */
+const SHOW_FILM: boolean = false;
 
 const TYPE_MS = 52;
 const ERASE_MS = 26;
@@ -31,12 +39,10 @@ const MOBILE_START_W = 0.793;
 /**
  * Hero: the statement on the left, the film on the right.
  *
- * On a desktop screen the hero is one pinned scene. The film starts as a small
- * card with the "Creating ..." bubble sitting on its corner; as the visitor
- * scrolls, the statement lifts away, the bubble leaves to the right, and the
- * card grows to the full width of the column. By the time it lands, it IS the
- * intro film — there is no second film section underneath any more, so the
- * thing that arrives is the thing that was already on screen.
+ * On a desktop screen the hero is one pinned scene. The card starts small with
+ * the "Creating ..." bubble sitting on its corner; as the visitor scrolls, the
+ * statement lifts away, the bubble leaves to the right, and the card grows to
+ * the full width of the column. By the time it lands, it IS the intro film.
  *
  * Playback rules, in order:
  *  - Nothing plays by itself while the card is small. The poster stands in and
@@ -44,10 +50,12 @@ const MOBILE_START_W = 0.793;
  *  - If the visitor never touches the button, it starts the moment the card
  *    lands, and stops again if they scroll back up.
  *  - A visitor who pressed pause is left alone: it never restarts on its own.
- *  - Under reduced motion there is no scene and no autoplay. It is a poster, a
- *    button and a static layout.
+ *  - It always starts muted, because browsers block autoplay with sound. The
+ *    sound button is the only thing that unmutes it.
+ *  - Under reduced motion there is no scene and no autoplay. It is a poster,
+ *    the buttons and a static layout.
  *
- * Below `lg` it is a shorter version of the same idea. The film sits under the
+ * Below `lg` it is a shorter version of the same idea. The card sits under the
  * title with the bubble on its corner; scrolling lifts the statement away,
  * grows the card to the full column and brings it up under the nav, and the
  * tools row rises to meet it. The scene ends exactly there, so no gap is left.
@@ -62,6 +70,7 @@ export function Hero() {
   const reduced = useReducedMotion();
   const [word, setWord] = useState<string>(site.rotating[0]);
   const [playing, setPlaying] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
 
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -72,6 +81,7 @@ export function Hero() {
   const filmRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const playRef = useRef<HTMLButtonElement>(null);
+  const soundRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   /** What the visitor asked for. "auto" means they have not touched it. */
@@ -113,6 +123,15 @@ export function Hero() {
       intent.current = "pause";
     }
     sync();
+  };
+
+  const toggleSound = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setSoundOn(!video.muted);
+    // Asking for sound on a film that isn't running means they want to hear it.
+    if (!video.muted && video.paused) toggle();
   };
 
   // The typewriter. It waits for `load` so the sentence is painted and measured
@@ -179,8 +198,10 @@ export function Hero() {
       const media = mediaRef.current;
       const bubble = bubbleRef.current;
       const play = playRef.current;
+      const sound = soundRef.current;
       const video = videoRef.current;
-      if (!stage || !box || !anchor || !film || !media || !bubble || !play || !video) return;
+      if (!stage || !box || !anchor || !film || !media || !bubble) return;
+      const controls = [play, sound].filter(Boolean);
 
       const mm = gsap.matchMedia();
 
@@ -223,7 +244,7 @@ export function Hero() {
               autoWanted.current = self.progress >= LANDED;
               // Start fetching before the card lands, so the first frame is
               // there when it does. `preload="none"` alone would wait for play.
-              if (self.progress > 0.12 && video.preload === "none") video.preload = "auto";
+              if (video && self.progress > 0.12 && video.preload === "none") video.preload = "auto";
               sync();
             },
           },
@@ -266,11 +287,14 @@ export function Hero() {
           // The picture inside settles from slightly zoomed, so it feels like
           // the lens pulling back rather than a box being stretched.
           .fromTo(media, { scale: 1.12 }, { scale: 1, ease: "power2.out", duration: 0.8 }, 0.08)
-          .to(play, { scale: 1.2, ease: "power2.inOut", duration: 0.8 }, 0.08)
           // The dotted field recedes so the film owns the frame.
           .to(stage.querySelector("[data-hero-dots]"), { opacity: 0.2, duration: 0.6 }, 0.1)
           // Hold on the landed frame, so there is a beat before the page moves.
           .to({}, { duration: 0.12 }, 0.88);
+
+        if (controls.length) {
+          tl.to(controls, { scale: 1.2, ease: "power2.inOut", duration: 0.8 }, 0.08);
+        }
 
         return () => {
           autoWanted.current = false;
@@ -316,7 +340,9 @@ export function Hero() {
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               autoWanted.current = self.progress >= LANDED;
-              if (self.progress > 0.12 && video.preload === "none") video.preload = "auto";
+              // Start fetching before the card lands, so the first frame is
+              // there when it does. `preload="none"` alone would wait for play.
+              if (video && self.progress > 0.12 && video.preload === "none") video.preload = "auto";
               sync();
             },
           },
@@ -471,48 +497,89 @@ export function Hero() {
                 className="absolute bottom-0 left-0 h-full w-[79.3%] overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised lg:left-auto lg:right-0 lg:w-full"
               >
                 <div ref={mediaRef} className="absolute inset-0">
-                  <video
-                    ref={videoRef}
-                    muted
-                    loop
-                    playsInline
-                    preload="none"
-                    poster="/riyaz-intro-poster.webp"
-                    aria-label="Intro film: Riyaz Malek, product designer. Silent."
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    className="block h-full w-full object-cover"
-                  >
-                    <source src="/riyaz-intro.webm" type="video/webm" />
-                    <source src="/riyaz-intro.mp4" type="video/mp4" />
-                  </video>
+                  {SHOW_FILM ? (
+                    <video
+                      ref={videoRef}
+                      muted
+                      loop
+                      playsInline
+                      preload="none"
+                      poster="/riyaz-intro-poster.webp"
+                      aria-label="Intro film: Riyaz Malek, product designer, with sound effects."
+                      onPlay={() => setPlaying(true)}
+                      onPause={() => setPlaying(false)}
+                      className="block h-full w-full object-cover"
+                    >
+                      <source src="/riyaz-intro.webm" type="video/webm" />
+                      <source src="/riyaz-intro.mp4" type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      {...imageProps("/riyaz-intro-poster.avif")}
+                      alt="Illustration of Riyaz Malek at a desk beside the words: Hi, I'm Riyaz Malek, product designer."
+                      sizes="(max-width: 1024px) 100vw, 1280px"
+                      priority
+                      className="block h-full w-full object-cover"
+                    />
+                  )}
                 </div>
 
-                {/* Always there, so anything that moves for more than five
-                    seconds has a way to stop it (WCAG 2.2.2). */}
-                <button
-                  ref={playRef}
-                  type="button"
-                  onClick={toggle}
-                  aria-label={playing ? "Pause intro film" : "Play intro film"}
-                  className="absolute bottom-4 right-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)]"
-                >
-                  {playing ? (
-                    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="currentColor" aria-hidden>
-                      <rect x="3.5" y="2.5" width="3" height="11" rx="0.75" />
-                      <rect x="9.5" y="2.5" width="3" height="11" rx="0.75" />
-                    </svg>
-                  ) : (
-                    <svg
-                      viewBox="0 0 16 16"
-                      className="h-4 w-4 translate-x-[1px]"
-                      fill="currentColor"
-                      aria-hidden
+                {SHOW_FILM ? (
+                  <>
+                    <button
+                      ref={soundRef}
+                      type="button"
+                      onClick={toggleSound}
+                      aria-label={soundOn ? "Turn intro film sound off" : "Turn intro film sound on"}
+                      aria-pressed={soundOn}
+                      className="absolute bottom-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)] right-[72px]"
                     >
-                      <path d="M4.5 2.9v10.2a.75.75 0 0 0 1.14.64l8.1-5.1a.75.75 0 0 0 0-1.28l-8.1-5.1a.75.75 0 0 0-1.14.64Z" />
-                    </svg>
-                  )}
-                </button>
+                      <svg
+                        viewBox="0 0 16 16"
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <path d="M2.5 6.25v3.5h2.25L8 12.5v-9L4.75 6.25H2.5Z" fill="currentColor" />
+                        {soundOn ? (
+                          <path d="M10.5 5.75a3.2 3.2 0 0 1 0 4.5M12.5 3.75a6 6 0 0 1 0 8.5" />
+                        ) : (
+                          <path d="m10.75 6.25 3.5 3.5m0-3.5-3.5 3.5" />
+                        )}
+                      </svg>
+                    </button>
+
+                    {/* Always there, so anything that moves for more than five
+                        seconds has a way to stop it (WCAG 2.2.2). */}
+                    <button
+                      ref={playRef}
+                      type="button"
+                      onClick={toggle}
+                      aria-label={playing ? "Pause intro film" : "Play intro film"}
+                      className="absolute bottom-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)] right-4"
+                    >
+                      {playing ? (
+                        <svg viewBox="0 0 16 16" className="h-4 w-4" fill="currentColor" aria-hidden>
+                          <rect x="3.5" y="2.5" width="3" height="11" rx="0.75" />
+                          <rect x="9.5" y="2.5" width="3" height="11" rx="0.75" />
+                        </svg>
+                      ) : (
+                        <svg
+                          viewBox="0 0 16 16"
+                          className="h-4 w-4 translate-x-[1px]"
+                          fill="currentColor"
+                          aria-hidden
+                        >
+                          <path d="M4.5 2.9v10.2a.75.75 0 0 0 1.14.64l8.1-5.1a.75.75 0 0 0 0-1.28l-8.1-5.1a.75.75 0 0 0-1.14.64Z" />
+                        </svg>
+                      )}
+                    </button>
+                  </>
+                ) : null}
               </div>
 
               {/* The sentence, as a speech bubble on the card's corner. The word

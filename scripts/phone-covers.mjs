@@ -2,11 +2,11 @@
  * Writes a downsized, lossy `cover-phone.avif` beside each project's cover.
  *
  * The one deliberate exception to optimize-images.mjs, which keeps everything
- * lossless at native size. next.config.ts sets `images.unoptimized`, so without
+ * at native size. next.config.ts sets `images.unoptimized`, so without
  * this a phone downloads the full 3214px cover to fill a card ~400px wide. The
  * work card serves these below `md` (see WorkCard.tsx).
  *
- * 1200px covers a 400px card at 3x. Reads the lossless cover in public/, so it
+ * 1200px covers a 400px card at 3x. Reads the cover in public/, so it
  * runs after optimize-images.mjs and needs no source PNG.
  *
  *   npm run images
