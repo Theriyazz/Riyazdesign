@@ -282,6 +282,7 @@ export function VideoBlock({
     <figure className="my-6">
       <div className="overflow-hidden rounded-[var(--radius-squircle)] border border-[var(--border)] bg-bg-raised">
         <video
+          key={src}
           src={src}
           width={width}
           height={height}
