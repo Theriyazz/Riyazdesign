@@ -11,10 +11,10 @@ import { SplitButton } from "@/components/primitives/SplitButton";
 import { DottedSurface } from "./DottedSurface";
 
 /**
- * Off for now: the card shows a still and the film is not embedded, so its
- * files are never requested. Set to true to bring back the film and its buttons.
+ * Set to false to show a still instead: the film is then not embedded, so its
+ * file is never requested.
  */
-const SHOW_FILM: boolean = false;
+const SHOW_FILM: boolean = true;
 
 const TYPE_MS = 52;
 const ERASE_MS = 26;
@@ -50,8 +50,11 @@ const MOBILE_START_W = 0.793;
  *  - If the visitor never touches the button, it starts the moment the card
  *    lands, and stops again if they scroll back up.
  *  - A visitor who pressed pause is left alone: it never restarts on its own.
- *  - It always starts muted, because browsers block autoplay with sound. The
- *    sound button is the only thing that unmutes it.
+ *  - Sound is on by default, and the sound button turns it off. Browsers block
+ *    autoplay with sound until the visitor has interacted with the page, so if
+ *    it is blocked the film plays muted with a "Tap for sound" label, and its
+ *    sound comes on at their first click or tap, unless they have turned it off.
+ *  - The restart button goes back to the first frame and plays.
  *  - Under reduced motion there is no scene and no autoplay. It is a poster,
  *    the buttons and a static layout.
  *
@@ -70,7 +73,8 @@ export function Hero() {
   const reduced = useReducedMotion();
   const [word, setWord] = useState<string>(site.rotating[0]);
   const [playing, setPlaying] = useState(false);
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
+  const [soundPrompt, setSoundPrompt] = useState(false);
 
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -80,33 +84,44 @@ export function Hero() {
   const bubbleRef = useRef<HTMLDivElement>(null);
   const filmRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
-  const playRef = useRef<HTMLButtonElement>(null);
-  const soundRef = useRef<HTMLButtonElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   /** What the visitor asked for. "auto" means they have not touched it. */
   const intent = useRef<"auto" | "play" | "pause">("auto");
+  /** Whether the visitor wants sound. On until they turn it off. */
+  const wantSound = useRef(true);
+  /** Whether the browser refused to play with sound. Cleared by their first click. */
+  const soundBlocked = useRef(false);
   /** Whether the scene says it should be playing without being asked. */
   const autoWanted = useRef(false);
   /** Whether the hero is anywhere near the screen. */
   const onScreen = useRef(true);
 
-  const sync = useCallback(() => {
+  const sync = useCallback(function sync() {
     const video = videoRef.current;
     if (!video) return;
     const want =
       intent.current === "play" || (intent.current === "auto" && autoWanted.current);
     if (want && onScreen.current && !document.hidden) {
+      if (!video.paused) return;
+      video.muted = !wantSound.current || soundBlocked.current;
       video.play().catch((err: DOMException) => {
-        // AbortError is a pause landing before play resolved. Anything else
-        // (low power mode, a blocked autoplay policy) means it is not going to
-        // run, so hand control back to the button instead of leaving it saying
-        // Pause.
-        if (err.name !== "AbortError") {
-          intent.current = "auto";
-          autoWanted.current = false;
-          setPlaying(false);
+        if (err.name === "AbortError") return;
+        // Blocked for having sound: play muted, and wait for their first click.
+        if (err.name === "NotAllowedError" && !video.muted) {
+          soundBlocked.current = true;
+          video.muted = true;
+          setSoundOn(false);
+          setSoundPrompt(true);
+          sync();
+          return;
         }
+        // Low power mode or a blocked autoplay policy: it is not going to run, so
+        // hand control back to the button instead of leaving it saying Pause.
+        intent.current = "auto";
+        autoWanted.current = false;
+        setPlaying(false);
       });
     } else if (!video.paused) {
       video.pause();
@@ -128,11 +143,39 @@ export function Hero() {
   const toggleSound = () => {
     const video = videoRef.current;
     if (!video) return;
-    video.muted = !video.muted;
-    setSoundOn(!video.muted);
+    const next = !(wantSound.current && !soundBlocked.current);
+    wantSound.current = next;
+    soundBlocked.current = false;
+    setSoundPrompt(false);
+    video.muted = !next;
+    setSoundOn(next);
     // Asking for sound on a film that isn't running means they want to hear it.
-    if (!video.muted && video.paused) toggle();
+    if (next && video.paused) toggle();
   };
+
+  const restart = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    if (video.paused) toggle();
+  };
+
+  // Their first click lets the browser play sound, so bring it in if it was
+  // held back. Only clicks count: scrolling doesn't unlock sound, and unmuting
+  // without permission would make the browser pause the film.
+  useEffect(() => {
+    const unlock = () => {
+      if (!soundBlocked.current) return;
+      soundBlocked.current = false;
+      setSoundPrompt(false);
+      const video = videoRef.current;
+      if (!video || !wantSound.current) return;
+      video.muted = false;
+      setSoundOn(true);
+    };
+    document.addEventListener("click", unlock);
+    return () => document.removeEventListener("click", unlock);
+  }, []);
 
   // The typewriter. It waits for `load` so the sentence is painted and measured
   // once, statically, before it ever animates.
@@ -197,11 +240,9 @@ export function Hero() {
       const film = filmRef.current;
       const media = mediaRef.current;
       const bubble = bubbleRef.current;
-      const play = playRef.current;
-      const sound = soundRef.current;
+      const controls = controlsRef.current;
       const video = videoRef.current;
       if (!stage || !box || !anchor || !film || !media || !bubble) return;
-      const controls = [play, sound].filter(Boolean);
 
       const mm = gsap.matchMedia();
 
@@ -292,7 +333,7 @@ export function Hero() {
           // Hold on the landed frame, so there is a beat before the page moves.
           .to({}, { duration: 0.12 }, 0.88);
 
-        if (controls.length) {
+        if (controls) {
           tl.to(controls, { scale: 1.2, ease: "power2.inOut", duration: 0.8 }, 0.08);
         }
 
@@ -381,6 +422,11 @@ export function Hero() {
           )
           .fromTo(media, { scale: 1.1 }, { scale: 1, ease: "power2.out", duration: 0.85 }, 0.05)
           .to({}, { duration: 0.1 }, 0.9);
+
+        // Smaller on the small card, so they don't cover the picture.
+        if (controls) {
+          tl.fromTo(controls, { scale: 0.8 }, { scale: 1, ease: "power2.inOut", duration: 0.85 }, 0.05);
+        }
 
         return () => {
           autoWanted.current = false;
@@ -505,12 +551,11 @@ export function Hero() {
                       playsInline
                       preload="none"
                       poster="/riyaz-intro-poster.webp"
-                      aria-label="Intro film: Riyaz Malek, product designer, with sound effects."
+                      aria-label="Intro film: Riyaz Malek, product designer, with sound."
                       onPlay={() => setPlaying(true)}
                       onPause={() => setPlaying(false)}
                       className="block h-full w-full object-cover"
                     >
-                      <source src="/riyaz-intro.webm" type="video/webm" />
                       <source src="/riyaz-intro.mp4" type="video/mp4" />
                     </video>
                   ) : (
@@ -524,61 +569,108 @@ export function Hero() {
                   )}
                 </div>
 
-                {SHOW_FILM ? (
-                  <>
-                    <button
-                      ref={soundRef}
-                      type="button"
-                      onClick={toggleSound}
-                      aria-label={soundOn ? "Turn intro film sound off" : "Turn intro film sound on"}
-                      aria-pressed={soundOn}
-                      className="absolute bottom-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)] right-[72px]"
+                {/* No handler of its own: the click unlocks sound at the document,
+                    the same as a click anywhere else. */}
+                {soundPrompt ? (
+                  <button
+                    type="button"
+                    className="mono absolute bottom-[60px] right-3 z-10 flex h-11 items-center gap-2 rounded-full px-4 lg:bottom-4 lg:right-[206px] lg:h-[53px] lg:px-5"
+                    style={{ background: "var(--accent)", color: "var(--btn-chip-fg)" }}
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden
                     >
-                      <svg
-                        viewBox="0 0 16 16"
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden
-                      >
-                        <path d="M2.5 6.25v3.5h2.25L8 12.5v-9L4.75 6.25H2.5Z" fill="currentColor" />
-                        {soundOn ? (
-                          <path d="M10.5 5.75a3.2 3.2 0 0 1 0 4.5M12.5 3.75a6 6 0 0 1 0 8.5" />
-                        ) : (
-                          <path d="m10.75 6.25 3.5 3.5m0-3.5-3.5 3.5" />
-                        )}
-                      </svg>
-                    </button>
+                      <path d="M2.5 6.25v3.5h2.25L8 12.5v-9L4.75 6.25H2.5Z" fill="currentColor" />
+                      <path d="M10.5 5.75a3.2 3.2 0 0 1 0 4.5M12.5 3.75a6 6 0 0 1 0 8.5" />
+                    </svg>
+                    Tap for sound
+                  </button>
+                ) : null}
 
-                    {/* Always there, so anything that moves for more than five
-                        seconds has a way to stop it (WCAG 2.2.2). */}
-                    <button
-                      ref={playRef}
-                      type="button"
-                      onClick={toggle}
-                      aria-label={playing ? "Pause intro film" : "Play intro film"}
-                      className="absolute bottom-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)] right-4"
-                    >
-                      {playing ? (
-                        <svg viewBox="0 0 16 16" className="h-4 w-4" fill="currentColor" aria-hidden>
-                          <rect x="3.5" y="2.5" width="3" height="11" rx="0.75" />
-                          <rect x="9.5" y="2.5" width="3" height="11" rx="0.75" />
-                        </svg>
-                      ) : (
+                {SHOW_FILM ? (
+                  <div
+                    ref={controlsRef}
+                    className="absolute bottom-3 right-3 z-10 flex origin-bottom-right gap-2 lg:bottom-4 lg:right-4"
+                  >
+                      {/* Always there, so anything that moves for more than five
+                          seconds has a way to stop it (WCAG 2.2.2). */}
+                      <button
+                        type="button"
+                        onClick={toggle}
+                        aria-label={playing ? "Pause intro film" : "Play intro film"}
+                        className="grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)]"
+                      >
+                        {playing ? (
+                          <svg viewBox="0 0 16 16" className="h-4 w-4" fill="currentColor" aria-hidden>
+                            <rect x="3.5" y="2.5" width="3" height="11" rx="0.75" />
+                            <rect x="9.5" y="2.5" width="3" height="11" rx="0.75" />
+                          </svg>
+                        ) : (
+                          <svg
+                            viewBox="0 0 16 16"
+                            className="h-4 w-4 translate-x-[1px]"
+                            fill="currentColor"
+                            aria-hidden
+                          >
+                            <path d="M4.5 2.9v10.2a.75.75 0 0 0 1.14.64l8.1-5.1a.75.75 0 0 0 0-1.28l-8.1-5.1a.75.75 0 0 0-1.14.64Z" />
+                          </svg>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={toggleSound}
+                        aria-label={soundOn ? "Turn intro film sound off" : "Turn intro film sound on"}
+                        aria-pressed={soundOn}
+                        className="grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)]"
+                      >
                         <svg
                           viewBox="0 0 16 16"
-                          className="h-4 w-4 translate-x-[1px]"
-                          fill="currentColor"
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           aria-hidden
                         >
-                          <path d="M4.5 2.9v10.2a.75.75 0 0 0 1.14.64l8.1-5.1a.75.75 0 0 0 0-1.28l-8.1-5.1a.75.75 0 0 0-1.14.64Z" />
+                          <path d="M2.5 6.25v3.5h2.25L8 12.5v-9L4.75 6.25H2.5Z" fill="currentColor" />
+                          {soundOn ? (
+                            <path d="M10.5 5.75a3.2 3.2 0 0 1 0 4.5M12.5 3.75a6 6 0 0 1 0 8.5" />
+                          ) : (
+                            <path d="m10.75 6.25 3.5 3.5m0-3.5-3.5 3.5" />
+                          )}
                         </svg>
-                      )}
-                    </button>
-                  </>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={restart}
+                        aria-label="Restart intro film"
+                        className="grid h-11 w-11 place-items-center rounded-full border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--btn-secondary-fg)] transition-colors duration-200 hover:border-[var(--btn-secondary-border-hover)] hover:bg-[var(--btn-secondary-bg-hover)] hover:text-[var(--btn-secondary-fg-hover)]"
+                      >
+                        <svg
+                          viewBox="0 0 16 16"
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                        >
+                          <path d="M3 8a5 5 0 1 0 1.6-3.66" />
+                          <path d="M2.75 2.25v2.5h2.5" />
+                        </svg>
+                      </button>
+                  </div>
                 ) : null}
               </div>
 
