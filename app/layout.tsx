@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 
 import { site } from "@/lib/site";
 import { MotionRoot } from "@/components/motion/MotionRoot";
@@ -11,40 +11,36 @@ import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 /*
- * Pinned weights and the latin subset only.
+ * Self-hosted, latin subset only: the same files Google Fonts serves for these
+ * families, kept in app/fonts so the build never downloads them.
  *
- * The `geist` npm package ships full variable files — 68KB sans + 70KB mono.
- * With `display: swap` the real font arrives *after* first paint and re-paints
- * the hero text, which Chrome scores as a new largest paint: mobile LCP was
- * landing at 3.6s, essentially "when the fonts finished downloading".
+ * `next/font/google` fetches at build time, and Next 16.3's Turbopack fails to
+ * resolve the files it fetched ("next/font/google queries have exactly one
+ * entry"). On Netlify that failed every deploy from Sep 22 on.
  *
- * We only use two sans weights and one mono weight, so static instances cut
- * the payload sharply for identical rendering.
+ * Each family is one variable file. The weight ranges cover what the site uses:
+ * 400 and 500 for text, 700 for the hero <h1> (the body sets
+ * `font-synthesis-weight: none`, so it has to be real), and 400 and 600 for
+ * mono labels and button text.
  */
-const geistSans = Geist({
-  subsets: ["latin"],
-  // 700 is here for the hero <h1> alone. It has to be a real instance: the
-  // body sets `font-synthesis-weight: none`, so asking for a weight we have
-  // not loaded renders at the nearest one we have rather than faking it —
-  // `font-weight: 700` would have silently drawn at 500.
-  weight: ["400", "500", "700"],
+const geistSans = localFont({
+  src: "./fonts/geist-latin.woff2",
+  weight: "400 700",
   variable: "--font-geist-sans",
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  // 400 for micro-labels; 600 for button text, where uppercase mono at 13px
-  // needs the extra weight to hold its own against the surrounding display type.
-  weight: ["400", "600"],
+const geistMono = localFont({
+  src: "./fonts/geist-mono-latin.woff2",
+  weight: "400 600",
   variable: "--font-geist-mono",
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
+const instrumentSerif = localFont({
+  src: "./fonts/instrument-serif-italic-latin.woff2",
   weight: "400",
-  style: ["italic"],
+  style: "italic",
   variable: "--font-instrument-serif",
   display: "swap",
 });
