@@ -1,0 +1,32 @@
+{
+  "name": "riyaz-intro-video",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:wide": "remotion render src/index.ts Intro-16x9 out/intro-16x9.mp4",
+    "render:tall": "remotion render src/index.ts Intro-9x16 out/intro-9x16.mp4",
+    "render": "npm run render:wide && npm run render:tall",
+    "render:reel": "remotion render src/index.ts Insta-Reel out/insta-reel.mp4",
+    "render:square": "remotion render src/index.ts Insta-Square out/insta-square.mp4",
+    "render:insta": "npm run render:reel && npm run render:square",
+    "render:story": "remotion render src/index.ts Story-Reel out/story-reel.mp4",
+    "render:careerlogica": "remotion render src/index.ts CareerLogica-Launch out/careerlogica-launch.mp4",
+    "sfx": "node scripts/make-sfx.mjs",
+    "hello:assets": "node scripts/hello-assets.mjs",
+    "render:hello": "remotion render src/index.ts Hello-16x9 brag-output/riyaz-intro-1080p60.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p",
+    "render:hello2": "remotion render src/index.ts Hello2-16x9 brag-output/riyaz-intro-v6-1080p60.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.534",
+    "@remotion/google-fonts": "^4.0.534",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.534"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

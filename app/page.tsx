@@ -3,19 +3,16 @@ import type { WorkCardData } from "@/components/primitives/WorkCard";
 
 import { HashScroller } from "@/components/layout/AnchorLink";
 import { Hero } from "@/components/sections/Hero";
-import { FirstFold } from "@/components/sections/FirstFold";
 import { SelectedWork } from "@/components/sections/SelectedWork";
 import { About } from "@/components/sections/About";
-import { Capabilities } from "@/components/sections/Capabilities";
-import { ToolStack } from "@/components/sections/ToolStack";
+import { HowIWork } from "@/components/sections/HowIWork";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Experience } from "@/components/sections/Experience";
 import { ContactCTA } from "@/components/sections/ContactCTA";
 
 /**
- * Testimonials still has real client quotes in it — this isn't a content
- * decision, just a "not yet" for the page. Flip back on rather than deleting
- * the section or its render call.
+ * Real client quotes only (components/sections/Testimonials.tsx). On with the
+ * PECUC quote; the EdLogica and ATRC quotes join it as they arrive.
  */
 const SHOW_TESTIMONIALS = true;
 
@@ -27,23 +24,24 @@ export default async function HomePage() {
     title: meta.title,
     industry: meta.industry,
     year: meta.year,
-    // The card's own image where one exists, the shared cover otherwise.
-    cover: meta.thumbnail ?? meta.cover,
+    cover: meta.cover,
+    coverPhone: meta.coverPhone,
+    outcome: meta.outcome,
+    color: meta.cardColor,
+    theme: meta.cardTheme,
   }));
 
   return (
     <>
       <HashScroller />
+      {/* The hero carries the intro film: it starts as a card beside the
+          statement and grows into the full-width film as the visitor scrolls,
+          so there is no separate film section underneath it. */}
       <Hero />
-      {/* Ahead of the statement paragraphs on purpose: the tool row is a
-          credibility strip, and it reads better as something a visitor
-          passes on the way into the pitch than as a coda after it. */}
-      <ToolStack />
-      <FirstFold />
       <SelectedWork projects={projects} />
-      <About />
-      <Capabilities />
+      <HowIWork />
       {SHOW_TESTIMONIALS ? <Testimonials /> : null}
+      <About />
       <Experience />
       <ContactCTA />
     </>

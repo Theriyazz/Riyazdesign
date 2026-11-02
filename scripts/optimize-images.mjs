@@ -1,11 +1,11 @@
 /**
- * Converts the source PNGs (1.6–2.4MB each) into web-ready AVIF + WebP and
- * emits a manifest of intrinsic dimensions and blur placeholders.
+ * Converts the source PNGs into AVIF + WebP at their native size and emits a
+ * manifest of intrinsic dimensions and blur placeholders.
  *
- * We deliberately emit ONE large derivative per image rather than a full
- * width ladder: next/image already generates responsive sizes on demand, so
- * a ladder here would just duplicate that work. What this script is actually
- * for is getting the *source* off multi-megabyte PNG.
+ * Each file is compressed by at most half against its lossless encode: the
+ * lowest quality whose size is still at least 50% of lossless, and never below
+ * MIN_QUALITY. Nothing is resized, so nothing loses resolution. next.config.ts
+ * sets `images.unoptimized`, so these files are what the browser receives.
  *
  *   npm run images
  *
@@ -19,6 +19,12 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+/** A file never drops below this share of its lossless size. */
+const MIN_SHARE = 0.5;
+const MIN_QUALITY = 70;
+const MAX_QUALITY = 100;
+const JOBS_AT_ONCE = 3;
 
 /**
  * CareerLogica research artifacts, in the order they were made: who it is for,
@@ -75,11 +81,9 @@ const CAREERLOGICA_WORK = [
   // The CareerNaksha / CareerLogica pair in section 05.
   "dash-old",
   "dash-new",
-  // Onboarding flow (03), the three signup paths (03), and the EN/AR pair (06).
+  // Onboarding flow (03) and the three signup paths (03).
   "02",
   "signup-flows",
-  "en",
-  "ar",
   // The marketing pages, full scroll (section 04). Numbered 04 in the export
   // even though it is section 04's only figure — the MDX points at this name
   // rather than the file being renamed, so the two cannot drift apart.
@@ -146,6 +150,7 @@ const ATRC = [
   ["work/atrc/Thumbnail.avif.png", "work/atrc/thumbnail"],
   ["work/atrc/User Flow.png", "work/atrc/user-flow"],
   ["work/atrc/Iteration 3.png", "work/atrc/iteration-3"],
+  ["work/atrc/Milestone Toast.png", "work/atrc/milestone-toast"],
   // The wireframe spread, exported into the careerlogica folder by mistake.
   // Pointed at where it actually sits rather than moved, so a re-export of that
   // same file lands in the same place without a second manual step.
@@ -172,6 +177,9 @@ const JOBS = [
   ["Riyaz Images/Image 3 wide.png", "riyaz/wide"],
   ["Riyaz Images/Riyaz Image 2.png", "riyaz/alt-1"],
   ["Riyaz Images/Image 3.png", "riyaz/alt-2"],
+  // The still in the hero card. Remotion renders it as a JPEG, which also sits
+  // in public/ as-is as riyaz-intro-poster.jpg.
+  ["intro-video/brag-output/poster.jpg", "riyaz-intro-poster"],
 
   ...CAREERLOGICA_RESEARCH,
   ...CAREERLOGICA_WORK,
@@ -193,8 +201,6 @@ const JOBS = [
  *
  * source (relative to repo root) -> output basename under public/
  */
-const ICON_DISPLAY_PX = 84;
-const ICON_EXPORT_SCALE = 2;
 const ICON_JOBS = [
   ["Tools Icon/Figma.png", "tools/figma"],
   ["Tools Icon/Framer.png", "tools/framer"],
@@ -207,59 +213,112 @@ const ICON_JOBS = [
   ["Tools Icon/GitHub.png", "tools/github"],
 ];
 
-const MAX_WIDTH = 2560;
 const manifest = {};
 
 const kb = (n) => `${(n / 1024).toFixed(0)}KB`;
+
+/**
+ * The lowest quality at or above MIN_QUALITY whose output is still at least
+ * MIN_SHARE of `lossless` bytes. A flat image can come in under that even at
+ * full quality, and then full quality is what it gets.
+ */
+async function compress(input, encode, lossless) {
+  const floor = lossless.length * MIN_SHARE;
+  let low = MIN_QUALITY;
+  let high = MAX_QUALITY;
+  let best = await encode(sharp(input).rotate(), MAX_QUALITY);
+  let quality = MAX_QUALITY;
+  while (high - low > 2) {
+    const mid = Math.round((low + high) / 2);
+    const attempt = await encode(sharp(input).rotate(), mid);
+    if (attempt.length >= floor) {
+      best = attempt;
+      quality = mid;
+      high = mid;
+    } else {
+      low = mid;
+    }
+  }
+  return { best, quality };
+}
+
+const avif = (image, quality) =>
+  image.avif({ quality, effort: 4, chromaSubsampling: "4:4:4" }).toBuffer();
+const webp = (image, quality) =>
+  image.webp({ quality, effort: 4, smartSubsample: true }).toBuffer();
+
+async function runJob([src, out], previous) {
+  const srcPath = path.join(ROOT, src);
+  if (!existsSync(srcPath)) {
+    console.warn(`  skip  ${src} (not found)`);
+    // Keep the built file working when its source is not on this machine.
+    return previous ? { entry: previous, sourceSize: 0, outputSize: 0 } : null;
+  }
+
+  await mkdir(path.join(ROOT, "public", path.dirname(out)), { recursive: true });
+
+  const base = path.join(ROOT, "public", out);
+  const input = await readFile(srcPath);
+  const meta = await sharp(input).rotate().metadata();
+
+  const losslessAvif = await sharp(input).rotate()
+    .avif({ lossless: true, effort: 4 }).toBuffer();
+  const losslessWebp = await sharp(input).rotate()
+    .webp({ lossless: true, effort: 4 }).toBuffer();
+
+  const a = await compress(input, avif, losslessAvif);
+  const w = await compress(input, webp, losslessWebp);
+  await writeFile(`${base}.avif`, a.best);
+  await writeFile(`${base}.webp`, w.best);
+
+  // 20px blur placeholder, inlined as a data URI so there is no extra request.
+  const blur = await sharp(input).rotate().resize({ width: 20 })
+    .webp({ quality: 45 }).toBuffer();
+
+  const saved = (100 - (a.best.length / losslessAvif.length) * 100).toFixed(0);
+  console.log(
+    `  ok    ${out}.avif  ${meta.width}x${meta.height}  q${a.quality}  ${kb(losslessAvif.length)} -> ${kb(a.best.length)}  (-${saved}%)`
+  );
+
+  return {
+    entry: {
+      width: meta.width,
+      height: meta.height,
+      blurDataURL: `data:image/webp;base64,${blur.toString("base64")}`,
+    },
+    sourceSize: losslessAvif.length,
+    outputSize: a.best.length,
+  };
+}
 
 async function run() {
   let sourceTotal = 0;
   let outputTotal = 0;
 
-  for (const [src, out] of JOBS) {
-    const srcPath = path.join(ROOT, src);
-    if (!existsSync(srcPath)) {
-      console.warn(`  skip  ${src} (not found)`);
-      continue;
-    }
+  const manifestPath = path.join(ROOT, "lib", "image-manifest.json");
+  const previous = existsSync(manifestPath)
+    ? JSON.parse(await readFile(manifestPath, "utf8"))
+    : {};
 
-    const outDir = path.join(ROOT, "public", path.dirname(out));
-    await mkdir(outDir, { recursive: true });
+  const results = new Array(JOBS.length);
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: JOBS_AT_ONCE }, async () => {
+      while (next < JOBS.length) {
+        const i = next++;
+        results[i] = await runJob(JOBS[i], previous[`/${JOBS[i][1]}.avif`]);
+      }
+    })
+  );
 
-    const base = path.join(ROOT, "public", out);
-    const input = await readFile(srcPath);
-    const pipeline = sharp(input).rotate();
-    const meta = await pipeline.metadata();
-
-    const width = Math.min(meta.width ?? MAX_WIDTH, MAX_WIDTH);
-    const height = Math.round(((meta.height ?? width) * width) / (meta.width ?? width));
-
-    await sharp(input).rotate().resize({ width, withoutEnlargement: true })
-      .avif({ quality: 62, effort: 6 }).toFile(`${base}.avif`);
-
-    await sharp(input).rotate().resize({ width, withoutEnlargement: true })
-      .webp({ quality: 80 }).toFile(`${base}.webp`);
-
-    // 20px blur placeholder, inlined as a data URI so there is no extra request.
-    const blur = await sharp(input).rotate().resize({ width: 20 })
-      .webp({ quality: 45 }).toBuffer();
-
-    manifest[`/${out}.avif`] = {
-      width,
-      height,
-      blurDataURL: `data:image/webp;base64,${blur.toString("base64")}`,
-    };
-
-    const srcSize = (await stat(srcPath)).size;
-    const avifSize = (await stat(`${base}.avif`)).size;
-    sourceTotal += srcSize;
-    outputTotal += avifSize;
-
-    const saved = (100 - (avifSize / srcSize) * 100).toFixed(0);
-    console.log(
-      `  ok    ${out}.avif  ${width}x${height}  ${kb(srcSize)} -> ${kb(avifSize)}  (-${saved}%)`
-    );
-  }
+  // Filled in job order, so the manifest diff stays readable between runs.
+  JOBS.forEach(([, out], i) => {
+    const result = results[i];
+    if (!result) return;
+    manifest[`/${out}.avif`] = result.entry;
+    sourceTotal += result.sourceSize;
+    outputTotal += result.outputSize;
+  });
 
   for (const [src, out] of ICON_JOBS) {
     const srcPath = path.join(ROOT, src);
@@ -272,11 +331,9 @@ async function run() {
 
     const input = await readFile(srcPath);
     const dest = path.join(ROOT, "public", `${out}.webp`);
-    const exportPx = ICON_DISPLAY_PX * ICON_EXPORT_SCALE;
-    await sharp(input)
-      .resize(exportPx, exportPx, { kernel: "lanczos3" })
-      .webp({ quality: 92 })
-      .toFile(dest);
+    // Native pixels, lossless. The old path resampled 136px up to 168px, which
+    // adds no detail; the browser scales the true source instead.
+    await sharp(input).webp({ lossless: true }).toFile(dest);
 
     const srcSize = (await stat(srcPath)).size;
     const outSize = (await stat(dest)).size;
@@ -286,7 +343,7 @@ async function run() {
   }
 
   await writeFile(
-    path.join(ROOT, "lib", "image-manifest.json"),
+    manifestPath,
     JSON.stringify(manifest, null, 2) + "\n"
   );
 

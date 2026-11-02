@@ -1,6 +1,5 @@
 import { Section } from "./Section";
 import { RevealGroup } from "@/components/motion/RevealText";
-import { SplitButton } from "@/components/primitives/SplitButton";
 import { site } from "@/lib/site";
 
 /**
@@ -12,35 +11,36 @@ import { site } from "@/lib/site";
  */
 const ROLES = [
   {
-    from: "Freelance UX Designer",
+    from: "Freelance Product Designer",
     to: null,
     org: null,
     period: "2025 – Present",
-    body: "SaaS, EdTech and non-profit clients across India and the UAE.",
+    body: "Sole designer for ATRC, CareerLogica (140+ screens) and PECUC (navigation 37 → 7). Clients in India and the UAE.",
   },
   {
     from: "UX Designer",
     to: null,
     org: "Thatha Business Development LLP, Bengaluru",
     period: "2024 – 2025",
-    body: "20+ websites and landing pages for US non-profits. Built style guides that held consistency across client projects.",
+    body: "Designed 20+ websites and landing pages for US non-profits, with style guides that kept them consistent across clients.",
   },
   {
     from: "Graphic Designer",
     to: "UX Designer",
     org: "CareerNaksha, Vadodara",
     period: "2023 – 2024",
-    body: "Started in graphics, moved to UX within six months. Redesigned the company website and designed multi-role dashboards for students, professionals, counsellors and admins.",
+    body: "Moved into UX within six months. Designed multi-role dashboards for students, counsellors and admins, and the freemium model that later shaped CareerLogica.",
   },
 ];
 
 export function Experience() {
   return (
     <Section
+      id="experience"
       eyebrow="Where I've worked"
       heading={
         <>
-          From graphics to <span className="serif-em">growth</span>
+          From graphics to <span className="serif-em">products</span>
         </>
       }
     >
@@ -82,9 +82,16 @@ export function Experience() {
         ))}
       </RevealGroup>
 
-      <SplitButton href={site.resume} download emphasis className="mt-10">
-        Get my resume
-      </SplitButton>
+      {/* A plain link, not a button: the resume backs the story up, it does
+          not lead it. */}
+      <a
+        href={site.resume}
+        download
+        data-track="resume"
+        className="link-sweep mono mt-10 inline-flex min-h-11 items-center text-fg"
+      >
+        Download resume (PDF)
+      </a>
     </Section>
   );
 }

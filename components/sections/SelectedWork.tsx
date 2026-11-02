@@ -16,14 +16,11 @@ export function SelectedWork({ projects }: { projects: WorkCardData[] }) {
         </>
       }
     >
-      {/* Three up. One card per row meant only one was ever on screen, which
-          made the section read as three separate pages rather than a body of
-          work. Two at tablet, one on a phone. */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((p, i) => (
-          // Only the first cover is priority — the rest are below the fold and
-          // would compete with the LCP for bandwidth.
-          <WorkCard key={p.slug} data={p} priority={i === 0} />
+      {/* One card per row, full column width: each cover is wide enough to show
+          the laptop and the phones together, which the three-up crop could not. */}
+      <div className="grid grid-cols-1 gap-6">
+        {projects.map((p) => (
+          <WorkCard key={p.slug} data={p} />
         ))}
       </div>
     </Section>

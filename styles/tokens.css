@@ -101,6 +101,8 @@
   --text-xs: var(--text-micro);
   --text-sm: 16px;
   --text-base: 20px;
+  /* Case study sub-headings and highlighted sentences. */
+  --text-md: 24px;
   --text-lg: clamp(29px, 2.4vw, 34px);
   /* Flat, not fluid: the ramp used to run 24 -> 34, and raising the floor to
      34 leaves nothing to interpolate. */
@@ -121,6 +123,16 @@
      break inside it, so anything larger pushes "Creating" onto its own line
      at 375px and the sentence reads as three ragged fragments. */
   --text-hero-sub: clamp(26px, 3.4vw, 46px);
+  /* The hero's name line. Its own step, down from --text-3xl's 110px top to
+     88px, so the name and the title line under it share the fold; the 46px
+     floor keeps "Hi, I'm Riyaz Malek" to two lines on a 375px phone. */
+  --text-hero: clamp(40px, 6.7vw, 88px);
+  /* The title line under the name ("Product Designer based in Vadodara"), and
+     the speech bubble on the film's corner. 40px and 32px at the 1440px design
+     width, 24px and 20px on a phone. The 40px name floor lets "Hi, I'm Riyaz
+     Malek" share one line at 375. */
+  --text-hero-title: clamp(24px, 2.78vw, 40px);
+  --text-bubble: clamp(20px, 2.22vw, 32px);
 
   /* One-off display sizes. Each was an inline `style={{ fontSize }}` on its
      component, which is how a type scale ends up with sizes nobody can find.

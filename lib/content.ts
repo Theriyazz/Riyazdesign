@@ -10,9 +10,9 @@ const WORK_DIR = path.join(process.cwd(), "content", "work");
 /**
  * Frontmatter contract for a case study.
  *
- * This is strict on purpose. A missing `outcome` or a malformed `metrics`
- * entry fails the build rather than quietly rendering an empty band — a
- * half-populated case study is worse than a loud error at build time.
+ * This is strict on purpose. A missing `outcome` or `summary` fails the build
+ * rather than quietly rendering an empty card. A half-populated case study is
+ * worse than a loud error at build time.
  */
 export const caseStudySchema = z.object({
   slug: z.string().min(1),
@@ -31,16 +31,18 @@ export const caseStudySchema = z.object({
   industry: z.string().min(1),
   timeline: z.string().min(1),
   cover: z.string().startsWith("/"),
+  /** A lighter copy of `cover` for the work card on a phone. Omitted, phones get `cover`. */
+  coverPhone: z.string().startsWith("/").optional(),
   /**
-   * Optional separate image for the homepage work card.
-   *
-   * The card crops 4:5 portrait and the case study hero crops ~2.2:1
-   * landscape, so one file has to survive both — and a 2.2:1 cover loses about
-   * 64% of its width to the card's crop. Where a case study supplies a
-   * squarer thumbnail, the card uses it and the hero keeps the wide cover.
-   * Omitted, the card falls back to `cover` and nothing changes.
+   * Optional squarer image for the "next project" tile at the foot of a case
+   * study, which a 2.2:1 cover would lose most of its width to. Omitted, the
+   * tile falls back to `cover` and nothing changes.
    */
   thumbnail: z.string().startsWith("/").optional(),
+  /** The work card's ground, taken from the cover's own background. */
+  cardColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  /** `light` for a bright ground, where the panel's secondary text must lift. */
+  cardTheme: z.enum(["dark", "light"]).default("dark"),
   /**
    * The opening hook, verbatim from the case study source — the line the page
    * leads with under the meta bar.
@@ -51,6 +53,14 @@ export const caseStudySchema = z.object({
    * honest whatever stage the project is at.
    */
   headline: z.string().min(1),
+  /** The one-line result on the work card: scope or a number the work can defend. */
+  outcome: z.string().min(1),
+  /** The 30-second summary card at the top of the case study. */
+  summary: z.object({
+    problem: z.string().min(1),
+    decision: z.string().min(1),
+    outcomes: z.array(z.string().min(1)).min(2).max(3),
+  }),
   collaborator: z.string().optional(),
   year: z.string().min(4),
   featured: z.boolean().default(false),

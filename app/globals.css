@@ -288,22 +288,23 @@ body:has([data-page="case-study"]) {
 /* ------------------------------------------------------------- work card ---
    The glass panel resting on the cover.
 
-   The fill is deliberately heavy — 88% of --bg-raised, not the 62% the nav
-   frosts at. The nav sits over the page's own dark ground, where a light
-   layer is enough; this sits over a photograph whose pixels are unknown and
-   change per card, and the panel carries a heading. At 62% the title measured
-   under 4.5:1 against the brighter parts of a mockup. The blur is doing the
-   texture, the opacity is doing the contrast, and only one of those is
-   allowed to be a judgement call.
+   The cover ends just below the panel's top edge, so nearly all of the panel
+   sits on the card's own --card-color and the fill only has to tint it. The
+   blur shows the last of the cover passing underneath.
 
    -webkit- first: lightningcss preserves declaration order, and a browser
    reading the unprefixed form last would never see it — the same trap the nav
    hit. */
 .work-card-panel {
-  background: color-mix(in srgb, var(--bg-raised) 88%, transparent);
-  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-raised) 45%, transparent);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
+}
+
+/* A bright ground stays lighter than the others even once tinted, so the grey
+   secondary text falls under 4.5:1 there. It lifts to near-white instead. */
+[data-card-theme="light"] .work-card-panel {
+  --fg-muted: #e6e4d8;
 }
 
 /* Hover is paired with `[data-hovered]` throughout, not just `:hover`.
@@ -348,13 +349,39 @@ body:has([data-page="case-study"]) {
 .wordmark-text {
   display: block;
   white-space: nowrap;
+  text-transform: uppercase;
   font-weight: 500;
   line-height: 0.78;
   letter-spacing: -0.045em;
   color: var(--ink-800);
   padding-bottom: 0.26em;
   font-size: var(--text-wordmark); /* fallback: no container query units */
-  font-size: 17.1cqw;
+  /* Measured: "RIYAZ MALEK" in Geist 500 at -0.045em inks 5.81em wide, so
+     1/5.81 is 0.172 of the column per em; trimmed a hair under for the side
+     bearing. Re-measure if the word or the tracking changes. */
+  font-size: 17cqw;
+}
+
+/* The status pill's label, a size down on a phone so it fits one line in the
+   372px column, as in the design. After `.mono` so it wins at equal weight. */
+@media (max-width: 1023.98px) {
+  .mono.hero-pill-text {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+}
+
+/* ------------------------------------------------------------- hero bubble ---
+   The speech bubble on the film's corner. Square bottom-left, the corner that
+   points at the film. The shadow is the five stacked layers from the design,
+   each longer and fainter than the last. */
+.hero-bubble {
+  border-radius: 25px 25px 25px 0;
+  box-shadow:
+    0 11px 24px rgba(0, 0, 0, 0.15),
+    -2px 43px 43px rgba(0, 0, 0, 0.13),
+    -4px 97px 58px rgba(0, 0, 0, 0.08),
+    -7px 173px 69px rgba(0, 0, 0, 0.02);
 }
 
 /* ------------------------------------------------------------ type util */
@@ -496,180 +523,6 @@ html[data-motion="reduced"] [data-hero-sub] {
   50%,
   100% {
     opacity: 0;
-  }
-}
-
-/* ------------------------------------------------------------ tool ticker ---
-   One continuous drift, parked on hover.
-
-   The track holds the tool set twice and travels exactly -50%, so at the moment
-   the keyframe wraps, copy two is standing precisely where copy one began.
-   Nothing jumps because nothing moved — which is why both copies must stay the
-   same width, and why the trailing gap lives on the set rather than between the
-   two sets.
-
-   `linear` is not a default here, it is the whole effect: any easing gives the
-   row a heartbeat, and a ticker that breathes reads as an animation instead of
-   as a passing band. */
-
-/* The frame is the clip boundary and the edge treatment; the track inside it
-   is the only thing that moves.
-
-   The blur lives out here rather than on `.ticker` because `mask-image` builds
-   a stacking context, and a `backdrop-filter` nested inside one stops sampling
-   the page behind it — the marks would slide under a pane that blurs nothing. */
-.ticker-frame {
-  position: relative;
-}
-
-.ticker-frame::before,
-.ticker-frame::after {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  z-index: 1;
-  width: clamp(40px, 9%, 140px);
-  pointer-events: none;
-  /* Prefixed first, unprefixed last — lightningcss collapses the pair and keeps
-     whichever came last, deriving prefixes from that. Written the other way
-     round it emits only `-webkit-backdrop-filter`, and Firefox, which supports
-     the unprefixed property only, gets no blur at all. */
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-}
-/* The blur itself has to fade, or its own edge becomes the hard line the fade
-   was there to avoid. */
-.ticker-frame::before {
-  left: 0;
-  -webkit-mask-image: linear-gradient(90deg, #000, transparent);
-  mask-image: linear-gradient(90deg, #000, transparent);
-}
-.ticker-frame::after {
-  right: 0;
-  -webkit-mask-image: linear-gradient(270deg, #000, transparent);
-  mask-image: linear-gradient(270deg, #000, transparent);
-}
-
-.ticker {
-  overflow: hidden;
-  /* Dissolve both ends rather than guillotine a mark mid-tile. Percentages,
-     not the gutter: the frame now sits inside the shell, so its own edges are
-     already the container edges the marks must not cross. */
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 10%,
-    #000 90%,
-    transparent
-  );
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-}
-
-.ticker-track {
-  display: flex;
-  width: max-content;
-  /* Duration is chosen for a constant travel speed (~31px/s), not a constant
-     wall-clock loop, so it has to move with the mark size: at 84px marks and
-     a 96px gap, one half runs ~3240px and 44s would read as a sprint. */
-  animation: tickerDrift 100s linear infinite;
-}
-
-/* Park it on hover so a mark can actually be read, and on focus-within so the
-   same is true for a keyboard user tabbing past. */
-.ticker:hover .ticker-track,
-.ticker:focus-within .ticker-track {
-  animation-play-state: paused;
-}
-
-/* Half the track.
-
-   The guard for screens wider than the runs measure: rather than let a hole
-   open before the wrap, the half stretches to the viewport and `space-around`
-   spreads the slack evenly across the marks.
-
-   `100vw`, NOT `100%`. A percentage here resolves against `.ticker-track`,
-   whose width is `max-content` — which is itself the sum of these two halves.
-   That circularity resolves as each half inflating to the width of the whole
-   track, so `-50%` stops being one half and the seam jumps once per cycle.
-   The viewport is a definite length and closes the loop. */
-.ticker-set {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  min-width: 100vw;
-  gap: var(--space-24);
-}
-
-.ticker-run {
-  display: flex;
-  align-items: center;
-  gap: var(--space-24);
-}
-
-.ticker-mark {
-  flex: none;
-  opacity: 0.55;
-  transition: opacity var(--dur) var(--ease-out);
-}
-/* Dim at rest, full strength under the cursor. The rest of the row drops back
-   further while you are pointing at one — the same read the typeset names got
-   from `text-fg-subtle` -> `hover:text-fg`, now that the names are gone. */
-.ticker:hover .ticker-mark {
-  opacity: 0.28;
-}
-.ticker .ticker-mark:hover {
-  opacity: 1;
-}
-
-@keyframes tickerDrift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-/* Reduced motion: the row becomes a plain wrapped grid of marks.
-
-   `animation: none` has to be !important and outrank the global guard below,
-   which only shortens durations to 0.01ms. Shortening is the wrong fix for a
-   loop — it would run the single allowed iteration instantly and strand the
-   track at -50%, i.e. half the marks pushed off-screen for good.
-
-   Written as a media query rather than against `data-motion`, so it holds with
-   no JS too. The duplicate copy is decorative once nothing scrolls. */
-@media (prefers-reduced-motion: reduce) {
-  .ticker {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  /* Nothing is passing out of frame, so there is no edge to soften. */
-  .ticker-frame::before,
-  .ticker-frame::after {
-    display: none;
-  }
-  .ticker-track {
-    animation: none !important;
-    transform: none !important;
-    width: 100%;
-  }
-  /* Everything past the first run exists only to make the loop seamless. With
-     nothing looping, it is nine marks repeated for no reason. */
-  .ticker-set + .ticker-set,
-  .ticker-run + .ticker-run {
-    display: none;
-  }
-  .ticker-set {
-    justify-content: flex-start;
-    min-width: 0;
-  }
-  .ticker-run {
-    flex-wrap: wrap;
-    gap: var(--space-8);
-  }
-  .ticker-mark {
-    opacity: 1;
   }
 }
 
@@ -847,8 +700,7 @@ html[data-motion="reduced"] .link-sweep::after {
   /* Prefixed first, unprefixed last. lightningcss collapses the pair and keeps
      whichever came last, deriving prefixes from that — written the other way
      round it emits only `-webkit-backdrop-filter` and Firefox, which supports
-     the unprefixed property only, gets no blur at all. Same trap as
-     `.ticker-frame` above. */
+     the unprefixed property only, gets no blur at all. */
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }

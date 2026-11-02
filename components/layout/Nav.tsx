@@ -193,7 +193,7 @@ export function Nav() {
         id="mobile-nav"
         hidden={!mounted}
         className={cn(
-          "fixed inset-0 z-[59] flex flex-col justify-center bg-bg px-[var(--gutter)] transition-[opacity,transform] duration-200 ease-[var(--ease-out)] md:hidden",
+          "fixed inset-0 z-[59] flex flex-col justify-center bg-bg px-[var(--gutter)] transition-[opacity,transform] duration-200 ease-[var(--ease-out)] xl:hidden",
           visible ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
         )}
       >
@@ -211,16 +211,26 @@ export function Nav() {
           ))}
         </ul>
 
+        <AnchorLink
+          hash="contact"
+          onNavigate={() => setOpen(false)}
+          track="lets-talk-nav"
+          className="mono ctl-text mt-12 inline-flex min-h-11 w-fit items-center rounded-[var(--radius-chip)] bg-[var(--btn-chip-bg)] px-4 text-[var(--btn-chip-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]"
+        >
+          Let&rsquo;s talk
+        </AnchorLink>
         <a
           href={site.resume}
           download
-          className="mono ctl-text mt-12 inline-flex w-fit items-center gap-2 rounded-[var(--radius-chip)] bg-[var(--btn-chip-bg)] px-3.5 py-2 text-[var(--btn-chip-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]"
+          data-track="resume"
+          className="mono ctl-text mt-4 inline-flex min-h-11 w-fit items-center gap-2 text-fg-muted underline-offset-4 hover:text-fg hover:underline"
         >
           {resumeIcon} Resume
         </a>
         <a
           href={`mailto:${site.email}`}
-          className="mono ctl-text mt-4 text-fg-subtle underline-offset-4 hover:text-fg hover:underline"
+          data-track="email"
+          className="mono ctl-text mt-2 inline-flex min-h-11 w-fit items-center text-fg-subtle underline-offset-4 hover:text-fg hover:underline"
         >
           {site.email}
         </a>
@@ -258,11 +268,12 @@ export function Nav() {
             {site.wordmark}
           </TransitionLink>
 
-          {/* Below `md` these three labels plus the resume button crowd a 375px
-              bar, so they move into a panel. */}
+          {/* Below `xl` the four labels, the resume link and the Let's talk
+              chip overlap the centred pill (measured: 66px at 1024), so they
+              move into a panel. */}
           <ul
             ref={listRef}
-            className="nav-pill absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-raised)_82%,transparent)] px-2 py-1.5 backdrop-blur-md md:flex"
+            className="nav-pill absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-raised)_82%,transparent)] px-2 py-1.5 backdrop-blur-md xl:flex"
           >
             {/* One indicator for the whole list. It's 1px wide and stretched by
                 scaleX to the active label, so the slide is transform-only. */}
@@ -291,20 +302,24 @@ export function Nav() {
           </ul>
 
           <div className="flex shrink-0 items-center gap-2">
-            {/* Filled the same as the primary CTA (`SplitButton` with
-                `emphasis`) — same `--btn-chip-bg` fill, same
-                `--btn-chip-fg` text, same `--accent-hover` on hover — so the
-                one action in the bar a visitor is likeliest to want reads as
-                the site's primary action, not a secondary outline pill. Icon
-                and single-piece shape stay: this isn't a `SplitButton`, just
-                the same skin on the existing anchor. */}
+            {/* The resume is a plain link: recruiters find it, everyone else
+                sees the work first. The filled chip, the same skin as the
+                primary CTA, is the conversation. */}
             <a
               href={site.resume}
               download
-              className="mono ctl-text hidden items-center gap-2 rounded-full bg-[var(--btn-chip-bg)] px-3.5 py-1.5 text-[var(--btn-chip-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)] md:inline-flex"
+              data-track="resume"
+              className="mono ctl-text hidden items-center gap-2 px-2 py-1.5 text-fg-muted transition-colors duration-200 hover:text-fg xl:inline-flex"
             >
               {resumeIcon} Resume
             </a>
+            <AnchorLink
+              hash="contact"
+              track="lets-talk-nav"
+              className="mono ctl-text hidden items-center rounded-full bg-[var(--btn-chip-bg)] px-3.5 py-1.5 text-[var(--btn-chip-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)] xl:inline-flex"
+            >
+              Let&rsquo;s talk
+            </AnchorLink>
 
             <button
               ref={toggleRef}
@@ -312,7 +327,7 @@ export function Nav() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="mobile-nav"
-              className="mono ctl-text inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-3.5 py-1.5 text-fg-muted transition-colors duration-200 hover:text-fg md:hidden"
+              className="mono ctl-text inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--border)] px-4 text-fg-muted transition-colors duration-200 hover:text-fg xl:hidden"
             >
               <span
                 aria-hidden

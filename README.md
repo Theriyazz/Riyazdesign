@@ -90,13 +90,14 @@ time is a net loss however good it looks.
   `lib/useReducedMotion.ts`) disables Lenis, the preloader, the cursor, and all
   scrubs. Not sprinkled per component.
 - Only `transform` and `opacity` are animated. Never `width`/`height`/`top`/`left`.
-  The two exceptions are both deliberate and both scoped to one element: the
-  `filter` on the FirstFold sheen, and the `backdrop-filter` on the nav bar.
+  The exception is deliberate and scoped to one element: the `backdrop-filter`
+  on the nav bar. (`RevealSheen` in `components/motion/RevealText.tsx` also
+  animates `filter`; it has no caller on the page today.)
 - `useGSAP()` scoped to a container ref, so every timeline auto-cleans.
 - Reveal text rests at **0.5 opacity, not lower** — that's 4.93:1, the AA floor.
   A visitor can land mid-page or scrub backwards; the text has to be legible
   before the animation fires.
-  **The FirstFold sheen is the one exception**, resting at 0.35 behind an 8px
+  **`RevealSheen` is the one exception**, resting at 0.35 behind an 8px
   blur, because blurred text is unreadable at any opacity and the floor buys
   nothing there. It's allowed only because that fill is scrubbed and ends while
   the block is still well inside the viewport, so a reader who stops scrolling

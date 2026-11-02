@@ -75,7 +75,8 @@ Other components available in the body: `<ImageBlock>` (one image), `<Compare>`
 (exactly two, side by side), `<Callout>`, `<CardGrid>` / `<Card>`,
 `<Findings>` / `<Finding>`, `<Steps>` / `<Step>`, `<StatRow>` / `<Stat>`,
 `<SpecList>` / `<Spec>`, `<Takeaways>` / `<Takeaway>`, `<Principle>`, `<Quote>`,
-`<Deliverables>`.
+`<Deliverables>`, `<ContextCard>` (the opening context), `<Highlight>` (the one
+sentence a skimmer should take from a section).
 
 ### Showing more than two screens — `<ScreenCarousel>`
 
@@ -109,12 +110,14 @@ dashes on the page. Use `<SpecList>`, `<StatRow>` or `<CardGrid>` instead —
 they all say "a set of label/value pairs" and they're responsive, which a table
 at this width isn't.
 
-`<MetaBar />` takes no props — it reads Role, Delivered, Tools, Platform,
-Industry and Timeline straight from the frontmatter. It is a body tag rather
-than something the page places automatically, so the facts land where the
-writing wants them. All three studies put it at the end of Context, so the
-reader gets the hook and then what the project is before six fields of
-metadata. Include it once per case study.
+The facts a recruiter checks first (problem, role, timeline, key decision,
+outcomes) render automatically in the "In 30 seconds" card under the hook,
+from `summary`, `role` and `timeline` in the frontmatter. There is no facts
+table or Deliverables list in the body any more.
+
+`<Decision>` is built to be scanned: keep `why` and `tradeoff` to one or two
+short sentences each (under about 95 characters), so every row stays at 2
+lines on desktop and 3 on a phone.
 
 ---
 
@@ -152,11 +155,10 @@ Your copy is already in place. These are the files if you want to edit it:
 | Section | File |
 |---|---|
 | Hero | `components/sections/Hero.tsx` |
-| First fold statement | `components/sections/FirstFold.tsx` |
+| Intro film | `components/sections/IntroFilm.tsx` |
+| How I work | `components/sections/HowIWork.tsx` |
+| What clients say | `components/sections/Testimonials.tsx` |
 | About | `components/sections/About.tsx` |
-| Capabilities | `components/sections/Capabilities.tsx` |
-| Tool stack | `components/sections/ToolStack.tsx` |
-| Testimonials | `components/sections/Testimonials.tsx` |
 | Experience | `components/sections/Experience.tsx` |
 | Contact | `components/sections/ContactCTA.tsx` |
 

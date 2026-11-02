@@ -31,8 +31,8 @@ export function NextProject({ meta }: { meta: CaseStudyMeta }) {
               `cover` is a 2.22:1 letterbox cut for the full-bleed hero, and
               this box is 4:3 — dropping it in here cropped 28% off both sides
               and sliced the edges off the very mockup the card is selling.
-              `thumbnail` is the 1.33:1 crop the homepage work card already
-              uses, so it lands here at its native ratio with nothing lost.
+              `thumbnail` is a 1.33:1 crop, so it lands here at its native
+              ratio with nothing lost.
               Falls back to `cover` because `thumbnail` is optional in the
               frontmatter schema.
             */}
