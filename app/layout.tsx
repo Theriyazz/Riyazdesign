@@ -77,10 +77,20 @@ export const viewport: Viewport = {
  *  - `data-preload` decides the intro *before* anything paints. Deciding it in
  *    React instead meant the site painted first and the curtain dropped on top
  *    of it a beat later — backwards, and very visible now the curtain is light
- *    and the site is dark. The session key is claimed here too, so a back-nav
- *    can never replay it.
+ *    and the site is dark. It plays on every full page load (first visit,
+ *    reload, new tab) for full-motion visitors. Moving between pages inside
+ *    the site is client-side, so it never replays mid-visit.
+ *  - Comments and bare text in <head> are removed. Netlify injects a newline
+ *    and a "This site is hosted on Netlify" comment after the charset meta on
+ *    every page it serves. React renders neither, so hydration failed
+ *    (minified error #418) and the whole tree was rebuilt on the client. That
+ *    rebuild also strips the attributes this script puts on <html>, so
+ *    `data-preload` vanished and the intro was cut off mid-draw or skipped.
+ *    This script runs after the injection has been parsed and before React
+ *    hydrates. The newline matters as much as the comment: removing only the
+ *    comment left a stray text node that failed hydration just the same.
  */
-const BOOT_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');try{d.dataset.motion=window.matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'full';}catch(e){d.dataset.motion='reduced';}try{if(d.dataset.motion==='full'&&!sessionStorage.getItem('rm:preloaded')){sessionStorage.setItem('rm:preloaded','1');d.dataset.preload='1';}}catch(e){}})();`;
+const BOOT_SCRIPT = `(function(){var d=document.documentElement;for(var n=document.head&&document.head.firstChild;n;){var x=n.nextSibling;if(n.nodeType===8||(n.nodeType===3&&!/\\S/.test(n.nodeValue)))n.parentNode.removeChild(n);n=x;}d.classList.add('js');try{d.dataset.motion=window.matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'full';}catch(e){d.dataset.motion='reduced';}if(d.dataset.motion==='full')d.dataset.preload='1';})();`;
 
 export default function RootLayout({
   children,

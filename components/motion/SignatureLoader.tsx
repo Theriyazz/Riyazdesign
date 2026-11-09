@@ -28,6 +28,27 @@ const MIN_INK_PX = 1.2;
 /** Longest we hold the finished signature waiting for the page's `load`. */
 const LOAD_WAIT_MS = 2500;
 
+/** Most the timeline may advance in one frame, so jank slows the pen rather
+ *  than skipping it ahead. */
+const MAX_STEP_S = 1 / 30;
+
+/**
+ * Whether this page load plays the intro, read from the boot script's
+ * `data-preload` when this module first evaluates on the client — before React
+ * hydrates — and then held here.
+ *
+ * Read that early on purpose. If hydration fails (a host- or extension-injected
+ * node is enough), React rebuilds the tree and strips the attributes it did not
+ * render from `<html>` before any effect runs, so an effect would find the flag
+ * already gone and skip the intro. Module state survives that rebuild.
+ */
+let intro: "playing" | "done" | null =
+  typeof document === "undefined"
+    ? null
+    : document.documentElement.dataset.preload === "1"
+      ? "playing"
+      : "done";
+
 /**
  * Head layers, tip outwards: each is a fraction of the head length and a
  * multiple of the ink width. Stacked shortest-and-thickest last, so the pen
@@ -40,7 +61,7 @@ const HEAD_LAYERS = [
 ] as const;
 
 /**
- * First-visit intro: "Riyaz Malek" signs itself.
+ * Page-load intro: "Riyaz Malek" signs itself.
  *
  * Modelled on a pen signature reveal. Thin ink draws stroke by stroke in
  * writing order at a roughly constant pen speed, each stroke eased in and out,
@@ -54,7 +75,7 @@ const HEAD_LAYERS = [
  * left to right, uncovering the page a slice at a time.
  *
  * Whether it plays at all is decided by the boot script in `app/layout.tsx`
- * (first visit per session, full motion only), which sets `data-preload` before
+ * (every full page load, full motion only), which sets `data-preload` before
  * first paint. The markup is server-rendered with every stroke hidden, so the
  * first frame is the empty dark card rather than a flash of the signature.
  */
@@ -70,7 +91,14 @@ export function SignatureLoader() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    setPlaying(document.documentElement.dataset.preload === "1");
+    const root = document.documentElement;
+    if (intro === null) intro = root.dataset.preload === "1" ? "playing" : "done";
+    if (intro !== "playing") return;
+    // Reasserted, not just read: if React rebuilds the tree after a hydration
+    // error it strips attributes it did not render from <html>, and the CSS
+    // that shows this overlay keys off this one.
+    root.dataset.preload = "1";
+    setPlaying(true);
   }, []);
 
   useEffect(() => {
@@ -157,14 +185,28 @@ export function SignatureLoader() {
       );
     };
 
+    // The timeline is driven by hand rather than left to GSAP's clock. GSAP
+    // advances by wall time, so a long frame while the page's own JS boots
+    // (hydration, the hero, image decode) jumped the pen forward by that much
+    // — whole strokes appeared at once and the intro read as rushed. Capping
+    // each frame's step means a busy main thread slows the pen down instead.
+    let waiting = false;
+    const step = (_time: number, deltaMs: number) => {
+      if (waiting) return;
+      const next = tl.totalTime() + Math.min(deltaMs / 1000, MAX_STEP_S);
+      tl.totalTime(Math.min(next, tl.totalDuration()));
+    };
+
     const release = () => {
+      intro = "done";
+      gsap.ticker.remove(step);
       delete document.documentElement.dataset.preload;
       cancelAnimationFrame(holdFrame);
       if (stopped) getLenis()?.start();
       setDone(true);
     };
 
-    const tl = gsap.timeline({ onUpdate: paint, onComplete: release });
+    const tl = gsap.timeline({ paused: true, onUpdate: paint, onComplete: release });
 
     // --- Draw ----------------------------------------------------------------
     let t = 0.25;
@@ -199,11 +241,11 @@ export function SignatureLoader() {
     let loadTimer = 0;
     const onLoad = () => {
       window.clearTimeout(loadTimer);
-      if (tl.paused()) tl.play();
+      waiting = false;
     };
     tl.add(() => {
       if (document.readyState === "complete") return;
-      tl.pause();
+      waiting = true;
       window.addEventListener("load", onLoad, { once: true });
       loadTimer = window.setTimeout(onLoad, LOAD_WAIT_MS);
     }, t + 0.3);
@@ -238,10 +280,16 @@ export function SignatureLoader() {
       );
     }
 
+    gsap.ticker.add(step);
+
     return () => {
+      gsap.ticker.remove(step);
       tl.kill();
       window.clearTimeout(loadTimer);
       window.removeEventListener("load", onLoad);
+      // Dropped so an unmount never leaves the page scroll-locked. If this is
+      // a remount, the fresh loader reads `intro` (still "playing") and puts
+      // the flag straight back, so the intro restarts instead of vanishing.
       delete document.documentElement.dataset.preload;
       cancelAnimationFrame(holdFrame);
       if (stopped) getLenis()?.start();
