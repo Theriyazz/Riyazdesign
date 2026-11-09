@@ -20,10 +20,10 @@ const STREAKS = 6;
 const PEN_SPEED = 3400;
 
 /** Length of the wet-ink head trailing the pen tip, in viewBox units. */
-const HEAD = 120;
+const HEAD = 140;
 
-/** Rendered hairline width in CSS px, desktop and phone. */
-const INK_PX = { wide: 1.6, narrow: 1.25 };
+/** Thinnest the ink may render, in CSS px, however small the signature is drawn. */
+const MIN_INK_PX = 1.2;
 
 /** Longest we hold the finished signature waiting for the page's `load`. */
 const LOAD_WAIT_MS = 2500;
@@ -97,11 +97,10 @@ export function SignatureLoader() {
     holdScroll();
     const holdFrame = requestAnimationFrame(holdScroll);
 
-    // Hairline width in viewBox units, so it lands on INK_PX on screen at
-    // whatever size the SVG is drawn.
+    // Each stroke keeps the weight measured from the artwork (viewBox units),
+    // floored so it never renders thinner than MIN_INK_PX on a small screen.
     const scale = svg.getBoundingClientRect().width / SIGNATURE_WIDTH || 0.4;
-    const inkPx = window.innerWidth < 640 ? INK_PX.narrow : INK_PX.wide;
-    const ink = inkPx / scale;
+    const minInk = MIN_INK_PX / scale;
 
     const strokes = SIGNATURE_STROKES.map((s, i) => {
       const g = svg.querySelector<SVGGElement>(`[data-stroke="${i}"]`)!;
@@ -109,6 +108,7 @@ export function SignatureLoader() {
       const heads = Array.from(g.querySelectorAll<SVGPathElement>("[data-head]"));
       const glow = g.querySelector<SVGPathElement>("[data-glow]")!;
       const len = inkPath.getTotalLength();
+      const ink = Math.max(s.w, minInk);
       inkPath.style.strokeWidth = String(ink);
       heads.forEach((h, k) => (h.style.strokeWidth = String(ink * HEAD_LAYERS[k].width)));
       glow.style.strokeWidth = String(ink * 4);
@@ -175,8 +175,10 @@ export function SignatureLoader() {
         streak(t - 0.04, s.streakBefore);
         t += 0.1;
       }
-      const speed = PEN_SPEED * (s.kind === "swash" ? 1.7 : s.kind === "dot" ? 0.5 : 1);
-      const dur = gsap.utils.clamp(0.12, 0.55, s.len / speed);
+      const speed = PEN_SPEED * (s.kind === "swash" ? 1.4 : s.kind === "dot" ? 0.5 : 1);
+      // Capped high enough that the M (entry loop, both peaks and the foot in
+      // one stroke) keeps the same pen speed as everything else.
+      const dur = gsap.utils.clamp(0.12, 0.8, s.len / speed);
       const head = Math.min(HEAD, s.len * 0.45);
       tl.to(s.st, { p: 1, duration: dur, ease: s.kind === "swash" ? "power3.inOut" : "power1.inOut" }, t)
         // The head swells in as the pen lands, and once the stroke ends its
@@ -265,7 +267,7 @@ export function SignatureLoader() {
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ width: "min(86vw, 680px)", height: "auto", overflow: "visible" }}
+          style={{ width: "min(86vw, 720px)", height: "auto", overflow: "visible" }}
         >
           <defs>
             <filter id="sig-glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -292,7 +294,7 @@ export function SignatureLoader() {
                 d={s.d}
                 pathLength={1}
                 stroke="var(--paper-50)"
-                strokeWidth={4}
+                strokeWidth={s.w}
                 strokeDasharray="1 2"
                 strokeDashoffset={1}
               />
