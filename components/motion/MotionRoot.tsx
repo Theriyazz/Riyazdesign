@@ -3,7 +3,7 @@
 import { SmoothScroll } from "./SmoothScroll";
 import { Cursor } from "./Cursor";
 import { HoverSync } from "./HoverSync";
-import { Preloader } from "./Preloader";
+import { SignatureLoader } from "./SignatureLoader";
 import { TransitionProvider } from "./PageTransition";
 
 /**
@@ -19,7 +19,7 @@ export function MotionRoot({ children }: { children: React.ReactNode }) {
       {/* Pairs with SmoothScroll: Lenis is what stops the browser refreshing
           hover on its own, so this belongs next to it. */}
       <HoverSync />
-      <Preloader />
+      <SignatureLoader />
       <Cursor />
       {children}
     </TransitionProvider>
